@@ -23,5 +23,11 @@ Linking is optional per Shadows project. NYLRA follows the current work and
 intervention topics, retrieves permitted sources, and explains them through its
 own selected model. It does not replicate complete Planner histories.
 
+Personal workspace authority stays on its owning computer; team authority belongs
+to the future Rust Shadows server. Desktop/mobile sync continues NYLRA topics,
+not local databases or live execution. See the
+[sharing inventory](../shadows-backend/docs/architecture.md#what-lives-where) and
+[delivery order](../shadows-backend/docs/architecture.md#14-delivery-order).
+
 Sibling links assume repositories named `nylra`, `shadows-backend`, and
 `shadows` are checked out beside each other.

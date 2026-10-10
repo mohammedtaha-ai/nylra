@@ -232,6 +232,18 @@ Shadows should remain a local-first orchestration platform.
 
 The Liaison should be an optional connected service.
 
+The chosen experience is **personal work on its owning computer**, **team work
+owned by its server**, and **NYLRA conversation following the person across
+devices**. A laptop may execute team assignments without becoming a second owner.
+Personal projects and preferences are not exposed through team membership.
+
+Sign-in does not upload projects. Linking is not backup, team publication, code
+sync or execution transfer. An offline personal computer cannot run a new Planner
+turn; retained explanations are visibly cached. The authoritative decisions are in
+[Shadows §1.7](../shadows/docs/superpowers/specs/2026-09-21-architecture-design.md#17-workspace-authority-and-deployment),
+with the [sharing inventory](../shadows-backend/docs/architecture.md#what-lives-where)
+specifying what crosses into the cloud.
+
 ### 5.1 Why separation matters
 
 The two products have different responsibilities.
@@ -264,7 +276,9 @@ The two products have different responsibilities.
 - personal memory,
 - human-facing summaries.
 
-These responsibilities retain separate ownership within the shared backend.
+These responsibilities retain separate ownership across the product.
+Project rules remain in Rust for both local and future server deployments;
+the TypeScript application calls them rather than implementing another copy.
 An application process may host several domains without allowing them to
 bypass each other's public operations or private stores.
 
@@ -494,6 +508,13 @@ Timestamp: ...
 
 This event can then be accepted by Shadows.
 
+This conceptual record is not sufficient proof by itself. The trusted client
+binds a deliberate confirmation to the exact displayed operation/proposal.
+[Shadows §24.6](../shadows/docs/superpowers/specs/2026-10-08-approval-authority-design.md#246-external-human-confirmation-and-assessment)
+owns enforcement, Planner-versus-human attribution and assessment write limits.
+Voice prepares the response; voice-only confirmation needs separately reviewed
+proof before it can replace the deliberate client confirmation action.
+
 ---
 
 ## 10. Two Kinds of Memory
@@ -685,6 +706,10 @@ Possible reasoning providers may include:
 - enterprise-hosted models,
 - future providers.
 
+This inventory does not mean cloud NYLRA can reach a local model. Initial providers
+must be reachable by the cloud application. Local reasoning/speech providers need
+a separately scoped execution design.
+
 The system should not assume one model is best for all tasks.
 
 A user may choose:
@@ -873,7 +898,14 @@ Later:
 
 > Human: "Yes."
 
-> Liaison: "Your approval has been submitted. Claude recorded the decision and resumed planning."
+The person confirms the exact proposal in the trusted client surface. The model
+does not convert the transcribed "Yes" into approval evidence on its own.
+
+> Liaison: "Your confirmation is queued."
+
+Only after the corresponding owner outcomes arrive:
+
+> Liaison: "Shadows accepted the decision. Planning has resumed."
 
 That is the target experience.
 
@@ -1233,17 +1265,13 @@ Project state may contain proprietary source code and designs.
 
 These should be treated separately.
 
-Potential future protections:
-
-- end-to-end encrypted personal memory,
-- local encryption keys,
-- encrypted provider credentials,
-- user-controlled retention,
-- selective sync,
-- content redaction before remote model calls,
-- local summarization before cloud transmission.
-
-The product should make data movement visible.
+Cloud reasoning requires permitted plaintext to be processed by NYLRA and the
+chosen provider. Do not promise end-to-end secrecy from those processors. Show
+data movement and recipient providers. The
+[sharing/lifecycle owner](../shadows-backend/docs/architecture.md#what-lives-where)
+defines selection, derived-context scope and revocation. Retention, redaction and
+deletion include cached summaries. Future local reasoning and encryption designs
+need their own reviewed boundaries.
 
 ---
 
@@ -1281,13 +1309,14 @@ The architecture should support both without redesigning the core.
 
 ```text
 shadows/
-    Local software-delivery runtime
+    Rust project rules, local runtime and future team server/assigned workers
 
 shadows-backend/
     Shared cloud application
     NYLRA cloud conversation, context, and personal memory
     Accounts, device trust, selected-project links, and reliable delivery
-    Future server-owned Shadows workspaces
+    Team identity/membership and deployment composition
+    Calls Rust project rules without owning their tables
 
 nylra/
     Desktop client and character experience
@@ -1439,6 +1468,9 @@ Examples:
 
 This creates a personalized operating layer.
 
+Automatic acceptance thresholds require explicit owner-enforced delegated policies.
+Learning a preference does not grant authority.
+
 ---
 
 ## 38. Delegated Policies
@@ -1456,6 +1488,9 @@ Or:
 Delegation should be explicit, scoped, reversible, and visible.
 
 The system must never infer broad approval authority from casual conversation.
+
+Attribute delegated outcomes to the policy and performing agent, not a fresh human
+confirmation. Shadows §24.6 owns that distinction.
 
 ---
 
@@ -1787,6 +1822,9 @@ The full product direction is preserved. This inventory is not an approved
 implementation sequence or a claim that any capability is implemented.
 Delivery uses complete runnable paths inside the selected architecture;
 it does not plan a rewrite when the product grows.
+The [delivery order](../shadows-backend/docs/architecture.md#14-delivery-order)
+starts with sourced text continuity, enforced assessment/confirmation, then voice
+and presence. Team work and cloud execution retain separate runtime gates.
 
 ### Foundation and trust
 
@@ -1962,7 +2000,8 @@ The user says:
 
 > "Yes."
 
-The Decision Gateway records explicit approval.
+The person confirms the exact proposal in the trusted client surface.
+The Decision Gateway then records that explicit confirmation.
 
 The shared backend delivers the confirmed response to the owning Shadows runtime.
 
@@ -1976,6 +2015,10 @@ The repeated explanation dialogue used NYLRA rather than additional Planner
 turns. Actual cost savings require measurement across the complete journey.
 
 The system remained auditable.
+
+The storage-abstraction examples illustrate a dialogue, not a recommendation to
+add a layer to Shadows. Actual proposals must satisfy its library-first and
+first-real-user rules.
 
 That is the product.
 
