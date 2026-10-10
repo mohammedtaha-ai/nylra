@@ -33,3 +33,8 @@ not local databases or live execution. See the
 
 Sibling links assume repositories named `nylra`, `shadows-backend`, and
 `shadows` are checked out beside each other.
+
+Future production assistance is described in Vision section 46 and owned by
+Shadows §17.12. The [dated research](docs/evidence/2026-10-10-production-and-hackathon-research.md)
+records AWS references and a separate optional hackathon opportunity; contest
+requirements do not define the product.

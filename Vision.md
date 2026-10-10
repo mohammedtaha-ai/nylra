@@ -1673,6 +1673,25 @@ This is especially important when agent teams scale.
 
 ## 46. Cost and Budget Awareness
 
+### Production companion
+
+NYLRA should proactively explain operational incidents from linked AWS environments:
+"The orders service has sustained pressure and increased latency. The current
+evidence points to application capacity; here is the proposed change, its cost
+assumptions and the approval needed." This is an illustrative interaction, not a
+measured diagnosis. High CPU alone must not become a confident scaling request.
+
+The conversation continues after the action: did latency recover, did errors fall,
+was the change ineffective, or is more evidence required? Scaling, reducing unused
+capacity, investigating a slow query and identifying a bad release are possible
+outcomes. NYLRA reports unknown/stale evidence and pending actions honestly.
+
+[Shadows §17.12](../shadows/docs/superpowers/specs/2026-10-01-task-contracts-and-evidence-design.md#1712-production-operations-extension)
+owns observation-to-action authority and verification. NYLRA owns explanation,
+attention and the human interaction. The feature remains part of the product
+regardless of competition entry. Voice and AWS are integrations, not new owners
+of project rules or implied permission to alter infrastructure.
+
 The Liaison can eventually understand financial context.
 
 Examples:
