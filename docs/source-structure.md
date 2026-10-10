@@ -5,6 +5,11 @@ This file owns client source placement. [Vision](../Vision.md) owns experience;
 the [shared architecture](../../shadows-backend/docs/architecture.md) owns system
 boundaries. Listed paths are future destinations, not claims of existing code.
 
+[Delivery spec](superpowers/specs/2026-10-10-nylra-delivery-design.md) and
+[initial plan](superpowers/plans/2026-10-10-nylra-initial-plan.md) define the
+Windows-first experiments and phased acceptance. This file remains the owner of
+source placement; the plans do not create parallel ownership maps.
+
 ## Selected approach
 
 Keep desktop and mobile applications in one repository, each with its normal

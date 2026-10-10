@@ -11,6 +11,8 @@ contains documentation and character reference images, not an implemented app.
 | Document | Owns |
 | --- | --- |
 | [Vision](Vision.md) | The complete companion experience and future capabilities |
+| [Delivery spec](docs/superpowers/specs/2026-10-10-nylra-delivery-design.md) | AYLUL, Windows-first experiments and client acceptance gates |
+| [Initial plan](docs/superpowers/plans/2026-10-10-nylra-initial-plan.md) | Experiment-first tasks, revised from results before dependent work |
 | [Source structure](docs/source-structure.md) | Prepared desktop/mobile layout and dependency boundaries |
 | [Contract convention](../shadows-backend/docs/contracts/README.md) | Applying source contracts to implemented modules |
 | [Shared architecture](../shadows-backend/docs/architecture.md) | Languages, hosting, integration paths, scoped context, and authority boundaries |
