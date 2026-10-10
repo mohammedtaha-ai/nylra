@@ -2,6 +2,9 @@
 
 Read [README.md](README.md), [Vision.md](Vision.md), and the
 [shared architecture](../shadows-backend/docs/architecture.md) before code.
+Read [source structure](docs/source-structure.md) for the prepared client layout
+and the [contract convention](../shadows-backend/docs/contracts/README.md) before
+adding source. Proposed paths are not an existing code map.
 
 - This repository owns desktop and mobile clients. Shared cloud domain logic
   belongs to `shadows-backend`; local execution belongs to Shadows.

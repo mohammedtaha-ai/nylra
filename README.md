@@ -11,6 +11,8 @@ contains documentation and character reference images, not an implemented app.
 | Document | Owns |
 | --- | --- |
 | [Vision](Vision.md) | The complete companion experience and future capabilities |
+| [Source structure](docs/source-structure.md) | Prepared desktop/mobile layout and dependency boundaries |
+| [Contract convention](../shadows-backend/docs/contracts/README.md) | Applying source contracts to implemented modules |
 | [Shared architecture](../shadows-backend/docs/architecture.md) | Languages, hosting, integration paths, scoped context, and authority boundaries |
 | [Agent instructions](AGENTS.md) | Source ownership, contracts, and verification workflow |
 | [Source contract template](../shadows-backend/docs/contracts/TEMPLATE.yaml) | The evidence-based structure for describing an implemented source module |
