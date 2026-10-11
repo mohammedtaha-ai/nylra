@@ -1,0 +1,10 @@
+{
+  "source": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\thinking-v1.png",
+  "target": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\thinking-v1-clean.png",
+  "source_sha256": "e1bc22c355e16ccb662f1b43381a5e9c992591c7b71068d42b10094adf8609a9",
+  "target_sha256": "56ac1a5febf3a7f3fc54d5a0a41e5becf85837648e10e3a0e6f7493727baaf48",
+  "alpha1_pixels_removed": 12029,
+  "rgb_exactly_preserved": true,
+  "alpha_at_least2_exactly_preserved": true,
+  "source_unchanged": true
+}

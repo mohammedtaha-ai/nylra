@@ -11,6 +11,11 @@ Animated AYLUL and full browser UI acceptance remain gated. The earlier
 [continuation report](docs/evidence/2026-10-11-windows-shell-continuation.md) is historical.
 No conversations, mobile or Production features are implemented.
 
+[AYLUL artwork](assets/aylul/README.md) pins the three approved expressions and
+the six prepared review candidates. Start there for the appearance handoff;
+the [dated report](docs/evidence/2026-10-12-approved-aylul-and-six-expressions.md)
+records exact assets, prompts, checks and remaining runtime gates.
+
 ## Start here
 
 | Document | Owns |

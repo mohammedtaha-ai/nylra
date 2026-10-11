@@ -1,0 +1,64 @@
+[
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\idle-v3.png",
+    "sha256": "aedeed7c6f5b8e4f56450c6aeb20af5f9525a5428221a8b7b0a04edb89239915",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      0,
+      35,
+      1250,
+      1254
+    ],
+    "alpha_above_32_bbox": [
+      266,
+      162,
+      992,
+      1051
+    ],
+    "fully_transparent_pixels": 1090517,
+    "opaque_pixels": 455,
+    "alpha_at_least250_pixels": 301248,
+    "alpha_2_to32_pixels": 110868,
+    "edge_nonzero": 68,
+    "edge_max_alpha": 1,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 1483,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": false,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\idle-v4.png",
+    "sha256": "d301b9f125e9e5986dead6db2a67742e4f4865a56ed2295be838904a2b24b48b",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      0,
+      23,
+      1242,
+      1254
+    ],
+    "alpha_above_32_bbox": [
+      228,
+      128,
+      1027,
+      1105
+    ],
+    "fully_transparent_pixels": 1051336,
+    "opaque_pixels": 11,
+    "alpha_at_least250_pixels": 353608,
+    "alpha_2_to32_pixels": 72123,
+    "edge_nonzero": 222,
+    "edge_max_alpha": 1,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 2481,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": false,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  }
+]

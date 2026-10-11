@@ -1,0 +1,15 @@
+{
+  "pack": "aylul-expressions-v1",
+  "appearanceApproval": {"status":"approved","by":"Mohammed","date":"2026-10-11","scope":"idle, listening and blocked drawings, including measured glow variation"},
+  "canvas": [1254,1254],
+  "master": "idle.png",
+  "states": [
+    {"name":"idle","file":"idle.png","sha256":"7aef454a43d3900381133014a0f866b305b80c58a78ba08652884c4351414d51","source":"../../../../docs/evidence/probes/2026-10-10-n0/native/ui/idle-v3-clean.png"},
+    {"name":"listening","file":"listening.png","sha256":"4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f","source":"../../../../docs/evidence/probes/2026-10-10-n0/native/ui/listening-v5-clean.png"},
+    {"name":"blocked","file":"blocked.png","sha256":"0c78170c617769d09a004b1a8614825f8a79a19fa8ec75e864b3aaacb00dd146","source":"../../../../docs/evidence/probes/2026-10-10-n0/native/ui/blocked-v4-clean.png"}
+  ],
+  "cleanup":"RGB preserved; only alpha=1 removed under explicit user authorization",
+  "validation":"zero alpha on all edges and outer 8 percent; source hashes match",
+  "runtimeAcceptance":"pending; appearance approval does not establish native animation or event bindings",
+  "remainingStates":["happy","speaking","thinking","working","success","sleeping"]
+}

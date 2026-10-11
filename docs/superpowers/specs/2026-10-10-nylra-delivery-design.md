@@ -20,6 +20,18 @@ hidden or animation reduced. AYLUL is optional presence, not a condition for acc
 ## 2. AYLUL asset direction
 
 Mohammed selected the **AYLUL Companion Character Reference Board.png** during N0.
+He later preferred idle-v3 and approved cleaned idle-v3, listening-v5 and blocked-v4
+after the live preview, including their measured state-lighting variation.
+[Canonical pack](../../../assets/aylul/states/v1/manifest.json) owns the accepted
+source hashes; its idle sprite is the fixed appearance reference for further work.
+The [asset continuation](../../evidence/2026-10-11-aylul-asset-continuation.md)
+establishes non-destructive alpha=1 cleanup with exact RGB preservation and zero
+alpha in the outer8% margin. Do not substitute the unselected idle-v4 redraw.
+Appearance review is closed for these three images; native motion/performance and
+event-driven presentation remain separate N1b gates. The six remaining expressions
+are prepared in the [candidate pack](../../../assets/aylul/candidates/2026-10-11/manifest.json)
+and await their own review; [dated evidence](../../evidence/2026-10-12-approved-aylul-and-six-expressions.md)
+records the selected corrected versions and measurements.
 Preserve that original unchanged. On 2026-10-11 he intentionally deleted the
 alternative Shadow Companion Design Sheet to avoid confusing the references;
 its historical original remains in Git. Use only the selected simpler silhouette.

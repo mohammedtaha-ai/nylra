@@ -1,0 +1,10 @@
+{
+  "source": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\listening-v4.png",
+  "target": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\listening-v4-clean.png",
+  "source_sha256": "a6293cf14e4cc901cdc41d4d2c98366ace65153aadf8ae7532ccf4e4f5fd626a",
+  "target_sha256": "c0943eae6faf928cd1f9c658b71c17e681dbb714c8ebcff305a5db50d2a3f9e4",
+  "alpha1_pixels_removed": 46572,
+  "rgb_exactly_preserved": true,
+  "alpha_at_least2_exactly_preserved": true,
+  "source_unchanged": true
+}

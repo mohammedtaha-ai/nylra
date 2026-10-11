@@ -125,6 +125,16 @@ original 20ms cadence budget. Renderer acceptance stays OPEN. Paired release foc
 and a real sleep/resume passed on this device; 150% cases have separate evidence.
 No second monitor is available now; mixed DPI/removal remain UNTESTED.
 
+New [asset continuation](../../evidence/2026-10-11-aylul-asset-continuation.md):
+user prefers idle-v3; its alpha-only derivative now passes outer padding while
+preserving RGB. Listening-v5 and blocked-v4 have a browser preview and passing
+padding diagnostics. Mohammed subsequently accepted their shown appearance and
+lighting variation; canonical sources are pinned in assets/aylul/states/v1.
+The [six remaining expression candidates](../../evidence/2026-10-12-approved-aylul-and-six-expressions.md)
+are prepared from this master and await separate user review. Native animation
+acceptance remains open; appearance approval
+does not imply runtime/event acceptance. Earlier raw v1/v2/v3 remain historical.
+
 Adopt the tested native baseline pins recorded in the spec/report: Tauri 2.11.5
 with its coherent locked internal graph, official single-instance 2.4.5 and
 global-shortcut 2.3.2. This is capability evidence, not a production dependency

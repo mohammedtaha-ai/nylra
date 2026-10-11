@@ -1,0 +1,188 @@
+[
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\happy-v1-clean.png",
+    "sha256": "45dc728de7a08fe0bb03fde2ac50458054691de96880d3a756b7ecdac59b7ebb",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      220,
+      103,
+      1039,
+      1104
+    ],
+    "alpha_above_32_bbox": [
+      237,
+      119,
+      1020,
+      1087
+    ],
+    "fully_transparent_pixels": 1092434,
+    "opaque_pixels": 1,
+    "alpha_at_least250_pixels": 313307,
+    "alpha_2_to32_pixels": 48438,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 0,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\speaking-v1-clean.png",
+    "sha256": "208557975878ec9d4f4d05d6103bae7aaeaf13e9f1792b293a17dee27d6e8391",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      225,
+      110,
+      1034,
+      1098
+    ],
+    "alpha_above_32_bbox": [
+      255,
+      147,
+      1000,
+      1063
+    ],
+    "fully_transparent_pixels": 1102685,
+    "opaque_pixels": 261,
+    "alpha_at_least250_pixels": 305304,
+    "alpha_2_to32_pixels": 102217,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 0,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\thinking-v1-clean.png",
+    "sha256": "56ac1a5febf3a7f3fc54d5a0a41e5becf85837648e10e3a0e6f7493727baaf48",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      221,
+      107,
+      1033,
+      1102
+    ],
+    "alpha_above_32_bbox": [
+      237,
+      121,
+      1019,
+      1088
+    ],
+    "fully_transparent_pixels": 1097319,
+    "opaque_pixels": 17,
+    "alpha_at_least250_pixels": 317328,
+    "alpha_2_to32_pixels": 46460,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 0,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\working-v1-clean.png",
+    "sha256": "6d3683b673a196804e92f8dd03987e4904f730ffda83f259ba4cecf0c870a171",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      176,
+      66,
+      1081,
+      1146
+    ],
+    "alpha_above_32_bbox": [
+      195,
+      88,
+      1061,
+      1125
+    ],
+    "fully_transparent_pixels": 1025942,
+    "opaque_pixels": 28,
+    "alpha_at_least250_pixels": 417047,
+    "alpha_2_to32_pixels": 67878,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 2924,
+    "outer8percent_above32": 556,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\success-v1-clean.png",
+    "sha256": "cec1f3271a2da8ef78a28cd5d1ce1539b9c17b43025e37d920d80f705c73b753",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      227,
+      97,
+      1048,
+      1097
+    ],
+    "alpha_above_32_bbox": [
+      252,
+      122,
+      1036,
+      1072
+    ],
+    "fully_transparent_pixels": 1097990,
+    "opaque_pixels": 89,
+    "alpha_at_least250_pixels": 306656,
+    "alpha_2_to32_pixels": 70150,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 84,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  },
+  {
+    "file": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\sleeping-v1-clean.png",
+    "sha256": "07a11f39bb2759f2d7c5843efb0eeef973052c8148a30947a21520164215d064",
+    "size": [
+      1254,
+      1254
+    ],
+    "raw_alpha_bbox": [
+      221,
+      105,
+      1039,
+      1103
+    ],
+    "alpha_above_32_bbox": [
+      243,
+      121,
+      1016,
+      1081
+    ],
+    "fully_transparent_pixels": 1091432,
+    "opaque_pixels": 66,
+    "alpha_at_least250_pixels": 308573,
+    "alpha_2_to32_pixels": 64102,
+    "edge_nonzero": 0,
+    "edge_max_alpha": 0,
+    "edge_above32": 0,
+    "outer8percent_nonzero": 0,
+    "outer8percent_above32": 0,
+    "strict_edge_pass": true,
+    "note": "Alpha >32 is a diagnostic only; it does not replace the original zero-alpha padding criterion."
+  }
+]

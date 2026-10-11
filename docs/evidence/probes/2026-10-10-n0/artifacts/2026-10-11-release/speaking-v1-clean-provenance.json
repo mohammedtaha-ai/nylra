@@ -1,0 +1,10 @@
+{
+  "source": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\speaking-v1.png",
+  "target": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\speaking-v1-clean.png",
+  "source_sha256": "0db8067765daaaeab4da53ad75cf14d83b837e94a5906159f5c4ecd743132bb2",
+  "target_sha256": "208557975878ec9d4f4d05d6103bae7aaeaf13e9f1792b293a17dee27d6e8391",
+  "alpha1_pixels_removed": 13181,
+  "rgb_exactly_preserved": true,
+  "alpha_at_least2_exactly_preserved": true,
+  "source_unchanged": true
+}
