@@ -128,12 +128,23 @@ and logout behavior. The verifier and session handle must stay out of webview IP
 Backend identity validation, ticket validity/replay, account/device mapping and
 session revocation remain in shadows-backend.
 
-Native fixtures prove local plumbing only. The backend's current proposed service
-interfaces are not an exported wire schema. Do not adapt the earlier direct-OIDC
-B0 fixture into a competing protocol. Enable network authentication only after
-consuming the backend-owned versioned contract and matching fixtures. On restart,
-stored bytes indicate local material, not authentication; on logout, local clearing
-does not establish backend/provider revocation.
+NYLRA now consumes backend auth-v1 1.1.0 and its safe fixtures in native Rust.
+The main surface invokes a fixed action set and receives only a credential-free
+account projection. reqwest 0.12.28 uses verified HTTPS with an explicit public
+local CA; requests have a 15-second bound, no redirect following and bounded bodies.
+The current accepted endpoint is the local shadows-local realm; production issuer
+configuration remains separate. DPAPI atomically protects an origin-bound envelope
+in the application's data directory, retaining session and enrollment independently.
+On restart, stored bytes never establish identity without GET session acceptance.
+401 refuses the identity projection while preserving enrollment; 503 permits retry.
+Only first enrollment or explicit user-selected new enrollment sends mode new;
+ordinary reauthentication proves reuse. No failure silently falls back to new.
+Logout clears a handle only after backend confirmation, preserves enrollment,
+and reports provider completion as pending after browser handoff. Device revoke
+clears proof only after successful backend surrender. Native cancellation closes
+the listener, with bounded in-flight requests and best-effort revoke if already issued.
+The [joint evidence](../../evidence/2026-10-11-joint-native-auth.md) separates actual
+native/Docker acceptance, system-browser launch and remaining full UI acceptance.
 
 ## 4. Windows architecture and interaction
 

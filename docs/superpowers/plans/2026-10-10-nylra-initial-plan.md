@@ -73,7 +73,8 @@ Concrete continuation status:
 - [x] Local React/Tauri main shell, close/hide/shortcut and real tray/menu actions.
 - [x] Client verifier, loopback listener, reviewed-origin browser launcher and DPAPI primitives with fixture-based process restart/local clear evidence.
 - [x] Fix DPI-expanded main-window size; actual 150% and 175% final-source trials.
-- [ ] Consume backend's versioned native-login contract/fixtures and wire authenticated restart/logout. Joint login stays pending.
+- [x] Consume auth-v1 1.1.0 fixtures in Rust; wire session checks, enrollment reuse, cancellation and logout; verify native consumer against local Docker and a fresh process.
+- [ ] Complete full system-browser/app UI login, restart, cancellation and logout acceptance with browser trust configured correctly. See joint native evidence; automated form-driver acceptance alone does not close this gate.
 - [ ] Accept assets/motion and implement N1b; complete unavailable mixed-DPI/removal and 200% cases when hardware/settings permit.
 
 [Backend plan](../../../../shadows-backend/docs/superpowers/plans/2026-10-10-backend-initial-plan.md)

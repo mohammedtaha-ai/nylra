@@ -43,7 +43,7 @@ gaps:
   - at: NativeReturn
     gap: Native material has no explicit memory zeroization. It is neither logged nor serialized but remains in process memory for its lifetime.
 open_questions:
-  - Publish and pin the backend-owned native-login wire schema, return/error fixtures, deployment origin and session-validation/logout operations before adding an adapter.
+  - The auth module now consumes backend auth-v1 1.1.0; browser UI acceptance and production issuer configuration retain their own closing triggers.
 tests:
   - name: client_binding_is_random_and_s256
     checks: Two 43-character verifiers differ; challenge matches SHA-256; URI is fixed-path IPv4 loopback with a nonzero port.

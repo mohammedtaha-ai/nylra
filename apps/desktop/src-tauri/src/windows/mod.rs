@@ -59,7 +59,7 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let menu = tauri::menu::Menu::with_items(app, &[&show, &quit])?;
     // Neutral application icon, not substitute character artwork.
     let mut pixels = vec![0u8; 16 * 16 * 4];
-    for p in pixels.chunks_exact_mut(4) {
+    for p in pixels.as_chunks_mut::<4>().0 {
         p.copy_from_slice(&[168, 116, 225, 255]);
     }
     tauri::tray::TrayIconBuilder::with_id("nylra")

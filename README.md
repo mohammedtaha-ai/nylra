@@ -5,8 +5,10 @@ AYLUL is its companion character.
 
 **Status:** Product vision and agreements recorded. A main-only Windows shell and
 local native-login primitives are implemented in [apps/desktop](apps/desktop/README.md).
-Animated AYLUL, backend login and joint acceptance remain gated; see the dated
-[continuation report](docs/evidence/2026-10-11-windows-shell-continuation.md).
+Backend auth-v1 login is wired into Rust with protected enrollment/session storage;
+see [joint authentication evidence](docs/evidence/2026-10-11-joint-native-auth.md).
+Animated AYLUL and full browser UI acceptance remain gated. The earlier
+[continuation report](docs/evidence/2026-10-11-windows-shell-continuation.md) is historical.
 No conversations, mobile or Production features are implemented.
 
 ## Start here
