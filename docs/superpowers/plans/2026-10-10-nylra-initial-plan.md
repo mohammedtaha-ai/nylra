@@ -9,7 +9,11 @@ then complete voice, mobile continuity and operational incident experiences.
 project authority remain in their existing owners.
 **Tech Stack:** React/TypeScript/Vite/Tauri 2, renderer decided by N0; Flutter later.
 **Spec:** [NYLRA delivery](../specs/2026-10-10-nylra-delivery-design.md).
-**Status:** Initial plan, not executed. Windows-first choice confirmed by the user.
+**Status:** N0 experiments run on 2026-10-10 and 2026-10-11. Full N0 exit
+OPEN. Continue on `codex/windows-shell-n0`; preserve historical probes. The user
+authorized local commits on 2026-10-11, but no push or deployment.
+N1a main shell/local native primitives are implemented; joint login and N1b remain
+unaccepted. See [continuation evidence](../../evidence/2026-10-11-windows-shell-continuation.md).
 
 ## Global constraints
 
@@ -30,6 +34,48 @@ project authority remain in their existing owners.
 
 ## Coordination
 
+### Separate capability and identity acceptance
+
+| Gate | Owner | Evidence required / dependency |
+| --- | --- | --- |
+| Windows capability acceptance | NYLRA N0/N1 | Actual native windows, foreground/tray actions, release CPU/memory, visibility, supported device scenarios and inspected assets. No Linux identity prerequisite for these local trials. |
+| Linux backend identity acceptance | shadows-backend B0/B1 | OIDC/provider checks, backend-owned native-return contract and fixtures, persisted account/device/session validation and revocation. Windows hardware does not block backend acceptance. |
+| Joint end-to-end login | NYLRA + shadows-backend | Both runnable sides; actual system browser, backend-mediated ticket return, native verifier redemption, protected persistence, restart validation and logout/revocation. Fixture evidence cannot close this gate. |
+
+Native plumbing may be tested independently with an explicitly synthetic fixture.
+The backend currently offers proposed service interfaces in its delivery spec,
+not a versioned native-login HTTP schema or matching conformance fixtures. Do not
+invent HTTP paths, error enums, ticket query rules or backend identity policy.
+Pin and consume those owner artifacts when published; until then no login adapter
+is enabled. The existing B0 public-client OIDC fixture is not the proposed B1
+backend-mediated protocol.
+
+### N1 dependency split for this authorized slice
+
+N1a is the keyboard-accessible React/Tauri main shell, native tray/window lifecycle
+and local browser/listener/verifier/protected-store plumbing. These do not depend
+on shipping character art or a running Linux backend. Implement and verify them
+without claiming a signed-in session from a stored handle.
+
+N1b is the animated transparent companion. Failed alpha/alignment/state-readability
+and performance prerequisites must close before this dependent implementation.
+Missing real mixed-DPI/removal/suspend cases remain explicitly unaccepted; they
+must not be disguised as passing by synthetic geometry or messages. N1a evidence
+does not make N1b or the full Windows gate complete.
+
+Implemented N1a uses React 19.3.0/React DOM 19.3.0, Vite 8.3.4, TypeScript 7.0.2,
+frontend Tauri API 2.11.0 and the previously tested coherent native graph. Native
+return/verifier/DPAPI primitives have fixture evidence only. Sign-in stays disabled
+pending backend wire artifacts. Main tray activation and keyboard hide were tested.
+
+Concrete continuation status:
+
+- [x] Local React/Tauri main shell, close/hide/shortcut and real tray/menu actions.
+- [x] Client verifier, loopback listener, reviewed-origin browser launcher and DPAPI primitives with fixture-based process restart/local clear evidence.
+- [x] Fix DPI-expanded main-window size; actual 150% and 175% final-source trials.
+- [ ] Consume backend's versioned native-login contract/fixtures and wire authenticated restart/logout. Joint login stays pending.
+- [ ] Accept assets/motion and implement N1b; complete unavailable mixed-DPI/removal and 200% cases when hardware/settings permit.
+
 [Backend plan](../../../../shadows-backend/docs/superpowers/plans/2026-10-10-backend-initial-plan.md)
 owns J1 wire artifacts and names J0-J3. N0/B0 can proceed independently. N1 is a
 local shell; N2 waits for J1/B3 and real Shadows context for J2 acceptance. N3 waits
@@ -41,8 +87,13 @@ dependency by making NYLRA approve locally.
 **Inputs:** root reference-board and design-sheet PNGs.
 **Output:** `docs/evidence/<run-date>-aylul-windows-probes.md`; amend this plan/spec.
 **Temporary artifacts:** isolated asset/render/native trial, not product scaffolding.
+**Evidence:** [Windows probe report](../../evidence/2026-10-10-aylul-windows-probes.md).
+The [dated follow-up](../../evidence/2026-10-11-aylul-windows-probes.md) corrects
+historical comparison conditions and records matched-window trials at 144Hz.
+**Retention:** keep [probe source](../../evidence/probes/2026-10-10-n0/README.md)
+until reviewer inspection; no deletion of the only reproduction.
 
-- [ ] Preserve originals and compare the two silhouettes at 64/96/128 logical pixels.
+- [x] Preserve originals and compare the two silhouettes at 64/96/128 logical pixels.
 - [ ] Prepare representative original transparent idle/listening/blocked states
   with equal pivot/scale; inspect alpha edges on light and dark backgrounds.
 - [ ] Compare browser raster animation with PixiJS only if layered animation needs
@@ -52,13 +103,43 @@ dependency by making NYLRA approve locally.
 - [ ] Prove transparent Tauri window, drag, restricted click-through, tray, single
   instance, shortcut, focus and suspend/resume. Test 100/150/200 percent DPI and
   display removal with main/companion surfaces.
-- [ ] Review exact Coucou source/license before any reuse; record borrowed code
+- [x] Review exact Coucou source/license before any reuse; record borrowed code
   provenance/notices separately from original AYLUL art. No blanket fork.
 - [ ] Select dependencies and asset pipeline from evidence, pin versions, replace
   later task assumptions and record any unavailable physical-device scenario.
 
 **Exit:** accepted asset/render/native approach and revised tasks. A static board
 preview cannot close animation or native-window acceptance.
+
+**Observed status:** user selected the simpler reference board. Two original
+transparent asset trials were produced and inspected but failed alignment/padding
+and expression distinction; keep the asset checklist open. Canvas and CSS raster
+trials have 150 retained CPU/memory samples and rAF cadence measurements, but both
+exceed the provisional active CPU budget; final renderer acceptance is open.
+No layered requirement justified PixiJS; no authored Rive interaction was available.
+
+Continuation: reject retained assets as production inputs. The capped Release
+canvas run passed provisional CPU/memory/hidden-work thresholds but failed the
+original 20ms cadence budget. Renderer acceptance stays OPEN. Paired release focus
+and a real sleep/resume passed on this device; 150% cases have separate evidence.
+No second monitor is available now; mixed DPI/removal remain UNTESTED.
+
+Adopt the tested native baseline pins recorded in the spec/report: Tauri 2.11.5
+with its coherent locked internal graph, official single-instance 2.4.5 and
+global-shortcut 2.3.2. This is capability evidence, not a production dependency
+approval. Explicit native animation visibility is required; default show/hide and
+the nonfocusable mitigation stole focus. Parking/no-activate show remain alternatives
+until complete device lifecycle proof. Actual tray Left Down/Up delivery and an
+immediate paired no-activate visibility trial passed in the follow-up; tray menu
+activation, actual 150/200% and mixed DPI, display removal and suspend/resume remain
+unresolved. No broad native checklist
+item is marked complete from partial trials.
+
+**Closing trigger before N1b:** reviewer accepts consistent/provenanced assets,
+release performance and budgets, full tray activation and one focus-preserving
+visibility method with the missing device scenarios exercised. Turning and other
+expressions remain asset work; no N1 source was scaffolded by these experiments.
+The subsequent continuation implements independent N1a only; N1b remains gated.
 
 ### N1: Working Windows companion shell
 
@@ -67,8 +148,16 @@ preview cannot close animation or native-window acceptance.
 `apps/desktop/src-tauri/src/{lib,main}.rs`, native `windows/` and `commands/`,
 `apps/desktop/src-tauri/capabilities/`, `assets/aylul/manifest.json`,
 `apps/desktop/tests/companion-lifecycle.test.ts`.
-**Consumes:** N0 choices. **Produces:** companion/main surfaces and pure visual
-state transitions; exact interface names are fixed in N0's amended plan.
+**Consumes:** reviewer-accepted N0 choices; currently blocked by the open N0 exit.
+This consumption applies to N1b. N1a consumes only inspected native primitives and
+the owner's proposed native return location/verifier responsibilities; its transport
+adapter waits for the versioned backend contract. No nine-state pack is required
+or claimed by a main-only shell.
+**Produces:** companion/main surfaces and pure visual state transitions; fix exact
+interface names in the reviewed N1 design after N0 choices close. Probe controls
+are not product interfaces. Use the selected reference board, explicit rendering
+visibility and a proven focus policy; do not inherit an untested renderer or tray
+activation method from the probe.
 
 - [ ] Write failures for hidden animation, rapid drag/click, missing display,
   stale visual event, keyboard navigation and reduced motion.

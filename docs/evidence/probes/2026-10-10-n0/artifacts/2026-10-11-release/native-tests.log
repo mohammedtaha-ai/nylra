@@ -1,0 +1,31 @@
+   Compiling nylra-desktop v0.1.0 (E:\Globalprojects\nylra\apps\desktop\src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.90s
+     Running unittests src\lib.rs (apps\desktop\src-tauri\target\debug\deps\nylra_desktop-0672f50f173f5b9f.exe)
+
+running 11 tests
+test windows::placement::tests::lost_window_and_one_pixel_sliver_recover_a_usable_title_bar ... ok
+test native_login::tests::browser_refuses_unreviewed_or_unsafe_url_before_launch ... ok
+test native_login::tests::callback_rejects_wrong_method_path_fragment_and_duplicate_host ... ok
+test windows::placement::tests::accessible_window_on_negative_monitor_stays_put ... ok
+test windows::placement::tests::dpi_enlarged_window_fits_physical_work_area ... ok
+test native_login::tests::dpapi_roundtrip_and_tamper_refusal ... ok
+test native_login::tests::client_binding_is_random_and_s256 ... ok
+test native_login::tests::restart_load_then_local_logout_clears_material ... ok
+test native_login::tests::protected_store_replaces_material_and_refuses_corruption ... ok
+test native_login::tests::cancellation_closes_native_listener ... ok
+test native_login::tests::loopback_ignores_foreign_host_and_returns_one_owned_callback ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.08s
+
+     Running unittests src\main.rs (apps\desktop\src-tauri\target\debug\deps\nylra_desktop-eb2db5b97e03e9a0.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests nylra_desktop
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

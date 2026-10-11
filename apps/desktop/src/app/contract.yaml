@@ -1,0 +1,14 @@
+name: desktop-main-presentation
+version: 1
+status: current
+source: apps/desktop/src/app
+responsibility: Render the available local shell and explicitly unavailable sign-in/companion, with keyboard hide and a local failure alert.
+public_api:
+  Shell: Render no account identity or accepted project outcome; invoke only the platform hide wrapper.
+obligations:
+  - rule: Main remains usable without character artwork or backend access.
+    tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'
+    note: Current native screenshot and Tab/Space hide action; full screen-reader/RTL testing is missing.
+gaps:
+  - at: Shell
+    gap: No sign-in flow or signed-in projection; backend-owned wire schema and conformance fixtures are not available.

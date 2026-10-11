@@ -1,0 +1,15 @@
+name: main-window-command-boundary
+version: 1
+status: current
+source: apps/desktop/src-tauri/src/commands
+responsibility: Own the only shell IPC command, hiding the invoking main surface.
+public_api:
+  hide_main: Require main window label; call native hide; return a stable local error without OS details.
+external_types:
+  - tauri::WebviewWindow
+obligations:
+  - rule: Keyboard action can hide the main surface through the UI wrapper and IPC.
+    tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'
+  - rule: Other surface labels cannot use this command.
+    tested_by: none
+    note: Label check exists; no second product surface is built for a negative native test.

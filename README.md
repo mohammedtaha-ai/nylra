@@ -3,8 +3,11 @@
 Cloud-backed human liaison with a desktop companion and a mobile application.
 AYLUL is its companion character.
 
-**Status:** Product vision and agreements recorded. This repository currently
-contains documentation and character reference images, not an implemented app.
+**Status:** Product vision and agreements recorded. A main-only Windows shell and
+local native-login primitives are implemented in [apps/desktop](apps/desktop/README.md).
+Animated AYLUL, backend login and joint acceptance remain gated; see the dated
+[continuation report](docs/evidence/2026-10-11-windows-shell-continuation.md).
+No conversations, mobile or Production features are implemented.
 
 ## Start here
 

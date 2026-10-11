@@ -1,6 +1,7 @@
 # NYLRA source organization
 
-Date: 2026-10-10. Status: prepared design for review; no source is scaffolded.
+Date: 2026-10-10. Updated: 2026-10-11. Status: layout design; the implemented
+main-only Windows slice is mapped in [the inspected code map](codebase/README.md).
 This file owns client source placement. [Vision](../Vision.md) owns experience;
 the [shared architecture](../../shadows-backend/docs/architecture.md) owns system
 boundaries. Listed paths are future destinations, not claims of existing code.

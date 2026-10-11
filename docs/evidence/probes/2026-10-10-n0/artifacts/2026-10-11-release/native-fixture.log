@@ -1,0 +1,5 @@
+PASS fixture: save; no authentication or remote revocation claim
+PASS fixture: restart; no authentication or remote revocation claim
+PASS fixture: logout; no authentication or remote revocation claim
+PASS fixture: cleared; no authentication or remote revocation claim
+PASS fixture: system browser reached owned native listener; no backend login occurred

@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>N0 AYLUL comparisons</title>
+<style>body{font:15px system-ui;background:#ddd;margin:12px}h2{font-size:18px;margin:8px 0}section{display:flex;gap:12px}figure{margin:0;padding:6px;background:white}canvas{display:block}small{display:block} .dark{background:#15151b;color:white}</style>
+<h2>Reference silhouette crops (opaque board excerpts, equal square region; no asset extraction)</h2>
+<section id="boards"></section><h2>Generated trial atlas • light and dark • fixed equal cell/pivot</h2><section id="trials"></section>
+<p>NON-PRODUCT • 64 / 96 / 128 CSS pixels at actual devicePixelRatio. Generated expressions alone do not establish listening/blocked product events.</p>
+<script>
+const refs=['board-reference.png','board-rich.png'];
+async function load(src){const i=new Image();i.src=src;await i.decode();return i;}
+function canvas(parent,size){const c=document.createElement('canvas');c.width=size*devicePixelRatio;c.height=size*devicePixelRatio;c.style.width=size+'px';c.style.height=size+'px';parent.append(c);const ctx=c.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);return ctx;}
+(async()=>{for(const [j,src] of refs.entries()){const i=await load(src);const f=document.createElement('figure');f.innerHTML='<small>'+src+'</small>';boards.append(f);for(const s of [64,96,128]){const ctx=canvas(f,s);ctx.drawImage(i,36*i.width/1536,404*i.height/1024,142*i.width/1536,164*i.height/1024,(s-s*142/164)/2,0,s*142/164,s);f.append(document.createTextNode(s+'px'));}}
+const i=await load(location.search.includes('v2')?'trial-atlas-v2.png':'trial-atlas.png');for(const dark of [false,true]){const f=document.createElement('figure');if(dark)f.className='dark';f.innerHTML='<small>'+(dark?'Dark':'Light')+' • idle/listening/blocked</small>';trials.append(f);for(const s of [64,96,128]){const row=document.createElement('section');f.append(row);for(let j=0;j<3;j++)canvas(row,s).drawImage(i,j*i.width/3,0,i.width/3,i.height,(s-s*142/164)/2,0,s*142/164,s);f.append(document.createTextNode(s+'px'));}}})();
+</script>

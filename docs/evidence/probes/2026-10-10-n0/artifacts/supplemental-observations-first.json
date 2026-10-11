@@ -1,0 +1,27 @@
+[
+  {
+    "Scenario": "park-restore-focus",
+    "Before": 8391846,
+    "After": 8391846
+  },
+  {
+    "Scenario": "ShowWindow-SW_SHOWNOACTIVATE",
+    "Before": 8391846,
+    "After": 8391846,
+    "PreviouslyVisible": false
+  },
+  {
+    "Title": "N0 Synthetic Main",
+    "Handle": 8391846,
+    "Left": 60,
+    "Top": 60,
+    "Width": 656,
+    "Height": 519,
+    "DPI": 96
+  },
+  {
+    "Scenario": "tray-shell-click",
+    "Status": "blocked",
+    "Reason": "Probe icon not exposed by shell UI Automation in current notification area; no overflow or unrelated icons changed"
+  }
+]

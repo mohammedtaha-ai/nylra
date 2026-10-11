@@ -1,6 +1,6 @@
 # NYLRA delivery design
 
-Date: 2026-10-10. Status: initial specification requested by Mohammed.
+Date: 2026-10-10. Updated: 2026-10-11. Status: N0 measured; acceptance exit OPEN.
 Windows first, mobile afterward. Libraries and rendering choices are evaluated at
 the start; initial plans must change to follow the evidence before dependent work.
 
@@ -19,9 +19,11 @@ hidden or animation reduced. AYLUL is optional presence, not a condition for acc
 
 ## 2. AYLUL asset direction
 
-Preserve both original root PNGs. Use the Companion Character Reference Board as
-the proposed small-size silhouette and the Shadow Companion Design Sheet for richer
-detail. Evaluate both at the same real display sizes before finalizing the choice.
+Mohammed selected the **AYLUL Companion Character Reference Board.png** during N0.
+Preserve that original unchanged. On 2026-10-11 he intentionally deleted the
+alternative Shadow Companion Design Sheet to avoid confusing the references;
+its historical original remains in Git. Use only the selected simpler silhouette.
+Both were compared at 64/96/128 logical pixels on the current 100% Windows display.
 They are reference boards, not animation atlases; do not ship the board as a sprite.
 
 Prepare original transparent production assets with fixed canvas/pivot/scale,
@@ -59,8 +61,79 @@ provenance. Never copy its protected Mochi character, branding, sounds or animat
 Use native/window patterns only where they satisfy NYLRA's capabilities and trust.
 
 **Exit:** choose renderer/native libraries from results, amend this spec and plan,
-pin dependencies and record rejected alternatives. Delete disposable probe sources
-after their evidence is recorded, retaining the source revision where applicable.
+pin dependencies and record rejected alternatives. Retain reproducible non-product
+probe sources until reviewer inspection and explicit archival/removal approval.
+
+### N0 observations and remaining gates
+
+[Dated evidence](../../evidence/2026-10-10-aylul-windows-probes.md) records the
+2026-10-10 run; [follow-up evidence](../../evidence/2026-10-11-aylul-windows-probes.md)
+records actual 2026-10-11 trials. N0's exit is **OPEN**.
+No product source or later task was implemented.
+That statement describes the earlier dated probes. The later authorized
+[continuation](../../evidence/2026-10-11-windows-shell-continuation.md) implements
+the independent N1a main shell and local login primitives; N1b/joint login stay OPEN.
+
+- Browser raster remains the minimal experiment baseline. Canvas and CSS atlas
+  animation both displayed three synthetic states, but active CPU exceeded the
+  provisional budget. The historical comparison had different window conditions;
+  the matched follow-up still exceeded the budget on the current 144Hz display.
+  Final renderer selection closes only after accepted art, release profiling,
+  presentation-timing evidence and a reviewer-approved performance budget.
+- Two generated transparent trials failed alignment/padding and listening-state
+  distinction. Neither is a shipping asset. Close asset authoring/provenance with
+  approved consistent three-state samples before producing the complete nine-state
+  pack. Turning/directional animation and other expressions remain untested.
+- No layered need justified PixiJS. Rive remains gated on an available authoring
+  workflow and one original interaction; its runtime was not tested.
+- Tested native baseline: Tauri 2.11.5, build/macros/codegen/plugin 2.6.3, utils
+  2.9.3, runtime 2.11.3 and runtime-wry 2.11.4; official single-instance 2.4.5 and
+  global-shortcut 2.3.2. Preserve the probe lockfile; broad internal version ranges
+  resolved a graph that failed compilation. These pins do not select untested
+  React/Vite dependencies or establish production readiness.
+- Native hide did not update document.hidden in the trial. Explicit native
+  visibility signaling is required to cancel animation work. Default hide/show
+  stole focus even after set_focusable(false); reject that attention policy.
+  Parking and SW_SHOWNOACTIVATE preserved focus in isolated probes. Select a final
+  method only after combined rendering/visibility/monitor/suspend lifecycle proof.
+- Transparency, simple drag, stationary rectangular click-through, duplicate
+  launch, shortcut and one keyboard action passed narrow native trials. Tray API
+  construction and actual owned Left Down/Up click delivery passed in the follow-up.
+  Tray menu activation remains unverified. No-activate show paired with explicit
+  rendering visibility preserved foreground in the immediate follow-up test;
+  complete display/suspend lifecycle still gates final native adoption.
+- Real 150/200% and mixed DPI, physical display removal and suspend/resume are
+  still gated on corresponding device evidence. Resizing a 96-DPI window to
+  128/192/256 pixels is not a DPI test. Full RTL/accessibility and real OS reduced
+  motion remain unverified.
+- Coucou source snapshots and complete license notices are retained at the pinned
+  revision in the report. No Coucou implementation was imported into the probe and
+  no protected character/media was copied.
+
+The animated companion implementation (N1b) waits for closure of its N0
+asset/render/native gates. The authorized independent N1a main shell and native
+login plumbing can proceed without shipping rejected character art. This is not
+closure of the full N0 or Windows acceptance gate.
+Unresolved choices must not become default libraries, fake passing checks or
+speculative product interfaces.
+
+### Identity acceptance ownership
+
+Windows capability acceptance is NYLRA-owned. Linux identity/provider/session
+acceptance is shadows-backend-owned. Joint login acceptance follows only after
+both sides run together. NYLRA owns system-browser launch, a listener bound only
+to IPv4 127.0.0.1 with an ephemeral port and `/oidc-return`, a locally generated
+S256 return verifier, OS-protected opaque-session persistence, restart validation
+and logout behavior. The verifier and session handle must stay out of webview IPC.
+Backend identity validation, ticket validity/replay, account/device mapping and
+session revocation remain in shadows-backend.
+
+Native fixtures prove local plumbing only. The backend's current proposed service
+interfaces are not an exported wire schema. Do not adapt the earlier direct-OIDC
+B0 fixture into a competing protocol. Enable network authentication only after
+consuming the backend-owned versioned contract and matching fixtures. On restart,
+stored bytes indicate local material, not authentication; on logout, local clearing
+does not establish backend/provider revocation.
 
 ## 4. Windows architecture and interaction
 

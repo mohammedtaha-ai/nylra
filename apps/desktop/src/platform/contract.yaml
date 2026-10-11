@@ -1,0 +1,10 @@
+name: desktop-window-invocation
+version: 1
+status: current
+source: apps/desktop/src/platform
+responsibility: Isolate the one typed frontend invocation for local shell hiding.
+public_api:
+  hideToTray: Invoke hide_main and preserve failure as a rejected Promise for the presentation caller.
+obligations:
+  - rule: The keyboard hide action reaches native hide_main.
+    tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'

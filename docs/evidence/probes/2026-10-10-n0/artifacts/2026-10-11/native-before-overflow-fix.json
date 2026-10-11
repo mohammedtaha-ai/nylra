@@ -1,0 +1,15 @@
+[
+  {
+    "Scenario": "native-hide-noactivate-show",
+    "Before": 2297848,
+    "After": 459060,
+    "FocusPreserved": false
+  },
+  {
+    "Scenario": "tray-shell-menu",
+    "NativeRect": "Ok(Some(Rect { position: Physical(PhysicalPosition { x: 1670, y: 1032 }), size: Physical(PhysicalSize { width: 32, height: 48 }) }))",
+    "MenuExposed": false,
+    "RecordedEvents": 0,
+    "Passed": false
+  }
+]
