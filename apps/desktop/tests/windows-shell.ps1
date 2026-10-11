@@ -1,0 +1,73 @@
+param([string]$RunName='2026-10-11-release')
+# Real Windows shell acceptance. No direct invocation of tray callbacks.
+$ErrorActionPreference='Stop'
+$root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
+$probe=Join-Path $root 'docs/evidence/probes/2026-10-10-n0'
+$out=Join-Path $probe "artifacts/$RunName"
+New-Item -ItemType Directory -Force $out|Out-Null
+if(Test-Path (Join-Path $out 'shell-observations.json')){throw 'Use a fresh RunName to preserve evidence'}
+. (Join-Path $probe 'windows-support.ps1')
+Add-Type -AssemblyName UIAutomationClient
+Add-Type -AssemblyName UIAutomationTypes
+Add-Type @'
+using System;using System.Runtime.InteropServices;
+public class NylraShell {
+ [StructLayout(LayoutKind.Sequential)]public struct Rect {public int L,T,R,B;}
+ [StructLayout(LayoutKind.Sequential)]public struct MonitorInfo {public int Size;public Rect Monitor;public Rect Work;public uint Flags;}
+ [DllImport("user32.dll")]public static extern IntPtr MonitorFromWindow(IntPtr h,uint flags);
+ [DllImport("user32.dll")]public static extern bool GetMonitorInfoW(IntPtr h,ref MonitorInfo info);
+ [DllImport("user32.dll")]public static extern bool IsWindowVisible(IntPtr h);
+ [DllImport("user32.dll")]public static extern bool PostMessageW(IntPtr h,uint msg,IntPtr w,IntPtr l);
+}
+'@
+function Find-OwnedButton([string]$Name) {
+ $nameCondition=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),$Name
+ $typeCondition=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::ControlTypeProperty),([Windows.Automation.ControlType]::Button)
+ $condition=New-Object Windows.Automation.AndCondition $nameCondition,$typeCondition
+ [Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$condition)
+}
+function Shortcut {
+ foreach($key in @(0x11,0x12,0x10,0x7B)){[N0Win]::keybd_event($key,0,0,[UIntPtr]::Zero)}
+ foreach($key in @(0x7B,0x10,0x12,0x11)){[N0Win]::keybd_event($key,0,2,[UIntPtr]::Zero)}
+ Start-Sleep -Milliseconds 700
+}
+$exe=Join-Path $probe 'target/release/nylra-desktop.exe'
+$p=Start-Process $exe -PassThru -WindowStyle Hidden
+$results=[Collections.Generic.List[object]]::new()
+try {
+ Start-Sleep -Seconds 4;$w=Get-N0Rect 'NYLRA';$h=[IntPtr]$w.Handle
+ $monitor=New-Object NylraShell+MonitorInfo;$monitor.Size=[Runtime.InteropServices.Marshal]::SizeOf($monitor)
+ if(![NylraShell]::GetMonitorInfoW([NylraShell]::MonitorFromWindow($h,2),[ref]$monitor)){throw 'Native work area unavailable'}
+ $fits=$w.Left -ge $monitor.Work.L -and $w.Top -ge $monitor.Work.T -and ($w.Left+$w.Width) -le $monitor.Work.R -and ($w.Top+$w.Height) -le $monitor.Work.B
+ $results.Add([pscustomobject]@{Scenario='window-fits-native-work-area';Passed=$fits;Window=$w;WorkArea=$monitor.Work})
+ if(!$fits){throw 'Main window extends outside native work area'}
+ $results.Add([pscustomobject]@{Scenario='native-startup';Window=$w;Visible=[NylraShell]::IsWindowVisible($h);SHA256=(Get-FileHash $exe).Hash})
+ Save-N0Window 'NYLRA' (Join-Path $out 'shell-main.png')|Out-Null
+ [NylraShell]::PostMessageW($h,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 700
+ if([NylraShell]::IsWindowVisible($h)){throw 'Native close did not hide to tray'}
+ $icon=Find-OwnedButton 'NYLRA';$overflowOpened=$false
+ if(!$icon){foreach($name in @('Show Hidden Icons','Show hidden icons','Hidden icon menu')){$overflow=Find-OwnedButton $name;if($overflow){$r=$overflow.Current.BoundingRectangle;Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2));$overflowOpened=$true;break}};$icon=Find-OwnedButton 'NYLRA'}
+ if(!$icon){$results.Add([pscustomobject]@{Scenario='actual-tray-left-click';Passed=$false;Reason='Owned notification-area Button not exposed'});Shortcut}
+ else {
+  $r=$icon.Current.BoundingRectangle;$x=[int]($r.Left+$r.Width/2);$y=[int]($r.Top+$r.Height/2)
+  Click-N0 $x $y;Start-Sleep -Milliseconds 700
+  $passed=[NylraShell]::IsWindowVisible($h) -and [N0Win]::GetForegroundWindow().ToInt64() -eq $w.Handle
+  $results.Add([pscustomobject]@{Scenario='actual-tray-left-click';IconName=$icon.Current.Name;Click=@($x,$y);Passed=$passed})
+  if(!$passed){throw 'Actual tray click failed to restore/focus main'}
+ }
+ if($overflowOpened){[N0Win]::keybd_event(27,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(27,0,2,[UIntPtr]::Zero)}
+ foreach($i in 1..10){[NylraShell]::PostMessageW($h,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 250;if([NylraShell]::IsWindowVisible($h)){throw 'Hide cycle failed'};Shortcut;if(![NylraShell]::IsWindowVisible($h)){throw 'Shortcut restore failed'}}
+ $results.Add([pscustomobject]@{Scenario='close-hide-shortcut-restore';Cycles=10;Passed=$true})
+ # Only enabled action is Hide to tray; real Tab+Space exercises the UI wrapper/IPC.
+ [N0Win]::keybd_event(9,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(9,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 200
+ [N0Win]::keybd_event(32,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(32,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 700
+ $results.Add([pscustomobject]@{Scenario='keyboard-hide-button';Passed=![NylraShell]::IsWindowVisible($h)})
+ Shortcut
+ # Bound owned-process idle measurement; shell has no companion animation.
+ $cpuBefore=$p.CPU;$clock=[DateTime]::UtcNow;Start-Sleep -Seconds 5;$p.Refresh()
+ $results.Add([pscustomobject]@{Scenario='main-process-only-idle';Seconds=([DateTime]::UtcNow-$clock).TotalSeconds;CPUOneCorePercent=100*($p.CPU-$cpuBefore)/([DateTime]::UtcNow-$clock).TotalSeconds;WorkingSetMiB=$p.WorkingSet64/1MB;Note='Excludes WebView2 descendants; not aggregate renderer acceptance'})
+} finally {
+ $results|ConvertTo-Json -Depth 6|Set-Content (Join-Path $out 'shell-observations.json')
+ # End only this script's owned test app. Production Quit remains available in tray.
+ if(!$p.HasExited){Stop-Process -Id $p.Id; $p.WaitForExit(5000)|Out-Null}
+}

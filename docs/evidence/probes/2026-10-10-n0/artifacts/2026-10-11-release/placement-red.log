@@ -1,0 +1,25 @@
+   Compiling nylra-desktop v0.1.0 (E:\Globalprojects\nylra\apps\desktop\src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.21s
+     Running unittests src\lib.rs (apps\desktop\src-tauri\target\debug\deps\nylra_desktop-0672f50f173f5b9f.exe)
+
+running 2 tests
+test windows::placement::tests::accessible_window_on_negative_monitor_stays_put ... ok
+test windows::placement::tests::lost_window_and_one_pixel_sliver_recover_a_usable_title_bar ... FAILED
+
+failures:
+
+---- windows::placement::tests::lost_window_and_one_pixel_sliver_recover_a_usable_title_bar stdout ----
+
+thread 'windows::placement::tests::lost_window_and_one_pixel_sliver_recover_a_usable_title_bar' (15680) panicked at src\windows\placement.rs:7:9:
+assertion `left == right` failed
+  left: None
+ right: Some((1168, 200))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    windows::placement::tests::lost_window_and_one_pixel_sliver_recover_a_usable_title_bar
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

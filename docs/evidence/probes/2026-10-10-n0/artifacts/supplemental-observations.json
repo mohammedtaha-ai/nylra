@@ -1,0 +1,55 @@
+[
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 5573980,
+    "Left": 200,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 5573980,
+    "Left": 200,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 5573980,
+    "Left": 200,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Scenario": "park-restore-focus",
+    "Before": 134888,
+    "After": 134888
+  },
+  {
+    "Scenario": "ShowWindow-SW_SHOWNOACTIVATE",
+    "Before": 134888,
+    "After": 134888,
+    "PreviouslyVisible": false
+  },
+  {
+    "Title": "N0 Synthetic Main",
+    "Handle": 134888,
+    "Left": 60,
+    "Top": 60,
+    "Width": 656,
+    "Height": 519,
+    "DPI": 96
+  },
+  {
+    "Scenario": "tray-shell-click",
+    "Name": "NON-PRODUCT N0 probe",
+    "NativeRect": "Ok(Some(Rect { position: Physical(PhysicalPosition { x: 1670, y: 1032 }), size: Physical(PhysicalSize { width: 32, height: 48 }) }))",
+    "Status": "native rectangle input sent; confirm runtime tray_input"
+  }
+]

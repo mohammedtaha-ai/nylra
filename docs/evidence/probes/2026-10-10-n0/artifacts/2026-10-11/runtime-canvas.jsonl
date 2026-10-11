@@ -1,0 +1,147 @@
+{"event":"tray_created","id":"24532-1","unix_ms":1791670736394}
+{"event":"shortcut_registered","unix_ms":1791670736395}
+{"event":"window_created","position":"PhysicalPosition { x: 60, y: 60 }","scale":1.0,"size":"PhysicalSize { width: 640, height: 480 }","unix_ms":1791670736397,"window":"main"}
+{"event":"window_created","position":"PhysicalPosition { x: 760, y: 200 }","scale":1.0,"size":"PhysicalSize { width: 180, height: 180 }","unix_ms":1791670736398,"window":"companion"}
+{"event":"monitors","unix_ms":1791670736399,"value":"[Monitor { name: Some(\"\\\\\\\\.\\\\DISPLAY1\"), size: PhysicalSize { width: 1920, height: 1080 }, position: PhysicalPosition { x: 0, y: 0 }, work_area: PhysicalRect { position: PhysicalPosition { x: 0, y: 0 }, size: PhysicalSize { width: 1920, height: 1032 } }, scale_factor: 1.0 }]"}
+{"event":"window_event","unix_ms":1791670736432,"value":"Focused(true)","window":"companion"}
+{"event":"metrics","unix_ms":1791670736473,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"main"}
+{"event":"metrics","unix_ms":1791670736594,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670738432}
+{"event":"window_event","unix_ms":1791670738439,"value":"Resized(PhysicalSize { width: 128, height: 128 })","window":"companion"}
+{"cmd":"canvas","event":"control","result":"Ok(())","unix_ms":1791670738934}
+{"event":"metrics","unix_ms":1791670738936,"value":{"hidden":false,"kind":"mode","mode":"idle","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791670738937,"value":{"kind":"renderer","renderer":"canvas"},"window":"companion"}
+{"cmd":"focus-main","event":"control","result":"Ok(())","unix_ms":1791670739439}
+{"event":"window_event","unix_ms":1791670739468,"value":"Focused(false)","window":"companion"}
+{"event":"window_event","unix_ms":1791670739468,"value":"Focused(true)","window":"main"}
+{"event":"metrics","unix_ms":1791670741285,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670741472,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670745878}
+{"event":"metrics","unix_ms":1791670746288,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"cmd":"idle","event":"control","result":"Ok(())","unix_ms":1791670746382}
+{"event":"metrics","unix_ms":1791670746387,"value":{"hidden":false,"kind":"mode","mode":"idle","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791670746469,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670746786}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670746787}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670749309}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670749310}
+{"event":"metrics","unix_ms":1791670751289,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670751462,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670752131}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670752132}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670754749}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670754750}
+{"event":"metrics","unix_ms":1791670756298,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670756464,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670757467}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670757468}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670760081}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670760082}
+{"event":"metrics","unix_ms":1791670761282,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670761468,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670762799}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670762800}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670765415}
+{"cmd":"active","event":"control","result":"Ok(())","unix_ms":1791670765819}
+{"event":"metrics","unix_ms":1791670765821,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791670766292,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670766322}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670766323}
+{"event":"metrics","unix_ms":1791670766458,"value":{"frames":93,"hidden":false,"kind":"sample","max":7.30000000000291,"mode":"active","p50":6.900000000001455,"p95":7.299999999999272,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670768735}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670768736}
+{"event":"metrics","unix_ms":1791670771290,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670771349}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670771349}
+{"event":"metrics","unix_ms":1791670771459,"value":{"frames":720,"hidden":false,"kind":"sample","max":8,"mode":"active","p50":6.900000000001455,"p95":7.200000000004366,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670774063}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670774063}
+{"event":"metrics","unix_ms":1791670776284,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670776459,"value":{"frames":720,"hidden":false,"kind":"sample","max":7.5,"mode":"active","p50":6.900000000001455,"p95":7.200000000004366,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670776676}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670776676}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670779290}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670779290}
+{"event":"metrics","unix_ms":1791670781289,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670781459,"value":{"frames":720,"hidden":false,"kind":"sample","max":8.19999999999709,"mode":"active","p50":7,"p95":7.200000000004366,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670781903}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670781904}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670784517}
+{"cmd":"hide","event":"control","result":"Ok(())","unix_ms":1791670785022}
+{"event":"metrics","unix_ms":1791670785027,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"event":"metrics","unix_ms":1791670785028,"value":{"kind":"nativeVisibility","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670785526}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670785526}
+{"event":"metrics","unix_ms":1791670786283,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670786469,"value":{"frames":513,"hidden":false,"kind":"sample","max":7.400000000001455,"mode":"active","p50":6.900000000001455,"p95":7.30000000000291,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670787941}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670787942}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670790557}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670790557}
+{"event":"metrics","unix_ms":1791670791286,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670791471,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670793174}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670793175}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670795891}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670795892}
+{"event":"metrics","unix_ms":1791670796288,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670796458,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670798507}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670798508}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670801123}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670801124}
+{"event":"metrics","unix_ms":1791670801284,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670801473,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670803742}
+{"cmd":"show","event":"control","result":"Ok(())","unix_ms":1791670804247}
+{"event":"window_event","unix_ms":1791670804284,"value":"Focused(false)","window":"main"}
+{"event":"window_event","unix_ms":1791670804288,"value":"Focused(true)","window":"companion"}
+{"event":"metrics","unix_ms":1791670804293,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791670804294,"value":{"kind":"nativeVisibility","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670804652}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670804653}
+{"event":"metrics","unix_ms":1791670806291,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670806464,"value":{"frames":315,"hidden":false,"kind":"sample","max":8.39999999999418,"mode":"active","p50":6.900000000008731,"p95":7.2000000000116415,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670807166}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670807166}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670809781}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670809781}
+{"event":"metrics","unix_ms":1791670811286,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670811464,"value":{"frames":720,"hidden":false,"kind":"sample","max":7.5,"mode":"active","p50":6.900000000008731,"p95":7.2000000000116415,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670812398}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670812398}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670815013}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670815013}
+{"event":"metrics","unix_ms":1791670816288,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670816458,"value":{"frames":719,"hidden":false,"kind":"sample","max":8.19999999999709,"mode":"active","p50":6.900000000008731,"p95":7.2999999999883585,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670817630}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670817631}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670820245}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670820246}
+{"event":"metrics","unix_ms":1791670821296,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670821464,"value":{"frames":721,"hidden":false,"kind":"sample","max":8.10000000000582,"mode":"active","p50":6.900000000008731,"p95":7.2999999999883585,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791670822858}
+{"cmd":"reduced","event":"control","result":"Ok(())","unix_ms":1791670823361}
+{"event":"metrics","unix_ms":1791670823362,"value":{"hidden":false,"kind":"mode","mode":"reduced","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670823867}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670823868}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670826286}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670826288}
+{"event":"metrics","unix_ms":1791670826288,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670826472,"value":{"frames":273,"hidden":false,"kind":"sample","max":8.39999999999418,"mode":"reduced","p50":6.900000000008731,"p95":7.100000000005821,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670828904}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670828905}
+{"event":"metrics","unix_ms":1791670831284,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670831469,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670831520}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670831521}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670834236}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670834237}
+{"event":"metrics","unix_ms":1791670836296,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670836465,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670836953}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670836953}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791670839566}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791670839566}
+{"event":"metrics","unix_ms":1791670841293,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791670841465,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}

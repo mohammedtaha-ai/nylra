@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>N0 NON-PRODUCT</title>
+<style>
+html,body{margin:0;background:transparent;color:#eee;font:16px system-ui}body.main{background:repeating-conic-gradient(#3a4554 0% 25%,#eee 0% 50%) 0/32px 32px;color:#111;padding:16px}canvas{display:block}button{font:inherit}#status{background:#fff;color:#111;padding:8px}body:not(.main) #status{display:none}
+</style>
+<canvas id="sprite"></canvas><div id="status" dir="auto">N0 synthetic state • أيلول تجربة<br><button id="click">Underlying click target</button><span id="count">0</span><br><button onclick="setMode('reduced')">Reduced motion</button></div>
+<script>
+// NON-PRODUCT benchmark: simple atlas drawing + translation, not character animation.
+const main=location.search.includes('main');document.body.classList.toggle('main',main);
+let clicks=0;document.querySelector('#click').onclick=()=>{document.querySelector('#count').textContent=++clicks;report({kind:'click',clicks})};
+const c=document.querySelector('canvas'),ctx=c.getContext('2d'),img=new Image();img.src='trial-atlas.png';
+let mode='idle',raf=0,frames=0,intervals=[],last=0;
+function report(value){if(window.__TAURI_INTERNALS__)window.__TAURI_INTERNALS__.invoke('metrics',{value});}
+function draw(t=0){const size=main?128:Math.min(innerWidth,innerHeight);const d=devicePixelRatio;c.width=size*d;c.height=size*d;c.style.width=size+'px';c.style.height=size+'px';ctx.scale(d,d);const cell=img.width/3;const state=mode==='active'?Math.floor(t/1000)%3:0;ctx.drawImage(img,state*cell,0,cell,img.height,0,mode==='active'?Math.sin(t/300)*2:0,size,size);}
+function tick(t){frames++;if(last)intervals.push(t-last);last=t;draw(t);raf=requestAnimationFrame(tick);}
+window.setMode=function(value){cancelAnimationFrame(raf);raf=0;mode=value;last=0;if(!document.hidden&&mode==='active')raf=requestAnimationFrame(tick);else draw();report({kind:'mode',mode,hidden:document.hidden});};
+document.addEventListener('visibilitychange',()=>{setMode(mode);report({kind:'visibility',hidden:document.hidden});});
+img.onload=()=>{draw();report({kind:'loaded',width:img.width,height:img.height,dpr:devicePixelRatio,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches});};
+setInterval(()=>{const sorted=intervals.toSorted();report({kind:'sample',mode,hidden:document.hidden,frames,p50:sorted[Math.floor(sorted.length*.5)]||null,p95:sorted[Math.floor(sorted.length*.95)]||null,max:sorted.at(-1)||null});frames=0;intervals=[];},5000);
+document.addEventListener('mousedown',event=>report({kind:'pointer',x:event.clientX,y:event.clientY}));
+</script>

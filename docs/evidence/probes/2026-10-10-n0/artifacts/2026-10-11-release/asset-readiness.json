@@ -1,0 +1,181 @@
+[
+  {
+    "path": "AYLUL Companion Character Reference Board.png",
+    "sha256": "a1ef31bc867e3905a5f40092032afc3c817dfe82c651060835fcf5f312785717",
+    "size": [
+      1536,
+      1024
+    ],
+    "alpha_zero": 0,
+    "alpha_partial": 0,
+    "alpha_opaque": 1572864,
+    "bbox": [
+      0,
+      0,
+      1536,
+      1024
+    ]
+  },
+  {
+    "path": "AYLUL Shadow Companion Design Sheet.png",
+    "status": "missing; alternative board intentionally removed by owner on 2026-10-11; historical measurements remain"
+  },
+  {
+    "path": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\trial-atlas.png",
+    "sha256": "0a27b9edc20749181c206ea63a6ce77b9dbbc1b519e3169e6a4ef15362fb830b",
+    "size": [
+      2172,
+      724
+    ],
+    "alpha_zero": 893885,
+    "alpha_partial": 678192,
+    "alpha_opaque": 451,
+    "bbox": [
+      0,
+      0,
+      2158,
+      724
+    ],
+    "cells": [
+      {
+        "state": "idle",
+        "alpha_bbox": [
+          0,
+          0,
+          724,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          122,
+          43,
+          708,
+          679
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 137
+      },
+      {
+        "state": "listening",
+        "alpha_bbox": [
+          0,
+          0,
+          724,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          68,
+          42,
+          653,
+          677
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 128
+      },
+      {
+        "state": "blocked",
+        "alpha_bbox": [
+          1,
+          0,
+          710,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          11,
+          44,
+          595,
+          676
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 76
+      }
+    ]
+  },
+  {
+    "path": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\trial-atlas-v2.png",
+    "sha256": "fa961cd96405309b834437c6b1b3fde3eb9b2c3d6a8d2e776eb6bdfb9635854c",
+    "size": [
+      2172,
+      724
+    ],
+    "alpha_zero": 901459,
+    "alpha_partial": 670111,
+    "alpha_opaque": 958,
+    "bbox": [
+      23,
+      0,
+      2118,
+      724
+    ],
+    "cells": [
+      {
+        "state": "idle",
+        "alpha_bbox": [
+          23,
+          0,
+          720,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          123,
+          29,
+          709,
+          698
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 93
+      },
+      {
+        "state": "listening",
+        "alpha_bbox": [
+          51,
+          0,
+          724,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          65,
+          28,
+          655,
+          696
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 121
+      },
+      {
+        "state": "blocked",
+        "alpha_bbox": [
+          5,
+          0,
+          670,
+          724
+        ],
+        "alpha_bbox_over_32": [
+          10,
+          30,
+          598,
+          700
+        ],
+        "bottom_pivot": [
+          362.0,
+          724
+        ],
+        "edge_alpha_nonzero": 95
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+name: desktop-window-invocation
+version: 1
+status: current
+source: apps/desktop/src/platform
+responsibility: Isolate typed frontend invocations for native shell and credential-free account projection.
+public_api:
+  authAction: Invoke only named native account actions; returns AuthView without credentials.
+  cancelLogin: Signal native login cancellation independently of the blocking operation.
+  hideToTray: Invoke hide_main and preserve failure as a rejected Promise for the presentation caller.
+obligations:
+  - rule: The keyboard hide action reaches native hide_main.
+    tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'

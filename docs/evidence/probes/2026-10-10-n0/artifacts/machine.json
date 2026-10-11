@@ -1,0 +1,33 @@
+{
+  "CapturedAt": "2026-10-10T10:21:56.0602706+03:00",
+  "OS": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64-bit"
+  },
+  "CPU": {
+    "Name": "Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz",
+    "NumberOfLogicalProcessors": 12
+  },
+  "RAM": {
+    "TotalPhysicalMemory": 34278969344
+  },
+  "GPU": {
+    "Name": "NVIDIA GeForce GTX 1070",
+    "CurrentHorizontalResolution": 1920,
+    "CurrentVerticalResolution": 1080,
+    "CurrentRefreshRate": 60
+  },
+  "Tools": {
+    "Npm": "11.12.1",
+    "PowerShell": "7.6.5",
+    "Pillow": "12.3.0",
+    "Cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "Python": "Python 3.14.5",
+    "Rust": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "Git": "git version 2.54.0.windows.1",
+    "Node": "v24.15.0"
+  },
+  "WebView2": "154.0.4258.37"
+}

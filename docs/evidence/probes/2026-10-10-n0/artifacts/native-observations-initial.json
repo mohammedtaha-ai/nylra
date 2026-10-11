@@ -1,0 +1,110 @@
+[
+  {
+    "Title": "N0 AYLUL Asset Inspection",
+    "Handle": 527932,
+    "Left": 10,
+    "Top": 10,
+    "Width": 1016,
+    "Height": 849,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 AYLUL Asset Inspection",
+    "Handle": 593468,
+    "Left": 10,
+    "Top": 10,
+    "Width": 1016,
+    "Height": 849,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Main",
+    "Handle": 593492,
+    "Left": 60,
+    "Top": 60,
+    "Width": 656,
+    "Height": 519,
+    "DPI": 96
+  },
+  {
+    "Scenario": "drag",
+    "Before": {
+      "Title": "N0 Synthetic Companion",
+      "Handle": 8391412,
+      "Left": 760,
+      "Top": 200,
+      "Width": 180,
+      "Height": 180,
+      "DPI": 96
+    },
+    "After": {
+      "Title": "N0 Synthetic Companion",
+      "Handle": 8391412,
+      "Left": 820,
+      "Top": 230,
+      "Width": 180,
+      "Height": 180,
+      "DPI": 96
+    }
+  },
+  {
+    "Scenario": "hide-show-focus",
+    "Before": 593492,
+    "After": 8391412
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 8391412,
+    "Left": 200,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 8391412,
+    "Left": 200,
+    "Top": 200,
+    "Width": 192,
+    "Height": 192,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 8391412,
+    "Left": 200,
+    "Top": 200,
+    "Width": 256,
+    "Height": 256,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 8391412,
+    "Left": -10000,
+    "Top": -10000,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 8391412,
+    "Left": 760,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  {
+    "Scenario": "second-instance",
+    "SecondPID": 22708,
+    "Exited": true
+  },
+  {
+    "Scenario": "shortcut-focus",
+    "Foreground": 593492,
+    "Main": 593492
+  }
+]

@@ -1,0 +1,27 @@
+{"event":"tray_created","id":"14140-1","unix_ms":1791676843775}
+{"event":"shortcut_registered","unix_ms":1791676843776}
+{"event":"window_created","position":"PhysicalPosition { x: 60, y: 60 }","scale":1.0,"size":"PhysicalSize { width: 640, height: 480 }","unix_ms":1791676843776,"window":"main"}
+{"event":"window_created","position":"PhysicalPosition { x: 760, y: 200 }","scale":1.0,"size":"PhysicalSize { width: 180, height: 180 }","unix_ms":1791676843776,"window":"companion"}
+{"event":"monitors","unix_ms":1791676843777,"value":"[Monitor { name: Some(\"\\\\\\\\.\\\\DISPLAY1\"), size: PhysicalSize { width: 1920, height: 1080 }, position: PhysicalPosition { x: 0, y: 0 }, work_area: PhysicalRect { position: PhysicalPosition { x: 0, y: 0 }, size: PhysicalSize { width: 1920, height: 1032 } }, scale_factor: 1.0 }]"}
+{"event":"window_event","unix_ms":1791676843792,"value":"Focused(true)","window":"companion"}
+{"event":"metrics","unix_ms":1791676843889,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"companion"}
+{"event":"metrics","unix_ms":1791676843899,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"main"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676845894}
+{"event":"window_event","unix_ms":1791676845901,"value":"Resized(PhysicalSize { width: 128, height: 128 })","window":"companion"}
+{"cmd":"active","event":"control","result":"Ok(())","unix_ms":1791676846397}
+{"event":"metrics","unix_ms":1791676846399,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"cmd":"focus-main","event":"control","result":"Ok(())","unix_ms":1791676846799}
+{"event":"window_event","unix_ms":1791676846819,"value":"Focused(false)","window":"companion"}
+{"event":"window_event","unix_ms":1791676846819,"value":"Focused(true)","window":"main"}
+{"event":"metrics","unix_ms":1791676848676,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676848816,"value":{"frames":54,"hidden":false,"kind":"sample","max":48.70000000000027,"mode":"active","p50":48.599999999999454,"p95":48.70000000000027,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"window_event","unix_ms":1791676853747,"value":"Focused(false)","window":"main"}
+{"event":"metrics","unix_ms":1791676853901,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676873448,"value":{"frames":109,"hidden":false,"kind":"sample","max":95.60000000000036,"mode":"active","p50":48.5,"p95":48.70000000000073,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791676873449,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676873659,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676873813,"value":{"frames":11,"hidden":false,"kind":"sample","max":48.70000000000073,"mode":"active","p50":34.79999999999927,"p95":48.70000000000073,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791676878660,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676878815,"value":{"frames":122,"hidden":false,"kind":"sample","max":55.5,"mode":"active","p50":41.69999999999709,"p95":48.69999999999709,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676879151}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676879151}

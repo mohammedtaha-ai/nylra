@@ -1,0 +1,41 @@
+[
+  {
+    "Scenario": "native-startup",
+    "Window": {
+      "Title": "NYLRA",
+      "Handle": 72091760,
+      "Left": 26,
+      "Top": 26,
+      "Width": 736,
+      "Height": 679,
+      "DPI": 96
+    },
+    "Visible": true,
+    "SHA256": "93B0C5FEA71D314B50031960AC9B38DC2DAE10A6CD164B426FD475042BA8F288"
+  },
+  {
+    "Scenario": "actual-tray-left-click",
+    "IconName": "NYLRA",
+    "Click": [
+      1606,
+      836
+    ],
+    "Passed": true
+  },
+  {
+    "Scenario": "close-hide-shortcut-restore",
+    "Cycles": 10,
+    "Passed": true
+  },
+  {
+    "Scenario": "keyboard-hide-button",
+    "Passed": true
+  },
+  {
+    "Scenario": "main-process-only-idle",
+    "Seconds": 5.0124674,
+    "CPUOneCorePercent": 0.0,
+    "WorkingSetMiB": 26.8828125,
+    "Note": "Excludes WebView2 descendants; not aggregate renderer acceptance"
+  }
+]

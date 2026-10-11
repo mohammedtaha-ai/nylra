@@ -1,0 +1,150 @@
+{"event":"tray_created","id":"20536-1","unix_ms":1791676680641}
+{"event":"shortcut_registered","unix_ms":1791676680642}
+{"event":"window_created","position":"PhysicalPosition { x: 60, y: 60 }","scale":1.0,"size":"PhysicalSize { width: 640, height: 480 }","unix_ms":1791676680642,"window":"main"}
+{"event":"window_created","position":"PhysicalPosition { x: 760, y: 200 }","scale":1.0,"size":"PhysicalSize { width: 180, height: 180 }","unix_ms":1791676680642,"window":"companion"}
+{"event":"monitors","unix_ms":1791676680643,"value":"[Monitor { name: Some(\"\\\\\\\\.\\\\DISPLAY1\"), size: PhysicalSize { width: 1920, height: 1080 }, position: PhysicalPosition { x: 0, y: 0 }, work_area: PhysicalRect { position: PhysicalPosition { x: 0, y: 0 }, size: PhysicalSize { width: 1920, height: 1032 } }, scale_factor: 1.0 }]"}
+{"event":"window_event","unix_ms":1791676680654,"value":"Focused(true)","window":"companion"}
+{"event":"metrics","unix_ms":1791676680738,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"main"}
+{"event":"metrics","unix_ms":1791676680751,"value":{"dpr":1,"height":724,"kind":"loaded","reduced":false,"width":2172},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676682558}
+{"event":"window_event","unix_ms":1791676682570,"value":"Resized(PhysicalSize { width: 128, height: 128 })","window":"companion"}
+{"cmd":"canvas","event":"control","result":"Ok(())","unix_ms":1791676683060}
+{"event":"metrics","unix_ms":1791676683062,"value":{"hidden":false,"kind":"mode","mode":"idle","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791676683063,"value":{"kind":"renderer","renderer":"canvas"},"window":"companion"}
+{"cmd":"focus-main","event":"control","result":"Ok(())","unix_ms":1791676683564}
+{"event":"window_event","unix_ms":1791676683586,"value":"Focused(false)","window":"companion"}
+{"event":"window_event","unix_ms":1791676683587,"value":"Focused(true)","window":"main"}
+{"event":"metrics","unix_ms":1791676685553,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676685678,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676689992}
+{"event":"window_event","unix_ms":1791676690203,"value":"Focused(false)","window":"main"}
+{"cmd":"idle","event":"control","result":"Ok(())","unix_ms":1791676690495}
+{"event":"metrics","unix_ms":1791676690497,"value":{"hidden":false,"kind":"mode","mode":"idle","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791676690557,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676690680,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676690897}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676690898}
+{"event":"window_event","unix_ms":1791676692222,"value":"Focused(true)","window":"main"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676693410}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676693410}
+{"event":"window_event","unix_ms":1791676694383,"value":"Focused(false)","window":"main"}
+{"event":"metrics","unix_ms":1791676695549,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676695674,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676696121}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676696121}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676698836}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676698836}
+{"event":"metrics","unix_ms":1791676700548,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676700688,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676701449}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676701449}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676704062}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676704063}
+{"event":"metrics","unix_ms":1791676705546,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676705686,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676706677}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676706678}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676709289}
+{"cmd":"active","event":"control","result":"Ok(())","unix_ms":1791676709792}
+{"event":"metrics","unix_ms":1791676709794,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676710294}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676710295}
+{"event":"metrics","unix_ms":1791676710551,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676710676,"value":{"frames":21,"hidden":false,"kind":"sample","max":55.5,"mode":"active","p50":41.79999999999927,"p95":55.5,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676712706}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676712706}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676715320}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676715320}
+{"event":"metrics","unix_ms":1791676715556,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676715679,"value":{"frames":119,"hidden":false,"kind":"sample","max":55.599999999998545,"mode":"active","p50":41.70000000000073,"p95":48.79999999999927,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676717933}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676717933}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676720546}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676720546}
+{"event":"metrics","unix_ms":1791676720549,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676720673,"value":{"frames":118,"hidden":false,"kind":"sample","max":55.80000000000291,"mode":"active","p50":41.80000000000291,"p95":48.900000000001455,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676723159}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676723160}
+{"event":"metrics","unix_ms":1791676725547,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676725679,"value":{"frames":123,"hidden":false,"kind":"sample","max":55.5,"mode":"active","p50":41.60000000000582,"p95":48.799999999995634,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676725773}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676725773}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676728387}
+{"cmd":"hide","event":"control","result":"Ok(())","unix_ms":1791676728889}
+{"event":"metrics","unix_ms":1791676728894,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"event":"metrics","unix_ms":1791676728895,"value":{"kind":"nativeVisibility","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676729292}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676729293}
+{"event":"metrics","unix_ms":1791676730542,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676730683,"value":{"frames":78,"hidden":false,"kind":"sample","max":48.900000000001455,"mode":"active","p50":41.599999999998545,"p95":48.80000000000291,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"event":"window_event","unix_ms":1791676731573,"value":"Focused(true)","window":"main"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676731806}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676731806}
+{"event":"window_event","unix_ms":1791676732684,"value":"Focused(false)","window":"main"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676734419}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676734420}
+{"event":"metrics","unix_ms":1791676735544,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676735687,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676737031}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676737031}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676739644}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676739645}
+{"event":"metrics","unix_ms":1791676740549,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676740673,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676742257}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676742258}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":false,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676744872}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676744873}
+{"event":"metrics","unix_ms":1791676745548,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676745688,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"active","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":false},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676747485}
+{"cmd":"show-noactivate","event":"control","result":"Ok(())","unix_ms":1791676747996}
+{"event":"metrics","unix_ms":1791676747999,"value":{"hidden":false,"kind":"mode","mode":"active","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"event":"metrics","unix_ms":1791676748000,"value":{"kind":"nativeVisibility","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676748399}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676748424}
+{"event":"metrics","unix_ms":1791676750541,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676750684,"value":{"frames":67,"hidden":false,"kind":"sample","max":49.80000000000291,"mode":"active","p50":41.60000000000582,"p95":48.70000000001164,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676750836}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676750836}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676753452}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676753453}
+{"event":"metrics","unix_ms":1791676755551,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676755678,"value":{"frames":121,"hidden":false,"kind":"sample","max":55.59999999999127,"mode":"active","p50":41.69999999999709,"p95":48.80000000000291,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676756066}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676756066}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676758779}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676758779}
+{"event":"metrics","unix_ms":1791676760554,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676760672,"value":{"frames":122,"hidden":false,"kind":"sample","max":49,"mode":"active","p50":41.60000000000582,"p95":48.80000000000291,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676761293}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676761294}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676764008}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676764009}
+{"event":"metrics","unix_ms":1791676765550,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676765673,"value":{"frames":121,"hidden":false,"kind":"sample","max":55.40000000000873,"mode":"active","p50":41.60000000000582,"p95":48.80000000000291,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"cmd":"normalize","event":"control","result":"Ok(())","unix_ms":1791676766620}
+{"cmd":"reduced","event":"control","result":"Ok(())","unix_ms":1791676767023}
+{"event":"metrics","unix_ms":1791676767024,"value":{"hidden":false,"kind":"mode","mode":"reduced","renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676767527}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676767527}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676770039}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676770039}
+{"event":"metrics","unix_ms":1791676770542,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676770683,"value":{"frames":32,"hidden":false,"kind":"sample","max":49,"mode":"reduced","p50":41.89999999999418,"p95":49,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676772649}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676772649}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676775260}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676775260}
+{"event":"metrics","unix_ms":1791676775544,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676775685,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676777874}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676777874}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676780488}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676780488}
+{"event":"metrics","unix_ms":1791676780556,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676780680,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}
+{"companion_size":"PhysicalSize { width: 128, height: 128 }","companion_visible":true,"event":"surface_snapshot","main_minimized":false,"main_size":"PhysicalSize { width: 640, height: 480 }","main_visible":true,"scale":1.0,"unix_ms":1791676783100}
+{"cmd":"snapshot","event":"control","result":"Ok(())","unix_ms":1791676783100}
+{"event":"metrics","unix_ms":1791676785553,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"idle","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"main"}
+{"event":"metrics","unix_ms":1791676785680,"value":{"frames":0,"hidden":false,"kind":"sample","max":null,"mode":"reduced","p50":null,"p95":null,"renderer":"canvas","surfaceVisible":true},"window":"companion"}

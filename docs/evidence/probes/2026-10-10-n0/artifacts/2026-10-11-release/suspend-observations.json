@@ -1,0 +1,39 @@
+{
+  "Begin": "2026-10-11T03:00:53.2538502+03:00",
+  "End": "2026-10-11T03:01:13.1249298+03:00",
+  "ElapsedSeconds": 19.8710796,
+  "PrivilegeError": 0,
+  "SuspendCallSucceeded": true,
+  "Win32Error": 0,
+  "Before": {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 69734,
+    "Left": 760,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  "After": {
+    "Title": "N0 Synthetic Companion",
+    "Handle": 69734,
+    "Left": 760,
+    "Top": 200,
+    "Width": 128,
+    "Height": 128,
+    "DPI": 96
+  },
+  "OwnedProcessAlive": true,
+  "KernelPowerEvents": [
+    {
+      "TimeCreated": "2026-10-11T03:00:56.0048045+03:00",
+      "Id": 107,
+      "ProviderName": "Microsoft-Windows-Kernel-Power"
+    },
+    {
+      "TimeCreated": "2026-10-11T03:00:53.8159401+03:00",
+      "Id": 42,
+      "ProviderName": "Microsoft-Windows-Kernel-Power"
+    }
+  ]
+}

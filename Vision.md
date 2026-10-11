@@ -1,8 +1,15 @@
-# Vision
+# NYLRA - Vision
 
 ## Human Liaison for Agentic Systems
 
-**Working concept:** A standalone AI companion and human-liaison platform that connects a person to complex multi-agent systems such as Shadows.
+**Product:** A standalone AI companion and human-liaison platform that connects a person to complex multi-agent systems such as Shadows. AYLUL is its companion character.
+
+**Updated:** 2026-10-10. This file owns the full product vision. The agreed
+[shared architecture](../shadows-backend/docs/architecture.md) owns deployment,
+languages, connection paths, context sharing, and authority boundaries.
+The vision records intended capabilities, not implemented or verified software.
+Cloud NYLRA, selected-project linking, bounded current-work context, and the
+desktop/mobile connection paths replace the earlier alternative deployments.
 
 ---
 
@@ -199,8 +206,8 @@ Decision Gateway
     v
 Claude Planner
     |
-    | Writes the formal project decision
-    | Updates the plan
+    | Applies the accepted direction through Shadows' service rules
+    | Proposes or updates the appropriate plan version
     | Continues work
 ```
 
@@ -210,15 +217,32 @@ The Planner remains the planning authority.
 
 The human remains the decision authority.
 
+Shadows records acceptance against the exact current proposal before NYLRA
+reports it adopted. An assessment is Planner's opinion; delivery alone does
+not prove that a decision was accepted or that execution resumed.
+
 ---
 
 ## 5. Relationship With Shadows
 
-The Liaison should be a **separate project and repository**.
+NYLRA's desktop and mobile applications live in the **separate `nylra` repository**.
+Its cloud application logic lives in the shared **`shadows-backend` repository**.
 
 Shadows should remain a local-first orchestration platform.
 
 The Liaison should be an optional connected service.
+
+The chosen experience is **personal work on its owning computer**, **team work
+owned by its server**, and **NYLRA conversation following the person across
+devices**. A laptop may execute team assignments without becoming a second owner.
+Personal projects and preferences are not exposed through team membership.
+
+Sign-in does not upload projects. Linking is not backup, team publication, code
+sync or execution transfer. An offline personal computer cannot run a new Planner
+turn; retained explanations are visibly cached. The authoritative decisions are in
+[Shadows §1.7](../shadows/docs/superpowers/specs/2026-09-21-architecture-design.md#17-workspace-authority-and-deployment),
+with the [sharing inventory](../shadows-backend/docs/architecture.md#what-lives-where)
+specifying what crosses into the cloud.
 
 ### 5.1 Why separation matters
 
@@ -252,7 +276,11 @@ The two products have different responsibilities.
 - personal memory,
 - human-facing summaries.
 
-Trying to merge these responsibilities into one process would create unnecessary coupling.
+These responsibilities retain separate ownership across the product.
+Project rules remain in Rust for both local and future server deployments;
+the TypeScript application calls them rather than implementing another copy.
+An application process may host several domains without allowing them to
+bypass each other's public operations or private stores.
 
 ### 5.2 SQLite should not be abandoned because of the assistant
 
@@ -278,11 +306,11 @@ They do **not** justify converting Shadows itself into a server-centric applicat
 
 ### 5.3 The assistant must never depend on Shadows' database internals
 
-The Liaison should not read `shadows.sqlite` directly.
+The Liaison should not read Shadows' SQLite database directly.
 
 It should communicate through a formal, versioned protocol.
 
-For example:
+Illustrative future operations, not implemented API names:
 
 ```text
 get_project_status()
@@ -307,58 +335,25 @@ If Shadows changes its internal storage later, the Liaison should not care.
 
 ## 6. High-Level Architecture
 
-```text
-                         Human
-                           |
-        +------------------+------------------+
-        |                  |                  |
-      Mobile             Desktop            Voice
-        |                  |                  |
-        +------------------+------------------+
-                           |
-                    Human Liaison
-                           |
-          +----------------+----------------+
-          |                |                |
-     Personal Memory   Context Engine   Notification Policy
-          |                |                |
-          +----------------+----------------+
-                           |
-                    Decision Gateway
-                           |
-                    Secure Connector
-                           |
-                       Shadows
-                           |
-        +------------------+------------------+
-        |                  |                  |
-   Executive Manager     Planner            Critic
-        |                  |                  |
-        +------------------+------------------+
-                           |
-                        Executors
-```
+The [shared architecture sections 2-4](../shadows-backend/docs/architecture.md#2-languages-and-technology-direction)
+own the selected languages and connection topology. Desktop can reach local
+Shadows for navigation and presentation, and the cloud for NYLRA dialogue.
+Mobile reaches the cloud. Shadows maintains its own outbound connection even
+when the NYLRA desktop interface is closed.
 
-A more deployment-oriented view:
+NYLRA's reasoning orchestration, personal memory, and topic conversations are
+cloud-hosted. Native desktop functions belong to Tauri's Rust side; the mobile
+direction is Flutter/Dart. Exact libraries still require capability evidence.
+
+The work escalation sequence is:
 
 ```text
-Mobile App
-    |
-    | HTTPS / WebSocket / Push
-    v
-Assistant Service
-    |
-    | Secure outbound-connected relay
-    v
-Shadows Connector
-    |
-    v
-Local Shadows Instance
+Executor -> Manager -> Planner -> NYLRA -> Human
 ```
 
-The Shadows machine should initiate the connection outward.
-
-That avoids requiring the user to expose a local port to the public internet.
+Each role settles what its authority covers before escalation. NYLRA becomes
+involved when the person is needed; it is not an intermediate manager. The
+Manager and Executor roles remain future Shadows implementation work.
 
 ---
 
@@ -513,6 +508,13 @@ Timestamp: ...
 
 This event can then be accepted by Shadows.
 
+This conceptual record is not sufficient proof by itself. The trusted client
+binds a deliberate confirmation to the exact displayed operation/proposal.
+[Shadows §24.6](../shadows/docs/superpowers/specs/2026-10-08-approval-authority-design.md#246-external-human-confirmation-and-assessment)
+owns enforcement, Planner-versus-human attribution and assessment write limits.
+Voice prepares the response; voice-only confirmation needs separately reviewed
+proof before it can replace the deliberate client confirmation action.
+
 ---
 
 ## 10. Two Kinds of Memory
@@ -585,6 +587,15 @@ Answer with source
 
 This creates trustworthy memory rather than confident guessing.
 
+### 10.4 Working context is a separate scope
+
+Each ongoing topic names its project, affected work, relevant Planner thread,
+and versioned evidence. That association is not inferred from whichever
+conversation happened to be newest globally. The companion can retrieve a
+relevant older decision without copying the complete conversation history.
+The sharing rules are owned by
+[shared architecture section 6](../shadows-backend/docs/architecture.md#6-current-work-context-not-transcript-replication).
+
 ---
 
 ## 11. Context Engine
@@ -592,6 +603,10 @@ This creates trustworthy memory rather than confident guessing.
 The Context Engine is one of the most important parts of the system.
 
 Its job is to convert structured agent events into useful human explanations.
+
+For selected linked projects, the companion obtains the bounded current work
+context and sources needed for a topic. This also covers opening NYLRA after
+talking directly with Planner. It is not a full Planner transcript replica.
 
 Given a blocker, it may retrieve:
 
@@ -667,6 +682,12 @@ Eventually, the Liaison can make token economics visible:
 
 Token efficiency can become a measurable product capability.
 
+The objective is to route repeated clarification and voice dialogue to
+NYLRA's separately selected, cheaper model, reserving Planner calls for
+technical assessment and planning. The figures above are illustrative, not
+measured savings. Include retrieval, speech, retries, and correction costs in
+any comparison. More dialogue with NYLRA need not consume another Planner turn.
+
 ---
 
 ## 13. Provider Abstraction
@@ -684,6 +705,10 @@ Possible reasoning providers may include:
 - local models,
 - enterprise-hosted models,
 - future providers.
+
+This inventory does not mean cloud NYLRA can reach a local model. Initial providers
+must be reachable by the cloud application. Local reasoning/speech providers need
+a separately scoped execution design.
 
 The system should not assume one model is best for all tasks.
 
@@ -873,7 +898,14 @@ Later:
 
 > Human: "Yes."
 
-> Liaison: "Your approval has been submitted. Claude recorded the decision and resumed planning."
+The person confirms the exact proposal in the trusted client surface. The model
+does not convert the transcribed "Yes" into approval evidence on its own.
+
+> Liaison: "Your confirmation is queued."
+
+Only after the corresponding owner outcomes arrive:
+
+> Liaison: "Shadows accepted the decision. Planning has resumed."
 
 That is the target experience.
 
@@ -924,6 +956,9 @@ Create account / Sign in
 Pair this Shadows instance
       |
       v
+Select projects to enable for NYLRA
+      |
+      v
 Choose AI provider
       |
       v
@@ -969,6 +1004,12 @@ The mobile app may connect to all three through one user account.
 
 Permissions must remain scoped.
 
+Pairing an instance does not publish all its projects. Linking is enabled
+per project. One companion can serve several linked projects and instances,
+with each topic and its sources isolated to the permitted scope. Account-wide
+communication preferences do not grant cross-project access or approval power.
+Stable account identifiers bind ownership; name and email are attributes.
+
 The assistant should know:
 
 - which instance generated an event,
@@ -982,14 +1023,15 @@ The assistant should know:
 
 The local Shadows instance should not need to expose a public web server.
 
-A local connector can create an outbound authenticated connection:
+A connector owned by the local Shadows daemon creates an outbound authenticated
+connection to the shared backend. Its lifetime does not depend on a NYLRA window:
 
 ```text
 Shadows
     |
     | outbound secure WebSocket
     v
-Assistant Relay
+shadows-backend
     |
     v
 Mobile / Desktop
@@ -1007,6 +1049,10 @@ Benefits:
 The relay should minimize retained content.
 
 Where practical, it should transport encrypted structured events rather than become the authoritative project database.
+
+The server also hosts NYLRA's conversation and explanation logic. Relevant
+topic context may be retained to continue the same discussion from a phone.
+Fresh local retrieval and new Planner work require the daemon to be connected.
 
 ---
 
@@ -1077,6 +1123,12 @@ This makes it possible to answer:
 - Did the proposal change afterward?
 
 Approval should bind to the exact proposal content.
+
+A model-produced `human` field or an automatically signed interpretation is
+not proof of human confirmation. NYLRA's model cannot call an unrestricted
+approval operation. The trusted confirmation flow and owner-side revalidation
+are prerequisites in
+[shared architecture sections 8 and 13](../shadows-backend/docs/architecture.md#8-decision-and-approval-integrity).
 
 ---
 
@@ -1186,38 +1238,22 @@ The strongest model should be used only when necessary.
 
 ---
 
-## 28. Local and Self-Hosted Modes
+## 28. Cloud Hosting and Future Deployment Options
 
-The service should eventually support more than one deployment mode.
+NYLRA's selected operating model is cloud-hosted in `shadows-backend`, with
+desktop and mobile clients reaching the same assistant conversation. This
+replaces the earlier idea of a local assistant engine plus a relay-only server.
 
-### Cloud-assisted mode
+Shadows remains independently usable locally. Closing NYLRA or losing cloud
+connectivity does not remove the local Shadows dashboard and runtime.
+NYLRA can explain retained topic evidence while the source machine is offline,
+with freshness visible. It cannot perform a fresh local read or run Planner
+on a disconnected machine.
 
-Best for:
-
-- mobile access,
-- push,
-- remote devices,
-- phone calls,
-- minimal setup.
-
-### Self-hosted mode
-
-Best for:
-
-- privacy-sensitive users,
-- enterprises,
-- regulated environments,
-- offline networks.
-
-### Local-only mode
-
-Possible limitations:
-
-- no remote push without additional infrastructure,
-- no external call service,
-- but full desktop functionality can remain available.
-
-The product should not make cloud use mandatory unless the requested feature inherently requires it.
+Self-hosting remains a future deployment option for privacy-sensitive users,
+enterprises, and controlled networks. A fully local NYLRA reasoning engine is
+a future option requiring its own approved design, not part of the selected
+implementation or a promised language migration.
 
 ---
 
@@ -1229,17 +1265,13 @@ Project state may contain proprietary source code and designs.
 
 These should be treated separately.
 
-Potential future protections:
-
-- end-to-end encrypted personal memory,
-- local encryption keys,
-- encrypted provider credentials,
-- user-controlled retention,
-- selective sync,
-- content redaction before remote model calls,
-- local summarization before cloud transmission.
-
-The product should make data movement visible.
+Cloud reasoning requires permitted plaintext to be processed by NYLRA and the
+chosen provider. Do not promise end-to-end secrecy from those processors. Show
+data movement and recipient providers. The
+[sharing/lifecycle owner](../shadows-backend/docs/architecture.md#what-lives-where)
+defines selection, derived-context scope and revocation. Retention, redaction and
+deletion include cached summaries. Future local reasoning and encryption designs
+need their own reviewed boundaries.
 
 ---
 
@@ -1273,48 +1305,30 @@ The architecture should support both without redesigning the core.
 
 ---
 
-## 31. Suggested Repository Structure
-
-Shadows should remain independent.
-
-One possible structure:
+## 31. Repository Ownership
 
 ```text
 shadows/
-    Core orchestration platform
+    Rust project rules, local runtime and future team server/assigned workers
 
-liaison/
-    Assistant backend
-    Protocol
-    Context engine
-    Memory
-    Provider adapters
-    Relay
-    Policy engine
+shadows-backend/
+    Shared cloud application
+    NYLRA cloud conversation, context, and personal memory
+    Accounts, device trust, selected-project links, and reliable delivery
+    Team identity/membership and deployment composition
+    Calls Rust project rules without owning their tables
 
-liaison-desktop/
-    macOS / Windows / Linux companion
-
-liaison-mobile/
-    iOS / Android
+nylra/
+    Desktop client and character experience
+    Flutter mobile client
+    Client-side presentation and native platform integration
 ```
 
-However, the assistant components may initially live in a single monorepo:
-
-```text
-liaison/
-    apps/
-        server/
-        desktop/
-        mobile/
-    packages/
-        protocol/
-        providers/
-        memory/
-        policy/
-```
-
-This may be simpler during early development.
+These are agreed repository responsibilities, not existing source folders or
+a scaffolding plan. The [shared architecture](../shadows-backend/docs/architecture.md)
+owns the technical boundaries and language decisions. Code is organized by
+responsibility with source contracts following the
+[supplied template](../shadows-backend/docs/contracts/TEMPLATE.yaml).
 
 ---
 
@@ -1322,7 +1336,7 @@ This may be simpler during early development.
 
 The Shadows-to-Liaison protocol should be versioned independently.
 
-Example event:
+Illustrative event, not an implemented Shadows event or a finalized wire schema:
 
 ```json
 {
@@ -1454,6 +1468,9 @@ Examples:
 
 This creates a personalized operating layer.
 
+Automatic acceptance thresholds require explicit owner-enforced delegated policies.
+Learning a preference does not grant authority.
+
 ---
 
 ## 38. Delegated Policies
@@ -1471,6 +1488,9 @@ Or:
 Delegation should be explicit, scoped, reversible, and visible.
 
 The system must never infer broad approval authority from casual conversation.
+
+Attribute delegated outcomes to the policy and performing agent, not a fresh human
+confirmation. Shadows §24.6 owns that distinction.
 
 ---
 
@@ -1653,6 +1673,25 @@ This is especially important when agent teams scale.
 
 ## 46. Cost and Budget Awareness
 
+### Production companion
+
+NYLRA should proactively explain operational incidents from linked AWS environments:
+"The orders service has sustained pressure and increased latency. The current
+evidence points to application capacity; here is the proposed change, its cost
+assumptions and the approval needed." This is an illustrative interaction, not a
+measured diagnosis. High CPU alone must not become a confident scaling request.
+
+The conversation continues after the action: did latency recover, did errors fall,
+was the change ineffective, or is more evidence required? Scaling, reducing unused
+capacity, investigating a slow query and identifying a bad release are possible
+outcomes. NYLRA reports unknown/stale evidence and pending actions honestly.
+
+[Shadows §17.12](../shadows/docs/superpowers/specs/2026-10-01-task-contracts-and-evidence-design.md#1712-production-operations-extension)
+owns observation-to-action authority and verification. NYLRA owns explanation,
+attention and the human interaction. The feature remains part of the product
+regardless of competition entry. Voice and AWS are integrations, not new owners
+of project rules or implied permission to alter infrastructure.
+
 The Liaison can eventually understand financial context.
 
 Examples:
@@ -1689,6 +1728,10 @@ Possible offline capabilities:
 - queue an approval for later secure submission.
 
 High-risk approvals may require an online verification step.
+
+Every queued confirmation retains its exact proposal basis and is validated
+by the owning runtime on delivery. A superseded or changed proposal cannot
+be accepted merely because its earlier response was queued offline.
 
 ---
 
@@ -1792,68 +1835,62 @@ The product is specifically about human supervision of agentic work.
 
 ---
 
-## 53. Initial Product Scope
+## 53. Full Capability Inventory and Delivery Boundaries
 
-A strong first version can remain focused.
+The full product direction is preserved. This inventory is not an approved
+implementation sequence or a claim that any capability is implemented.
+Delivery uses complete runnable paths inside the selected architecture;
+it does not plan a rewrite when the product grows.
+The [delivery order](../shadows-backend/docs/architecture.md#14-delivery-order)
+starts with sourced text continuity, enforced assessment/confirmation, then voice
+and presence. Team work and cloud execution retain separate runtime gates.
 
-### Phase 1 — Shadows Liaison Foundation
+### Foundation and trust
 
-- standalone service,
-- Shadows pairing,
-- secure event protocol,
-- project/blocker/decision read access,
-- text chat,
-- context retrieval,
-- planner message relay,
-- request planner assessment,
-- explicit approval flow,
-- audit trail.
+- Shared cloud-hosted NYLRA conversation and personal memory.
+- Account/device trust and optional linking of selected Shadows projects.
+- Bounded current-work context, source provenance, and visible freshness.
+- Planner assessment requests, explicit confirmation, owner-side validation,
+  durable delivery, and audit evidence.
+- An explanation model separate from the planning model.
 
-### Phase 2 — Mobile and Notifications
+### Desktop and mobile continuity
 
-- mobile app,
-- push notifications,
-- device pairing,
-- remote responses,
-- severity policies,
-- grouped briefings.
+- Desktop companion, optional AYLUL character, tray presence, and local navigation.
+- Flutter mobile client, notifications, and remote topic responses.
+- The same NYLRA topic continued across devices.
+- A local connector that survives closing the desktop interface.
+- Explicit disconnected-source behavior and recoverable pending responses.
 
-### Phase 3 — Voice
+### Voice and attention
 
-- speech-to-text abstraction,
-- text-to-speech abstraction,
-- conversational voice mode,
-- provider selection,
-- text fallback.
+- Independently selected STT, reasoning, and TTS providers.
+- Conversational voice, text fallback, and voice shortcuts.
+- Quiet hours, severity policies, grouped notifications, and scheduled briefings.
+- Future telephone-call escalation with its own channel rules.
 
-### Phase 4 — Desktop Companion
+### Advanced personal assistance
 
-- ambient desktop presence,
-- quick approvals,
-- voice shortcut,
-- project state glance,
-- optional avatar.
+- Richer personal memory with correction, retention, and forgetting controls.
+- Multiple linked instances and isolated project contexts.
+- Cost/token visibility, attention budgets, decision replay, and outcome feedback.
+- Source-bound explanations and clear distinctions between fact and inference.
 
-### Phase 5 — Advanced Human Liaison
+### Extended platform
 
-- personal memory,
-- notification policies,
-- scheduled briefings,
-- multi-instance Shadows support,
-- confidence/provenance UI,
-- cost/token visibility.
-
-### Phase 6 — Multi-System Platform
-
-- adapter SDK,
-- integration with non-Shadows agent systems,
-- enterprise identity,
-- self-hosted server,
-- team approval workflows.
+- Non-Shadows integrations and an adapter SDK when another real consumer exists.
+- Self-hosting, enterprise identity, and team approval workflows.
+- Future cloud Shadows workspaces and execution handoff under their own owners.
+- Future production and infrastructure operations under explicit Shadows authority.
 
 ---
 
-## 54. A Possible Internal Component Map
+## 54. Responsibility Map
+
+These responsibilities live within the shared backend and its client adapters
+as appropriate. The exact ownership boundaries are defined in
+[shared architecture section 3](../shadows-backend/docs/architecture.md#3-application-organization).
+This conceptual map does not require a separate service or package per branch.
 
 ```text
 Liaison Core
@@ -1982,17 +2019,25 @@ The user says:
 
 > "Yes."
 
-The Decision Gateway records explicit approval.
+The person confirms the exact proposal in the trusted client surface.
+The Decision Gateway then records that explicit confirmation.
 
-Shadows receives the signed decision.
+The shared backend delivers the confirmed response to the owning Shadows runtime.
 
-Claude records the formal project decision and resumes planning.
+Shadows revalidates authority and the proposal basis, then records acceptance.
+Planner applies the accepted direction through the project's service rules.
+NYLRA reports the confirmed outcome; resumed work is reported only when observed.
 
 The user never opened the IDE.
 
-The planner did not waste its context re-explaining project history.
+The repeated explanation dialogue used NYLRA rather than additional Planner
+turns. Actual cost savings require measurement across the complete journey.
 
 The system remained auditable.
+
+The storage-abstraction examples illustrate a dialogue, not a recommendation to
+add a layer to Shadows. Actual proposals must satisfy its library-first and
+first-real-user rules.
 
 That is the product.
 
@@ -2082,7 +2127,7 @@ The Liaison protects the boundary between the two.
 12. **Interrupt only when the value justifies it.**
 13. **Security boundaries are product features, not implementation details.**
 14. **Uncertainty should be visible.**
-15. **The system should degrade gracefully to text-only and local-first modes.**
+15. **Voice degrades to text; disconnected sources expose freshness and limits; Shadows remains independently local-first.**
 16. **One Liaison should eventually be able to represent many projects, agents, and systems.**
 17. **Personality is optional; trust is mandatory.**
 

@@ -1,0 +1,10 @@
+{
+  "source": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\success-v1.png",
+  "target": "docs\\evidence\\probes\\2026-10-10-n0\\native\\ui\\success-v1-clean.png",
+  "source_sha256": "12d5ad424593bd0d1faaaf95f5ccadfb69d13880c2d2e355acedd62bc18b9b6f",
+  "target_sha256": "cec1f3271a2da8ef78a28cd5d1ce1539b9c17b43025e37d920d80f705c73b753",
+  "alpha1_pixels_removed": 38184,
+  "rgb_exactly_preserved": true,
+  "alpha_at_least2_exactly_preserved": true,
+  "source_unchanged": true
+}

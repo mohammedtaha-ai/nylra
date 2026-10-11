@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-11",
+  "referenceApprovedBy": "Mohammed",
+  "modelVersion": "not exposed by tool",
+  "prompts": [
+    {
+      "name": "happy",
+      "prompt": "Reference is the user-approved AYLUL idle master. Keep the same recognizable 3D dark-plum hood, rose-gold edging, black featureless face, top violet crystal, hanging right violet crystal, exact front-facing camera, scale, centered pose, lighting and square transparent canvas. Character and bounded crystal glow stay wholly inside the central 84 percent; empty outer 8 percent truly transparent. Do not redraw the hood/earring, zoom, add accessories, text, floor, shadow plane, mouth, eyebrows or background. Expression HAPPY: change only the eyes into two warm upward smiling crescent shapes (like closed eyes smiling), bright violet with soft lavender glow. Friendly, quietly joyful, no celebration stars. Distinguish clearly from the neutral oval eyes at 64 pixels. One single sprite, genuine alpha transparency.",
+      "reference": "docs/evidence/probes/2026-10-10-n0/native/ui/idle-v3-clean.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-d24fa510-4a5a-47e6-9a11-6a794a2276b2.png"
+    },
+    {
+      "name": "sleeping",
+      "prompt": "Reference is the user-approved AYLUL idle master. Keep the same recognizable 3D dark-plum hood, rose-gold edging, black featureless face, top violet crystal, hanging right violet crystal, exact front-facing camera, scale, centered pose, lighting and square transparent canvas. Character and bounded crystal glow stay wholly inside the central 84 percent; empty outer 8 percent truly transparent. Do not redraw the hood/earring, zoom, add accessories, text, floor, shadow plane, mouth, eyebrows or background. Expression SLEEPING: change only eyes into two thin, relaxed closed downward-curving eyelid arcs. Dimmer muted violet glow in eyes, peaceful, no angry angles and no smile crescents. Keep crystals/hood lighting unchanged. No Z letters, bubble or bed. One single sprite, genuine alpha transparency.",
+      "reference": "docs/evidence/probes/2026-10-10-n0/native/ui/idle-v3-clean.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-96f7aaad-67f0-4d7d-9eac-fb715036e955.png"
+    },
+    {
+      "name": "speaking",
+      "prompt": "Precise AYLUL expression edit of the attached user-approved idle master. Strictly retain front view, exact scale/position on the same square transparent canvas, dark-plum hood, rose-gold trim, black face, top violet crystal, hanging right crystal, cloth silhouette and existing lighting. Keep full character/glow within central 84 percent and actual zero-alpha outer 8 percent. No redesign, zoom, pose change, extra clothing, headphones, floor, background, watermark or text. Expression SPEAKING: eyes are two bright lively violet horizontal ovals, a little shorter vertically than idle, warm conversational focus. Add only three tiny lavender voice-wave strokes beside the LEFT face edge (not on the hanging crystal), inside the padded character area, as the simple speaking-state accent. No mouth or eyebrows. Preserve every hood/crystal detail. One single transparent sprite, no atlas.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-ac6b2e33-b68b-4132-958f-35f3a560d643.png"
+    },
+    {
+      "name": "thinking",
+      "prompt": "Precise AYLUL expression edit of the attached user-approved idle master. Strictly retain front view, exact scale/position on the same square transparent canvas, dark-plum hood, rose-gold trim, black face, top violet crystal, hanging right crystal, cloth silhouette and existing lighting. Keep full character/glow within central 84 percent and actual zero-alpha outer 8 percent. No redesign, zoom, pose change, extra clothing, headphones, floor, background, watermark or text. Expression THINKING: thoughtful asymmetric eyes, left eye a narrow violet oval and right eye a rounder slightly larger violet oval, both looking gently upward as if considering an idea. Keep the face cute and curious rather than sad or angry. No question mark, letters, mouth, eyebrows, bubbles or other objects. Distinguish from round-eyed listening and concerned blocked. One single transparent sprite, no atlas.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-76709188-244a-46a3-a5f0-9cda31ffb1a0.png"
+    },
+    {
+      "name": "working",
+      "prompt": "Precise AYLUL expression edit of the supplied user-approved idle master. Preserve the same front-facing pose, exact canvas scale/center, dark-plum hood shape and folds, rose-gold trim, black face, top violet crystal and hanging right crystal with their original positions. Retain original lighting and limited soft violet glow. Square transparent canvas, character strictly inside central 84 percent, outer 8 percent zero alpha. No new clothing, headphones, zoom, pose change, mouth, eyebrows, background, floor or lettering. Expression WORKING: two narrow horizontal violet eyes with a calm focused determined look, symmetric, NOT sad/concerned and NOT angry. A thin, faint lavender orbital arc just around the face's lower perimeter indicates active concentration, staying inside the hood silhouette; no large halo, no progress bar, no extra crystals. Contrast with worried blocked eyes and closed sleeping eyelids. One single transparent sprite.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-c4c31676-7e71-407c-b146-d59d79916ba2.png"
+    },
+    {
+      "name": "success",
+      "prompt": "Precise AYLUL expression edit of the supplied user-approved idle master. Preserve the same front-facing pose, exact canvas scale/center, dark-plum hood shape and folds, rose-gold trim, black face, top violet crystal and hanging right crystal with their original positions. Retain original lighting and limited soft violet glow. Square transparent canvas, character strictly inside central 84 percent, outer 8 percent zero alpha. No new clothing, headphones, zoom, pose change, mouth, eyebrows, background, floor or lettering. Expression SUCCESS: two bright violet upward smiling crescent eyes and a celebratory glow within the eyes, cute and quietly delighted. Add two tiny four-point lavender sparkles close beside the hood, well inside transparent margins, referencing the character's success-state visual language. Keep these restrained and visibly distinct from HAPPY, which has no sparkles. No gold crown, confetti, medals, text or extra accessories. One single transparent sprite.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-8f08d6c2-d768-4223-b5f3-a923470854a7.png"
+    },
+    {
+      "name": "working_v2",
+      "prompt": "Edit the approved AYLUL idle master WITHOUT enlarging or reframing it. Keep the entire character exactly the original size and position, hood and face original geometry, rose-gold trim, crystals original positions, original camera and lighting. Same square transparent canvas. The top crystal center remains around 50 percent width, 22 percent height; the hanging crystal remains around 65 percent width, 78 percent height. Preserve ample empty space. Character and intentional glow must start below 10 percent canvas height and end before 90 percent, with absolutely no nonzero-alpha pixels in outer 8 percent. Do not extend the glow into margins. No body changes, extra cloth, face outline, mouth, background, floor, text or watermark. Change ONLY eyes to two short flat violet horizontal pill shapes, calm focused concentration. No orbital arc or grin line. No eyebrows or symbols. Keep upper crystal size and hood size exactly as source; do NOT zoom the character to emphasize eyes. One single transparent sprite, not an atlas.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-bf4a6b8d-75a3-4393-903c-f9efc2d7cd8f.png"
+    },
+    {
+      "name": "success_v2",
+      "prompt": "Edit the approved AYLUL idle master WITHOUT enlarging or reframing it. Keep the entire character exactly the original size and position, hood and face original geometry, rose-gold trim, crystals original positions, original camera and lighting. Same square transparent canvas. The top crystal center remains around 50 percent width, 22 percent height; the hanging crystal remains around 65 percent width, 78 percent height. Preserve ample empty space. Character and intentional glow must start below 10 percent canvas height and end before 90 percent, with absolutely no nonzero-alpha pixels in outer 8 percent. Do not extend the glow into margins. No body changes, extra cloth, face outline, mouth, background, floor, text or watermark. Change ONLY eyes to cheerful bright upward smiling crescents; add two tiny lavender four-point sparkles just beside the hood at mid-height, within its existing overall padded bounding region. Keep top crystal glow no larger than source, softly bounded below y10 percent. This is the SUCCESS state, distinct from plain happy via two small sparkles. No large star halo, confetti, crown or pose change. One single transparent sprite, not an atlas.",
+      "reference": "assets/aylul/states/v1/idle.png",
+      "transparent_background": true,
+      "tool": "built-in image_gen",
+      "outputFilename": "exec-36e59650-604b-464a-919c-dda1038b2ddf.png"
+    }
+  ]
+}
