@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './shell.css';
 import { hideToTray } from '../platform/windows';
 import { authAction, cancelLogin, type AuthView, type AuthAction } from '../platform/auth';
+import { LinuxProbe } from './linux-probe';
 
 function Shell() {
   const [error,setError]=React.useState('');
@@ -49,4 +50,4 @@ function message(code:string) {
   const messages:Record<string,string>={request_refused:'Sign-in was refused. Retry with your existing registration, or explicitly register a new device.',verification_refused:'Session verification was refused. Your device registration is preserved.',backend_unavailable:'Cannot reach the backend. Please retry.',cancelled:'Sign-in cancelled.',login_timeout:'Sign-in timed out. Start again.',storage_invalid:'Protected account storage could not be read. No identity was accepted.',storage_unavailable:'Unable to save protected account storage.',certificate_unavailable:'Development certificate is unavailable. Check the native launch configuration.'};
   return messages[code]??'Unable to complete this action. Please retry.';
 }
-createRoot(document.getElementById('root')!).render(<React.StrictMode><Shell /></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>{import.meta.env.VITE_NYLRA_PROBE === '1' ? <LinuxProbe /> : <Shell />}</React.StrictMode>);
