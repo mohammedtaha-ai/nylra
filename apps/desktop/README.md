@@ -42,3 +42,22 @@ and cleans its encrypted acceptance store. Ordinary tests do not contact Keycloa
 The earlier native_fixture example remains a primitive-only test. See the
 [joint evidence](../../docs/evidence/2026-10-11-joint-native-auth.md) for actual
 checks, browser limitations and remaining production gates.
+
+## Disposable Linux conversation preview
+
+The `codex/linux-integration-probe` branch also contains an opt-in Linux
+preview. From this directory, run `npm ci` then `VITE_NYLRA_PROBE=1 npm run
+build`. From the repository root, build the Tauri executable on Linux with
+`cargo build --locked --manifest-path apps/desktop/src-tauri/Cargo.toml` and
+run `apps/desktop/src-tauri/target/debug/nylra-desktop` in a graphical session.
+The native process opens one webview showing the approved AYLUL idle asset. It
+does not compile or invoke the Windows login path.
+
+The preview form calls the disposable backend probe at `127.0.0.1:8765` and
+requires its SSE `done` event before reporting completion. Start Shadows and
+the backend probe as described in the sibling
+`shadows-backend/probes/j1-linux-2026-10-12/README.md` to use the form. The
+local port is allowed by this branch's Tauri CSP only for this experiment.
+Use synthetic project content only. Build and window evidence, plus the Linux
+Dockerfile, are in
+[the dated probe](../../docs/evidence/probes/2026-10-12-linux/README.md).
