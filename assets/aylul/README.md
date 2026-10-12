@@ -18,5 +18,13 @@ joining this approved pack. Candidate generation/alpha cleanup remains reproduci
 in dated evidence. Only source assets live here; client packaging waits for its
 actual renderer journey, without scaffolding a second asset framework.
 
+The [idle animation v1 pack](animations/v1/idle/README.md) is a separate,
+local-preview-only development slice derived from the canonical idle image. It
+contains fixed-canvas numbered transparent PNG frames, a byte-identical still,
+metadata, and a dependency-free browser preview. Only idle is animated. The three
+canonical images and six candidate images remain unchanged; other animations,
+runtime event binding, renderer integration, and native performance acceptance are
+still pending their owning gates.
+
 [Preparation evidence](../../docs/evidence/2026-10-12-approved-aylul-and-six-expressions.md)
 records selected versions, corrected attempts, hashes and measured padding.
