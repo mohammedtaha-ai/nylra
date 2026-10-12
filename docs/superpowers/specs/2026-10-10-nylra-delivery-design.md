@@ -172,7 +172,14 @@ Use ordinary local state for simple view interaction; add a state-machine librar
 only if the measured transition complexity benefits. Select server-cache/UI utility
 libraries at N0/N2 against actual reconnect and accessibility needs, not by inventory.
 
-Cloud chat goes to shadows-backend; local Shadows access is presentation/navigation.
+Cloud chat goes to shadows-backend; local Shadows access is presentation/navigation,
+and, on the computer that owns the workspace, the source of a turn's project
+context (decided with the user on 2026-10-12; backend architecture's
+[same-machine context path](../../../../shadows-backend/docs/architecture.md#same-machine-context-path)
+owns the rule). The Tauri Rust side reads Shadows' `nylra-context/1` for the
+topic's project at send time and attaches it to the turn unchanged; the client
+neither filters, widens nor caches it as fresh. A refused or unreachable read is
+shown as such, and the turn is not sent with stale context.
 The daemon owns the cloud connector. Closing NYLRA must not close that connector.
 Workspace/account switches isolate cached evidence and pending input. Reconnect
 resumes through J1, with explicit resnapshot when needed; a cached view is not fresh.
