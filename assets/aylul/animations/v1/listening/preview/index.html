@@ -19,7 +19,7 @@
     .panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
     figure { margin: 0; border: 1px solid #392a4c; border-radius: 18px; padding: 16px; background: #171020; }
     .stage { display: grid; place-items: center; min-height: 310px; overflow: auto; border-radius: 12px; background-color: #110c18; background-image: linear-gradient(45deg, #1a1224 25%, transparent 25%), linear-gradient(-45deg, #1a1224 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1a1224 75%), linear-gradient(-45deg, transparent 75%, #1a1224 75%); background-size: 24px 24px; background-position: 0 0, 0 12px, 12px -12px, -12px 0; }
-    img { display: block; width: var(--preview-size, 128px); height: var(--preview-size, 128px); object-fit: contain; image-rendering: auto; }
+    img { display: block; width: var(--preview-size, 96px); height: var(--preview-size, 96px); object-fit: contain; image-rendering: auto; }
     figcaption { margin-top: 12px; color: #cbbdde; }
     .note { margin-top: 20px; padding: 14px 16px; border-left: 3px solid #8e64b6; background: #171020; color: #cbbdde; line-height: 1.55; }
     code { color: #ebd5ff; }
@@ -32,9 +32,10 @@
     <p class="scope">Local/test-only review of the listening slice. This page does not connect to program events, a backend, Shadows, or Planner logic.</p>
 
     <div class="controls" aria-label="Preview controls">
-      <button type="button" data-size="64">Small</button>
-      <button type="button" data-size="128" aria-pressed="true">Medium</button>
-      <button type="button" data-size="256">Large</button>
+      <button type="button" data-size="64">64 px</button>
+      <button type="button" data-size="96" aria-pressed="true">96 px</button>
+      <button type="button" data-size="128">128 px</button>
+      <button type="button" data-size="256">256 px detail</button>
       <button type="button" id="playback">Pause</button>
       <span class="status" id="status" aria-live="polite">Loading metadata…</span>
     </div>
@@ -50,7 +51,7 @@
       </figure>
     </div>
 
-    <p class="note">Fixed 1254 × 1254 transparent canvas; fixed pivot at <code>(627, 1102)</code>. The apparent motion is intentionally subtle at product display sizes. Runtime binding is deferred.</p>
+    <p class="note">Fixed 1254 × 1254 transparent canvas; fixed pivot at <code>(627, 1102)</code>. The body stays still while eye illumination and the two existing crystal glows respond in sequence. Reduced-motion preferences stop automatic playback. Runtime binding is deferred.</p>
   </main>
 
   <script>
@@ -60,9 +61,11 @@
     const sizeButtons = [...document.querySelectorAll('[data-size]')];
     let frames = [];
     let fps = 12;
-    let playing = true;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let playing = !reducedMotion.matches;
     let frameIndex = 0;
     let lastFrameAt = 0;
+    let animationRequest = 0;
 
     function setFrame(index) {
       frameIndex = index % frames.length;
@@ -71,11 +74,30 @@
     }
 
     function tick(timestamp) {
+      animationRequest = 0;
       if (playing && frames.length && timestamp - lastFrameAt >= 1000 / fps) {
         setFrame(frameIndex + 1);
         lastFrameAt = timestamp;
       }
-      requestAnimationFrame(tick);
+      schedule();
+    }
+
+    function schedule() {
+      if (!animationRequest && playing && !document.hidden) {
+        animationRequest = requestAnimationFrame(tick);
+      }
+    }
+
+    function stopScheduling() {
+      if (animationRequest) cancelAnimationFrame(animationRequest);
+      animationRequest = 0;
+    }
+
+    function updatePlaybackLabel() {
+      playback.textContent = playing ? 'Pause' : 'Play animation';
+      if (!playing && reducedMotion.matches) {
+        status.textContent = 'Reduced motion · still frame';
+      }
     }
 
     sizeButtons.forEach((button) => button.addEventListener('click', () => {
@@ -85,12 +107,26 @@
 
     playback.addEventListener('click', () => {
       playing = !playing;
-      playback.textContent = playing ? 'Pause' : 'Play';
       lastFrameAt = performance.now();
+      updatePlaybackLabel();
+      if (playing) schedule();
+      else stopScheduling();
     });
 
     document.addEventListener('visibilitychange', () => {
       lastFrameAt = performance.now();
+      if (document.hidden) stopScheduling();
+      else schedule();
+    });
+
+    reducedMotion.addEventListener('change', (event) => {
+      if (event.matches) {
+        playing = false;
+        frameIndex = 0;
+        if (frames.length) setFrame(0);
+        stopScheduling();
+      }
+      updatePlaybackLabel();
     });
 
     fetch('../metadata.json')
@@ -102,7 +138,8 @@
         frames = metadata.frames;
         fps = metadata.playback.fps;
         setFrame(0);
-        requestAnimationFrame(tick);
+        updatePlaybackLabel();
+        schedule();
       })
       .catch((error) => {
         status.textContent = `Preview error: ${error.message}`;

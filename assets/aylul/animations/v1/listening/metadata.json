@@ -2,22 +2,13 @@
   "schemaVersion": 1,
   "state": "listening",
   "version": "v1",
+  "revision": 2,
   "source": {
     "path": "../../../states/v1/listening.png",
     "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
   },
-  "canvas": {
-    "width": 1254,
-    "height": 1254,
-    "units": "px",
-    "transparent": true
-  },
-  "playback": {
-    "fps": 12,
-    "loop": true,
-    "frameDurationMs": 83.3333333333,
-    "loopDurationMs": 1333.3333333328
-  },
+  "canvas": { "width": 1254, "height": 1254, "units": "px", "transparent": true },
+  "playback": { "fps": 12, "loop": true, "frameDurationMs": 83.3333333333, "loopDurationMs": 2000 },
   "stillFrame": "still.png",
   "pivot": {
     "x": 627,
@@ -25,35 +16,53 @@
     "description": "Fixed canvas-space anchor at the horizontal center and the approved source's lowest non-transparent pixel. Do not trim, recenter, or infer a per-frame pivot."
   },
   "motion": {
-    "description": "A restrained vertical micro-hover with a two-stage focus rhythm in the existing translucent purple glow. RGB values, fully opaque pixels, character scale, silhouette, and horizontal placement remain unchanged.",
+    "type": "localized listening response",
+    "description": "A soft double attention beat in the existing eye illumination, followed by a delayed head-crystal response and a gentler pendant echo. The character body remains stationary. RGB values, scale, silhouette, pivot, and alignment remain unchanged.",
+    "wholeBodyTranslation": false,
+    "generatedImageModelUsed": false,
+    "loopClosure": "Frames 21-23 settle to the approved baseline; frame 23 and frame 0 are byte-identical to the canonical source.",
     "alphaTransform": {
-      "global": "For source alpha 2-159 outside the crystal regions, round(source alpha * globalGlowScale) away from zero and clamp to 1-254.",
-      "crystals": "For source alpha 2-223 in either crystal region, round(source alpha * crystalGlowScale) away from zero and clamp to 1-254.",
-      "preserved": "Alpha 0-1, alpha 255, RGB channels, and all other alpha values are unchanged.",
-      "crystalRegions": [
-        { "name": "head crystal halo", "xMin": 470, "xMax": 785, "yMin": 80, "yMax": 430 },
-        { "name": "pendant crystal halo", "xMin": 740, "xMax": 900, "yMin": 820, "yMax": 1130 }
+      "eyes": "Inside either eye region, pixels with source alpha 2-254, red >= 140, blue >= 140, and RGB sum >= 400 are multiplied by eyeIlluminationScale, rounded away from zero, and clamped to 1-254.",
+      "crystals": "Inside each crystal region, source alpha 2-223 is multiplied by that crystal's glow scale, rounded away from zero, and clamped to 1-254. Crystal cores are preserved.",
+      "preserved": "All RGB channels, alpha outside the qualified masks, canvas registration, fully transparent pixels, and the canonical source files are unchanged.",
+      "regions": [
+        { "name": "left eye illumination", "xMin": 450, "xMax": 595, "yMin": 700, "yMax": 835 },
+        { "name": "right eye illumination", "xMin": 655, "xMax": 805, "yMin": 700, "yMax": 835 },
+        { "name": "head crystal glow", "xMin": 470, "xMax": 785, "yMin": 80, "yMax": 430 },
+        { "name": "pendant crystal glow", "xMin": 740, "xMax": 900, "yMin": 846, "yMax": 1130 }
       ]
     }
   },
   "frames": [
-    { "order": 0, "file": "frames/frame-000.png", "offsetY": 0, "globalGlowScale": 1.00, "crystalGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" },
-    { "order": 1, "file": "frames/frame-001.png", "offsetY": -4, "globalGlowScale": 1.04, "crystalGlowScale": 1.08, "sha256": "d53097cf3d89a5ad42ced114c92e7ac657b85bb8fbc677524442e2968adf5992" },
-    { "order": 2, "file": "frames/frame-002.png", "offsetY": -7, "globalGlowScale": 1.09, "crystalGlowScale": 1.16, "sha256": "bbf30927d1b16f255180732036ce4a60e34cbe54e3b24473b0d322dd61bfaf33" },
-    { "order": 3, "file": "frames/frame-003.png", "offsetY": -9, "globalGlowScale": 1.13, "crystalGlowScale": 1.24, "sha256": "a3fef4ea57ef2906e60200bd8a97adf8b38aef92bdcc7ae55b120bd0d6f0ed53" },
-    { "order": 4, "file": "frames/frame-004.png", "offsetY": -10, "globalGlowScale": 1.09, "crystalGlowScale": 1.16, "sha256": "1779f706c75eff702631d9ccb45d8fcd58a49a4d2aec2a033ad926139ad7d328" },
-    { "order": 5, "file": "frames/frame-005.png", "offsetY": -9, "globalGlowScale": 1.04, "crystalGlowScale": 1.08, "sha256": "c9f21fc4f355c93d4669aa532c294d5ef9ea68e213398c7a52e1b6e75e576c28" },
-    { "order": 6, "file": "frames/frame-006.png", "offsetY": -7, "globalGlowScale": 1.00, "crystalGlowScale": 1.00, "sha256": "11807c0e225ed5209472e849198865a61690cb1aab5bb1f4b85c4d5d530b6752" },
-    { "order": 7, "file": "frames/frame-007.png", "offsetY": -4, "globalGlowScale": 0.97, "crystalGlowScale": 0.96, "sha256": "627667e8165c2f2076eb2a2b6f302dac0de08868c074f49aa8c7e77ae13ddf7b" },
-    { "order": 8, "file": "frames/frame-008.png", "offsetY": 0, "globalGlowScale": 1.00, "crystalGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" },
-    { "order": 9, "file": "frames/frame-009.png", "offsetY": 4, "globalGlowScale": 1.03, "crystalGlowScale": 1.06, "sha256": "bd5d9c343a51bcbab1a4b3950cbaa2d78031fcd7b15010068c7957c61e75d3fb" },
-    { "order": 10, "file": "frames/frame-010.png", "offsetY": 7, "globalGlowScale": 1.07, "crystalGlowScale": 1.12, "sha256": "d91f41d514a4979ef2ff6aa1edeba175d7f6eab1df3e55a194d3d688576eceaf" },
-    { "order": 11, "file": "frames/frame-011.png", "offsetY": 9, "globalGlowScale": 1.10, "crystalGlowScale": 1.18, "sha256": "eded1823f9b1765bda9cff2a799fd0e6ec86512550e03d7c2f30d0881b15caa2" },
-    { "order": 12, "file": "frames/frame-012.png", "offsetY": 10, "globalGlowScale": 1.07, "crystalGlowScale": 1.12, "sha256": "1ce89bff8754ab1d428955d69a18434bc0b3b0327ccc18d179934358579d6a34" },
-    { "order": 13, "file": "frames/frame-013.png", "offsetY": 9, "globalGlowScale": 1.03, "crystalGlowScale": 1.06, "sha256": "0a6c8f212a9b466dd19dfc94d2b4c5224f5876d458df868a570232a29e64d8ec" },
-    { "order": 14, "file": "frames/frame-014.png", "offsetY": 7, "globalGlowScale": 1.00, "crystalGlowScale": 1.00, "sha256": "fb26529d3b71978fc78a11d588115091a4126e879a00e4b8a4db4f575eda2d87" },
-    { "order": 15, "file": "frames/frame-015.png", "offsetY": 4, "globalGlowScale": 0.98, "crystalGlowScale": 0.98, "sha256": "4b5761828b51c4ca852dcccb0bd24aa4d3f4166b24e42740dcc1b4fa5ce131e2" }
+    { "order": 0, "file": "frames/frame-000.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" },
+    { "order": 1, "file": "frames/frame-001.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "3295e5201780867dcf6f4913868c4cf0f3c1940db9e1f036e89e4e35ebb505e0" },
+    { "order": 2, "file": "frames/frame-002.png", "offsetY": 0, "eyeIlluminationScale": 0.95, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.00, "sha256": "84a30f8448dba7e47dd5a14f8a39947969c1c6d48d722b3da9fc25b928f822f6" },
+    { "order": 3, "file": "frames/frame-003.png", "offsetY": 0, "eyeIlluminationScale": 0.91, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.00, "sha256": "8ebcbde0fafe7a4cdc9ef47b7584074cc9a1300d50e255c231650532a61cb3fb" },
+    { "order": 4, "file": "frames/frame-004.png", "offsetY": 0, "eyeIlluminationScale": 0.88, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.02, "sha256": "dc03bfef3a024683e749ef6c1e5bd79c16b76d72702883e29eb257dcb9cb36af" },
+    { "order": 5, "file": "frames/frame-005.png", "offsetY": 0, "eyeIlluminationScale": 0.91, "headCrystalGlowScale": 1.20, "pendantGlowScale": 1.06, "sha256": "afeccfbd04ee1fa2c69374e01ca5e4eda655ff7501bf24a5bd607c4222006929" },
+    { "order": 6, "file": "frames/frame-006.png", "offsetY": 0, "eyeIlluminationScale": 0.95, "headCrystalGlowScale": 1.28, "pendantGlowScale": 1.12, "sha256": "72efcee944244e68ba4fce9ea0e01e1e575ba1448e43a95ac501b3e8ba9cb5c6" },
+    { "order": 7, "file": "frames/frame-007.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.20, "pendantGlowScale": 1.18, "sha256": "b29dbac6647323064ce08e8a67280ca76cfa0eb64118010be9abba8456982676" },
+    { "order": 8, "file": "frames/frame-008.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.24, "sha256": "b8373dad78da743cc56adadd33ec7d50dc24bfb6e1b8cd39b79b81f3eaffe296" },
+    { "order": 9, "file": "frames/frame-009.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.18, "sha256": "0dedd5c1e96b456b4fe9f1e7a68e678ba28fc92d72565b1b3bfca74dacbed2af" },
+    { "order": 10, "file": "frames/frame-010.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.12, "sha256": "e1e9f24a70d9f1f519eda240625df731409df45039059397f3f8ec1d17f48acf" },
+    { "order": 11, "file": "frames/frame-011.png", "offsetY": 0, "eyeIlluminationScale": 0.94, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.06, "sha256": "32798e9a8094f0aa837c200c6c0178bf3d39429a070bb841e383fc93f6e83b0d" },
+    { "order": 12, "file": "frames/frame-012.png", "offsetY": 0, "eyeIlluminationScale": 0.89, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.02, "sha256": "c821c275d3f37ff5e11911377bb99f7b83505dae893d8e13023574c44de77d2f" },
+    { "order": 13, "file": "frames/frame-013.png", "offsetY": 0, "eyeIlluminationScale": 0.84, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "c95eee897b57c2ae9f5b74a2b92d0b98ceaa0d3025431b3304a529374749199d" },
+    { "order": 14, "file": "frames/frame-014.png", "offsetY": 0, "eyeIlluminationScale": 0.89, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.00, "sha256": "7997760bf0fa670bdb8e63bfde99da32d60940e45ae8b476501e09ce8f05f6bf" },
+    { "order": 15, "file": "frames/frame-015.png", "offsetY": 0, "eyeIlluminationScale": 0.94, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.00, "sha256": "32efdf39e68c183e7dadb7bd0e72edac1d7a30c4ecb6d15c1edfd7b6248c1855" },
+    { "order": 16, "file": "frames/frame-016.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.02, "sha256": "92d9134d71138ce4e8d12d82d0d8156aa4745fcccb55091772531e9fb917cb5a" },
+    { "order": 17, "file": "frames/frame-017.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.18, "pendantGlowScale": 1.05, "sha256": "0f81f29cece8b4cbc81a8320bf306b73e94ae08b816d1d16c9b2e179073eedb2" },
+    { "order": 18, "file": "frames/frame-018.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.10, "sha256": "58e283c58fdbf0dbf25a8dffd9a96ea6a4305855622894ca57dd0a1328eb86e7" },
+    { "order": 19, "file": "frames/frame-019.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.14, "sha256": "61580da13910045bcfbc694348d02728a211907495de395c62bfca8772a142c0" },
+    { "order": 20, "file": "frames/frame-020.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.10, "sha256": "750a1655c6508f1e55ff6780869f11cbb8088e230a2e6d9c2081cb6867073718" },
+    { "order": 21, "file": "frames/frame-021.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.05, "sha256": "1e87dbf300140143b2e251968de38de593b38ebb1d962d9eb34bb97f52a4f0ec" },
+    { "order": 22, "file": "frames/frame-022.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.02, "sha256": "9a76f3dadfed3ce0ab4fba97e70e5d6d15837ad2011e861f535a58de51a6c83a" },
+    { "order": 23, "file": "frames/frame-023.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" }
   ],
+  "preview": {
+    "reviewSizesPx": [64, 96, 128],
+    "reducedMotion": "Animation is stopped by default when prefers-reduced-motion: reduce matches; playback remains an explicit user choice."
+  },
   "scope": {
     "implemented": ["listening animation frames", "listening still frame", "local listening-only preview"],
     "deferred": ["runtime event binding", "backend and endpoint contracts", "Shadows integration", "Planner logic", "other AYLUL animation states"]
