@@ -36,7 +36,7 @@
       <button type="button" data-size="96" aria-pressed="true">96 px</button>
       <button type="button" data-size="128">128 px</button>
       <button type="button" data-size="256">256 px detail</button>
-      <button type="button" id="playback">Pause</button>
+      <button type="button" id="playback" disabled>Loading…</button>
       <span class="status" id="status" aria-live="polite">Loading metadata…</span>
     </div>
 
@@ -51,7 +51,7 @@
       </figure>
     </div>
 
-    <p class="note">Fixed 1254 × 1254 transparent canvas; fixed pivot at <code>(627, 1102)</code>. The body stays still while eye illumination and the two existing crystal glows respond in sequence. Reduced-motion preferences stop automatic playback. Runtime binding is deferred.</p>
+    <p class="note">Fixed 1254 × 1254 transparent canvas; fixed pivot at <code>(627, 1102)</code>. Watch the body anticipate and lean, the eyes focus, the upper crystal lag, and the hanging crystal settle independently. Reduced-motion preferences stop automatic playback. Runtime binding is deferred.</p>
   </main>
 
   <script>
@@ -60,6 +60,7 @@
     const status = document.querySelector('#status');
     const sizeButtons = [...document.querySelectorAll('[data-size]')];
     let frames = [];
+    let preloadedFrames = [];
     let fps = 12;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     let playing = !reducedMotion.matches;
@@ -69,7 +70,7 @@
 
     function setFrame(index) {
       frameIndex = index % frames.length;
-      animation.src = `../${frames[frameIndex].file}`;
+      animation.src = preloadedFrames[frameIndex].src;
       status.textContent = `Frame ${String(frameIndex + 1).padStart(2, '0')} / ${frames.length} · ${fps} fps · loop`;
     }
 
@@ -129,15 +130,26 @@
       updatePlaybackLabel();
     });
 
+    function preload(metadataFrames) {
+      return Promise.all(metadataFrames.map((frame) => new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error(`frame failed to load: ${frame.file}`));
+        image.src = `../${frame.file}`;
+      })));
+    }
+
     fetch('../metadata.json')
       .then((response) => {
         if (!response.ok) throw new Error(`metadata request failed (${response.status})`);
         return response.json();
       })
-      .then((metadata) => {
+      .then(async (metadata) => {
         frames = metadata.frames;
         fps = metadata.playback.fps;
+        preloadedFrames = await preload(frames);
         setFrame(0);
+        playback.disabled = false;
         updatePlaybackLabel();
         schedule();
       })

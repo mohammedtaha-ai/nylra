@@ -2,69 +2,579 @@
   "schemaVersion": 1,
   "state": "listening",
   "version": "v1",
-  "revision": 2,
+  "revision": 3,
+  "status": "approved",
   "source": {
     "path": "../../../states/v1/listening.png",
-    "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f",
+    "referenceBoard": "../../../../../AYLUL Companion Character Reference Board.png"
   },
-  "canvas": { "width": 1254, "height": 1254, "units": "px", "transparent": true },
-  "playback": { "fps": 12, "loop": true, "frameDurationMs": 83.3333333333, "loopDurationMs": 2000 },
+  "canvas": {
+    "width": 1254,
+    "height": 1254,
+    "units": "px",
+    "transparent": true
+  },
+  "playback": {
+    "fps": 16,
+    "loop": true,
+    "frameDurationMs": 62.5,
+    "loopDurationMs": 2000
+  },
   "stillFrame": "still.png",
   "pivot": {
     "x": 627,
     "y": 1102,
-    "description": "Fixed canvas-space anchor at the horizontal center and the approved source's lowest non-transparent pixel. Do not trim, recenter, or infer a per-frame pivot."
+    "description": "Fixed canvas-space registration and body-rotation pivot. Every frame remains 1254x1254 and is rendered directly from the canonical source without cumulative transforms."
   },
   "motion": {
-    "type": "localized listening response",
-    "description": "A soft double attention beat in the existing eye illumination, followed by a delayed head-crystal response and a gentler pendant echo. The character body remains stationary. RGB values, scale, silhouette, pivot, and alignment remain unchanged.",
-    "wholeBodyTranslation": false,
+    "type": "feathered mesh deformation with secondary motion",
+    "description": "Neutral hold, small anticipation away from the listener, attentive lean toward the listener, eye focus shift, independently lagged upper crystal, damped hanging-crystal follow-through, counter-settle, and canonical loop closure.",
     "generatedImageModelUsed": false,
-    "loopClosure": "Frames 21-23 settle to the approved baseline; frame 23 and frame 0 are byte-identical to the canonical source.",
-    "alphaTransform": {
-      "eyes": "Inside either eye region, pixels with source alpha 2-254, red >= 140, blue >= 140, and RGB sum >= 400 are multiplied by eyeIlluminationScale, rounded away from zero, and clamped to 1-254.",
-      "crystals": "Inside each crystal region, source alpha 2-223 is multiplied by that crystal's glow scale, rounded away from zero, and clamped to 1-254. Crystal cores are preserved.",
-      "preserved": "All RGB channels, alpha outside the qualified masks, canvas registration, fully transparent pixels, and the canonical source files are unchanged.",
-      "regions": [
-        { "name": "left eye illumination", "xMin": 450, "xMax": 595, "yMin": 700, "yMax": 835 },
-        { "name": "right eye illumination", "xMin": 655, "xMax": 805, "yMin": 700, "yMax": 835 },
-        { "name": "head crystal glow", "xMin": 470, "xMax": 785, "yMin": 80, "yMax": 430 },
-        { "name": "pendant crystal glow", "xMin": 740, "xMax": 900, "yMin": 846, "yMax": 1130 }
-      ]
-    }
+    "renderer": "Premultiplied-alpha inverse mapping with bilinear sampling. Feathered influence fields prevent cutout holes, duplicate sprites, hard seams, and dark RGB fringes.",
+    "generator": "tools/generate.py",
+    "independentMotion": {
+      "body": "Rigid rotation about the fixed pivot, maximum +2.4/-1.1 degrees, with a maximum 4 px rise and 3 px settle.",
+      "eyes": "Both approved eyes shift together up to 18 px horizontally and 8 px vertically, with a maximum 5 percent vertical focus deformation inside feathered local fields.",
+      "headCrystal": "Counter-rotates around its base up to +3.6/-3.2 degrees and lifts up to 6 px, lagging the body response.",
+      "pendant": "Swings around the attachment ring up to +7.0/-9.0 degrees with damped follow-through; the attachment remains stable through a vertical falloff mask.",
+      "glow": "Existing translucent upper and pendant glows react by at most 10 and 8 percent respectively; glow supports rather than leads the motion."
+    },
+    "keyframes": {
+      "bodyAngleDeg": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          -1.1
+        ],
+        [
+          12,
+          2.4
+        ],
+        [
+          17,
+          1.35
+        ],
+        [
+          22,
+          -0.45
+        ],
+        [
+          27,
+          0.2
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "bodyYpx": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          -4
+        ],
+        [
+          12,
+          3
+        ],
+        [
+          17,
+          0
+        ],
+        [
+          22,
+          1.5
+        ],
+        [
+          27,
+          0
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "eyeXpx": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          -7
+        ],
+        [
+          12,
+          18
+        ],
+        [
+          16,
+          12
+        ],
+        [
+          21,
+          -3.5
+        ],
+        [
+          26,
+          1.5
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "eyeYpx": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          12,
+          -8
+        ],
+        [
+          16,
+          -5
+        ],
+        [
+          21,
+          2
+        ],
+        [
+          26,
+          0
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "eyeScaleY": [
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          8,
+          0.95
+        ],
+        [
+          12,
+          1.03
+        ],
+        [
+          16,
+          1
+        ],
+        [
+          21,
+          0.975
+        ],
+        [
+          26,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "headCrystalAngleDeg": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          3.6
+        ],
+        [
+          12,
+          -3.2
+        ],
+        [
+          17,
+          1.6
+        ],
+        [
+          22,
+          -0.7
+        ],
+        [
+          27,
+          0.25
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "headCrystalYpx": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          12,
+          -6
+        ],
+        [
+          17,
+          -2
+        ],
+        [
+          22,
+          1.5
+        ],
+        [
+          27,
+          0
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "pendantAngleDeg": [
+        [
+          0,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          12,
+          -9
+        ],
+        [
+          17,
+          7
+        ],
+        [
+          22,
+          -3.5
+        ],
+        [
+          27,
+          1
+        ],
+        [
+          31,
+          0
+        ]
+      ],
+      "headGlowScale": [
+        [
+          0,
+          1
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          12,
+          1.1
+        ],
+        [
+          17,
+          1.04
+        ],
+        [
+          23,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "pendantGlowScale": [
+        [
+          0,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          15,
+          1.08
+        ],
+        [
+          20,
+          1.03
+        ],
+        [
+          26,
+          1
+        ],
+        [
+          31,
+          1
+        ]
+      ],
+      "interpolation": "smoothstep between keyframes"
+    },
+    "loopClosure": "Frames 0-3 form the neutral anticipation hold. Frame 31 and frame 0 are byte-identical to the canonical source; late transforms ease to zero before the boundary."
   },
+  "derivedMasks": [
+    {
+      "name": "eyes",
+      "file": "derived/masks/eyes-influence.png",
+      "sha256": "b5013629e877dcce7b7a7e192f591de7090a8c8cfc4370d4f3f6b99af9b4d377"
+    },
+    {
+      "name": "head crystal",
+      "file": "derived/masks/head-crystal-influence.png",
+      "sha256": "abccf9c9dc8b9fed7de23fdfa89aea54a0f534ea7ddb90d3b1d2a46ec2a23804"
+    },
+    {
+      "name": "pendant",
+      "file": "derived/masks/pendant-influence.png",
+      "sha256": "944d339cd808c7bc971aedab1f7f84d3c322fb01504ad36910bc18631751f234"
+    }
+  ],
   "frames": [
-    { "order": 0, "file": "frames/frame-000.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" },
-    { "order": 1, "file": "frames/frame-001.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "3295e5201780867dcf6f4913868c4cf0f3c1940db9e1f036e89e4e35ebb505e0" },
-    { "order": 2, "file": "frames/frame-002.png", "offsetY": 0, "eyeIlluminationScale": 0.95, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.00, "sha256": "84a30f8448dba7e47dd5a14f8a39947969c1c6d48d722b3da9fc25b928f822f6" },
-    { "order": 3, "file": "frames/frame-003.png", "offsetY": 0, "eyeIlluminationScale": 0.91, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.00, "sha256": "8ebcbde0fafe7a4cdc9ef47b7584074cc9a1300d50e255c231650532a61cb3fb" },
-    { "order": 4, "file": "frames/frame-004.png", "offsetY": 0, "eyeIlluminationScale": 0.88, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.02, "sha256": "dc03bfef3a024683e749ef6c1e5bd79c16b76d72702883e29eb257dcb9cb36af" },
-    { "order": 5, "file": "frames/frame-005.png", "offsetY": 0, "eyeIlluminationScale": 0.91, "headCrystalGlowScale": 1.20, "pendantGlowScale": 1.06, "sha256": "afeccfbd04ee1fa2c69374e01ca5e4eda655ff7501bf24a5bd607c4222006929" },
-    { "order": 6, "file": "frames/frame-006.png", "offsetY": 0, "eyeIlluminationScale": 0.95, "headCrystalGlowScale": 1.28, "pendantGlowScale": 1.12, "sha256": "72efcee944244e68ba4fce9ea0e01e1e575ba1448e43a95ac501b3e8ba9cb5c6" },
-    { "order": 7, "file": "frames/frame-007.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.20, "pendantGlowScale": 1.18, "sha256": "b29dbac6647323064ce08e8a67280ca76cfa0eb64118010be9abba8456982676" },
-    { "order": 8, "file": "frames/frame-008.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.24, "sha256": "b8373dad78da743cc56adadd33ec7d50dc24bfb6e1b8cd39b79b81f3eaffe296" },
-    { "order": 9, "file": "frames/frame-009.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.18, "sha256": "0dedd5c1e96b456b4fe9f1e7a68e678ba28fc92d72565b1b3bfca74dacbed2af" },
-    { "order": 10, "file": "frames/frame-010.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.12, "sha256": "e1e9f24a70d9f1f519eda240625df731409df45039059397f3f8ec1d17f48acf" },
-    { "order": 11, "file": "frames/frame-011.png", "offsetY": 0, "eyeIlluminationScale": 0.94, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.06, "sha256": "32798e9a8094f0aa837c200c6c0178bf3d39429a070bb841e383fc93f6e83b0d" },
-    { "order": 12, "file": "frames/frame-012.png", "offsetY": 0, "eyeIlluminationScale": 0.89, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.02, "sha256": "c821c275d3f37ff5e11911377bb99f7b83505dae893d8e13023574c44de77d2f" },
-    { "order": 13, "file": "frames/frame-013.png", "offsetY": 0, "eyeIlluminationScale": 0.84, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "c95eee897b57c2ae9f5b74a2b92d0b98ceaa0d3025431b3304a529374749199d" },
-    { "order": 14, "file": "frames/frame-014.png", "offsetY": 0, "eyeIlluminationScale": 0.89, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.00, "sha256": "7997760bf0fa670bdb8e63bfde99da32d60940e45ae8b476501e09ce8f05f6bf" },
-    { "order": 15, "file": "frames/frame-015.png", "offsetY": 0, "eyeIlluminationScale": 0.94, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.00, "sha256": "32efdf39e68c183e7dadb7bd0e72edac1d7a30c4ecb6d15c1edfd7b6248c1855" },
-    { "order": 16, "file": "frames/frame-016.png", "offsetY": 0, "eyeIlluminationScale": 0.98, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.02, "sha256": "92d9134d71138ce4e8d12d82d0d8156aa4745fcccb55091772531e9fb917cb5a" },
-    { "order": 17, "file": "frames/frame-017.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.18, "pendantGlowScale": 1.05, "sha256": "0f81f29cece8b4cbc81a8320bf306b73e94ae08b816d1d16c9b2e179073eedb2" },
-    { "order": 18, "file": "frames/frame-018.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.12, "pendantGlowScale": 1.10, "sha256": "58e283c58fdbf0dbf25a8dffd9a96ea6a4305855622894ca57dd0a1328eb86e7" },
-    { "order": 19, "file": "frames/frame-019.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.06, "pendantGlowScale": 1.14, "sha256": "61580da13910045bcfbc694348d02728a211907495de395c62bfca8772a142c0" },
-    { "order": 20, "file": "frames/frame-020.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.02, "pendantGlowScale": 1.10, "sha256": "750a1655c6508f1e55ff6780869f11cbb8088e230a2e6d9c2081cb6867073718" },
-    { "order": 21, "file": "frames/frame-021.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.05, "sha256": "1e87dbf300140143b2e251968de38de593b38ebb1d962d9eb34bb97f52a4f0ec" },
-    { "order": 22, "file": "frames/frame-022.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.02, "sha256": "9a76f3dadfed3ce0ab4fba97e70e5d6d15837ad2011e861f535a58de51a6c83a" },
-    { "order": 23, "file": "frames/frame-023.png", "offsetY": 0, "eyeIlluminationScale": 1.00, "headCrystalGlowScale": 1.00, "pendantGlowScale": 1.00, "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f" }
+    {
+      "order": 0,
+      "file": "frames/frame-000.png",
+      "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    },
+    {
+      "order": 1,
+      "file": "frames/frame-001.png",
+      "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    },
+    {
+      "order": 2,
+      "file": "frames/frame-002.png",
+      "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    },
+    {
+      "order": 3,
+      "file": "frames/frame-003.png",
+      "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    },
+    {
+      "order": 4,
+      "file": "frames/frame-004.png",
+      "sha256": "e457d916f890539674268594761c2f1ea3593599a4ec712ca39ef437d891bb97"
+    },
+    {
+      "order": 5,
+      "file": "frames/frame-005.png",
+      "sha256": "d8188d80567cc9ffbadaa7c5f17263359ccfb7ff37592fe76726cbf97136efd5"
+    },
+    {
+      "order": 6,
+      "file": "frames/frame-006.png",
+      "sha256": "925f0c06e1c6cd1c2befc110a2606e4ddd6a5457e721d83a4a25b4bfa50d437d"
+    },
+    {
+      "order": 7,
+      "file": "frames/frame-007.png",
+      "sha256": "755cab3f077845287f819589795b418e816eaa895c4d50f81aeede7dee3dfb81"
+    },
+    {
+      "order": 8,
+      "file": "frames/frame-008.png",
+      "sha256": "46cce3b5d52fd674fbf8e019964b521fbb61129a4e0bc3901d54aaf1637f6270"
+    },
+    {
+      "order": 9,
+      "file": "frames/frame-009.png",
+      "sha256": "45b87b0482df21f45a0b3dcc68db4f475087f37bb721ed2db5a2b7719f864788"
+    },
+    {
+      "order": 10,
+      "file": "frames/frame-010.png",
+      "sha256": "9278d75121464d3450b97c9940b25093a11bba7f341fce5c581e2b912a2723e6"
+    },
+    {
+      "order": 11,
+      "file": "frames/frame-011.png",
+      "sha256": "5e577b972b24bbf820df45097dec530e09f79ca28e0db0400837f33ca446782d"
+    },
+    {
+      "order": 12,
+      "file": "frames/frame-012.png",
+      "sha256": "bfcb0aeada6d1ebba9db8c8e796bd71ff0c38a7488abd3868abde0e51ceded67"
+    },
+    {
+      "order": 13,
+      "file": "frames/frame-013.png",
+      "sha256": "86a570974f7c29f168302c7391f616d4e5bb87db26393e23fe2e1ce815c8d6b3"
+    },
+    {
+      "order": 14,
+      "file": "frames/frame-014.png",
+      "sha256": "e7179bbb4ae05005353d77b78291788bda372726c1dd73701774239920ac151b"
+    },
+    {
+      "order": 15,
+      "file": "frames/frame-015.png",
+      "sha256": "65a12cc349132cc1d24e74fd079b611a22893cca333854bbc0002b235cfd64a8"
+    },
+    {
+      "order": 16,
+      "file": "frames/frame-016.png",
+      "sha256": "9bc2f30406bcb85236c608304612286fba8442fb5bdfc82176a7e8027ce1f864"
+    },
+    {
+      "order": 17,
+      "file": "frames/frame-017.png",
+      "sha256": "6f365e2f89894558f92f2de09aca4764862dd12fa538fdead47e7351aaed0715"
+    },
+    {
+      "order": 18,
+      "file": "frames/frame-018.png",
+      "sha256": "979560da976b885fe160cc3b56ec73841a9edcc3a8b6cdc7b666d394a3883c78"
+    },
+    {
+      "order": 19,
+      "file": "frames/frame-019.png",
+      "sha256": "2babb95cfe88106e1bf38ac491d68c3d597069e8481bd108bfcc9c3c9fcf76af"
+    },
+    {
+      "order": 20,
+      "file": "frames/frame-020.png",
+      "sha256": "6fbd60559fcbc15f1eccaa24486b47039d757e8858d9011d8422d2d0226fd01b"
+    },
+    {
+      "order": 21,
+      "file": "frames/frame-021.png",
+      "sha256": "faf74183ea32207312bbdbaf72859063abbe1f01e9c2888c25d0b9f419ec9045"
+    },
+    {
+      "order": 22,
+      "file": "frames/frame-022.png",
+      "sha256": "b900890e6154320b40fa31a29b35637dc224778aea0a1e3c8a26607c02bcda8a"
+    },
+    {
+      "order": 23,
+      "file": "frames/frame-023.png",
+      "sha256": "721ce8e5f7495bb5b142f01d69c272171d6728b20143ebfff488b37d4563f85d"
+    },
+    {
+      "order": 24,
+      "file": "frames/frame-024.png",
+      "sha256": "d1c8ae5ac0d8c7873dc927063f518ae9bdde75155daba646876dfc9ba69ed0f2"
+    },
+    {
+      "order": 25,
+      "file": "frames/frame-025.png",
+      "sha256": "0d1552a386f10c79a1d5deb913a06185f0a358fe788e9bf29315fb538d47100b"
+    },
+    {
+      "order": 26,
+      "file": "frames/frame-026.png",
+      "sha256": "862c71d4a9b4555cca5095822c2143fc6b8584f89479c816d52899b50b173c36"
+    },
+    {
+      "order": 27,
+      "file": "frames/frame-027.png",
+      "sha256": "d2dc780326f01dd74b9d87bbea097eddee687dd9a356ad83fb5de1e78bd07b89"
+    },
+    {
+      "order": 28,
+      "file": "frames/frame-028.png",
+      "sha256": "74df1416159998be62b5a4ce5ed384c3b0f3c69be43b6a4a1124d8903e1668f7"
+    },
+    {
+      "order": 29,
+      "file": "frames/frame-029.png",
+      "sha256": "62d71202793f82cd2bdfac8e6d8aa17ce5d9aed1f8dd256ed177c680f19e9453"
+    },
+    {
+      "order": 30,
+      "file": "frames/frame-030.png",
+      "sha256": "f7c49884bd85457d06544359fb69e5366bfd758a2d03ab835b7418086b83463c"
+    },
+    {
+      "order": 31,
+      "file": "frames/frame-031.png",
+      "sha256": "4d5de6d5009c7ef2b9d12a8fa0f20a3756055eb4394cfe8ce649807e9591b25f"
+    }
   ],
   "preview": {
-    "reviewSizesPx": [64, 96, 128],
-    "reducedMotion": "Animation is stopped by default when prefers-reduced-motion: reduce matches; playback remains an explicit user choice."
+    "reviewSizesPx": [
+      64,
+      96,
+      128,
+      256
+    ],
+    "preloadFrames": true,
+    "reducedMotion": "Animation is stopped on the canonical still when prefers-reduced-motion: reduce matches; playback remains an explicit user choice."
   },
+  "limitations": [
+    "The canonical source is flattened. Independent motion is produced by smoothly deforming source pixels through feathered fields, not by pretending clean original layers exist.",
+    "Local feathering necessarily moves a small amount of surrounding face/glow with each feature; masks and amplitudes are constrained to keep that deformation visually continuous at review sizes."
+  ],
   "scope": {
-    "implemented": ["listening animation frames", "listening still frame", "local listening-only preview"],
-    "deferred": ["runtime event binding", "backend and endpoint contracts", "Shadows integration", "Planner logic", "other AYLUL animation states"]
+    "implemented": [
+      "listening animation frames",
+      "derived influence masks",
+      "deterministic frame generator",
+      "local listening-only preview"
+    ],
+    "deferred": [
+      "runtime event binding",
+      "backend and endpoint contracts",
+      "Shadows integration",
+      "Planner logic",
+      "other AYLUL animation states"
+    ]
   }
 }
