@@ -3,11 +3,12 @@ set -euo pipefail
 
 probe_out=${1:?Pass a writable output directory}
 mkdir -p "$probe_out"
-export HOME="$probe_out/home"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_DATA_HOME="$HOME/.local/share"
+probe_home="$probe_out/home"
+export XDG_CONFIG_HOME="$probe_home/.config"
+export XDG_DATA_HOME="$probe_home/.local/share"
+export XDG_CACHE_HOME="$probe_home/.cache"
 export XDG_RUNTIME_DIR="$probe_out/runtime"
-mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_RUNTIME_DIR"
+mkdir -p "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 export DISPLAY=:99
 Xvfb :99 -screen 0 1024x768x24 -ac -nolisten tcp >"$probe_out/xvfb.log" 2>&1 &
@@ -49,6 +50,11 @@ if [[ ${2:-} == --mock-chat ]]; then
   sleep 1
   xdotool mousemove 88 596 click 1
   sleep 2
+  xdotool mousemove 680 500 click --repeat 4 --delay 100 5
+  sleep 1
+elif [[ ${2:-} == --live-chat || ${2:-} == --owner-fixture ]]; then
+  xdotool mousemove 88 596 click 1
+  if [[ ${2:-} == --live-chat ]]; then sleep 35; else sleep 3; fi
   xdotool mousemove 680 500 click --repeat 4 --delay 100 5
   sleep 1
 fi

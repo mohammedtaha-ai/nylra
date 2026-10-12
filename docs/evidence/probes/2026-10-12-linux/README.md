@@ -24,13 +24,15 @@ login, mobile support, animation, or a production connector.
 
 | Check | Observation |
 | --- | --- |
-| SSE client tests | Three passed: split delta frames, terminal error, missing terminal event. |
+| SSE client tests | Five passed: split delta frames, terminal error, missing terminal event, CRLF/multiline data, and bounded unfinished frames. The failed CRLF test justified replacing the hand parser with eventsource-parser 4.1.2. |
 | Vite probe build | Succeeded; bundled the approved `assets/aylul/states/v1/idle.png` (732,444 bytes). |
 | Vite local server | Served the preview page and idle PNG with HTTP 200. |
 | Native Linux `cargo check` in Rust 1.94 Debian container with GTK/WebKit deps | Succeeded after gating Windows-only modules and supplying a Linux PNG icon. |
 | Native Linux `cargo build` in the same container | Succeeded, producing the Tauri executable. |
 | Native executable under Xvfb | Opened a visible `NYLRA · Linux probe` webview. The captured [window.png](window.png) visibly contains approved AYLUL idle artwork and the chat form. `run-headless.sh` exited 0. |
 | Native button + SSE fixture under Xvfb | `run-headless.sh <output> --mock-chat` clicked Ask NYLRA against `mock-chat.py` on loopback. The captured [window-chat-fixture.png](window-chat-fixture.png) shows `Complete` and `Synthetic Lighthouse`. This fixture made no provider or Shadows call. |
+| Native window → backend SDK → real Shadows owner with provider fixture | `run-live.sh <fresh-output> --provider-fixture` completed with one owner tool execution, two SDK steps and 20 text characters. Screenshot [window-owner-fixture.png](window-owner-fixture.png) shows the completed owner-derived reply. Only provider responses were simulated. |
+| Native window → backend → real MiniMax | MiniMax explicitly rejected the request with Token Plan usage limit code 2067 / insufficient_balance_error. Native UI reported unavailable/incomplete. |
 
 The initial bare host `cargo check` stopped at missing `glib-2.0` development
 metadata; the container supplied the required native packages. The initial
@@ -40,7 +42,17 @@ provider or frontend failures.
 
 The first headless launch failed because the container's non-root user lacked a
 writable home directory. `run-headless.sh` now supplies a private writable home
-and XDG runtime directory; the repeated run opened and captured the window.
+directory through explicit XDG config/data/cache paths and a private XDG runtime
+directory; the repeated run opened and captured the window.
+
+The cross-project runtime [runtime.Dockerfile](runtime.Dockerfile) uses Node 24
+and Debian 13 so it can run the host-built Shadows binary requiring GLIBC_2.39.
+Mount the three repositories read-only, the disposable probe output writable,
+and the pinned Claude executable read-only at their documented `/workspace`
+paths. Run from `/workspace/nylra`. `run-live.sh` starts the backend's retained
+`native-live.mjs`, which creates a fresh Shadows database/project and only then
+opens the UI. Keep real provider keys and proxy/CA configuration in process
+environment only. Do not commit a real provider's raw errors or response text.
 
 The Linux entry point creates one local Tauri webview. It deliberately omits
 Windows DPAPI/browser-login commands and tray integration. The Linux-specific
@@ -54,7 +66,10 @@ mark these as probe paths.
 
 The captured windows prove the native webview rendered the approved idle asset
 and that its button can display a completed SSE reply from a local fixture.
-The backend's successful **real MiniMax** round trip was driven by a local HTTP
-client; the native webview was not clicked against the real provider probe.
+The backend's earlier successful **real MiniMax** round trip was driven by a
+local HTTP client. The later native click reached MiniMax but was refused by
+its plan limit. The complete native/owner/SDK path was then validated with a
+deterministic provider fixture. OpenRouter remains blocked by the current
+environment policy; its quota or key validity is unknown.
 This preview also does not test persisted conversation, identities, project
 grant, offline reconnection or production authority.

@@ -10,7 +10,7 @@ obligations:
     tested_by: 'integration: cargo check --locked --manifest-path apps/desktop/src-tauri/Cargo.toml on Linux'
   - rule: The approved AYLUL idle asset is visible in a native Linux window.
     tested_by: 'integration: docs/evidence/probes/2026-10-12-linux/run-headless.sh'
-    note: Xvfb window screenshot is retained as docs/evidence/probes/2026-10-12-linux/window.png; a separate click used a deterministic local SSE fixture, not MiniMax.
+    note: Xvfb window screenshot is retained as docs/evidence/probes/2026-10-12-linux/window.png; run-live.sh also completed through the real Shadows owner and AI SDK with only the provider simulated.
 gaps:
   - at: run
     gap: The Linux runtime is a disposable single-window preview without account, tray, notification, or production connector integration.
