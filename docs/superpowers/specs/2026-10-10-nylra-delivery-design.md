@@ -201,6 +201,10 @@ remain separate from reasoning; the client owns capture/playback, not cloud dial
 Voice-only human approval remains gated by Shadows §24.6.
 
 Flutter follows the Windows journey using the same versioned protocol and fixtures.
+Since 2026-10-12 both clients build against the backend's
+[nylra-v1 contract](../../../../shadows-backend/api/nylra-v1.openapi.json) and its
+[fixtures](../../../../shadows-backend/api/nylra-v1.fixtures.json); Flutter generates
+Dart from that file and never edits a copy. A field the app needs is added there first.
 Android/iOS delivery order and available physical devices are decided at the mobile
 gate, not assumed here. Native lock-screen/background limitations need per-platform
 evidence; a WebView preview is not phone acceptance. No forced TS/Dart code sharing.
