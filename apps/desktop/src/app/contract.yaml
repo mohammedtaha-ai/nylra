@@ -13,7 +13,7 @@ obligations:
     note: Current native screenshot and Tab/Space hide action; full screen-reader/RTL testing is missing.
   - rule: The opt-in preview rejects error and incomplete conversation streams rather than reporting success.
     tested_by: 'apps/desktop/src/app/probe-stream.test.mjs'
-    note: Tests cover split delta frames, error, and missing terminal events.
+    note: Tests cover split delta frames, error, missing terminal events, CRLF/multiline data, and bounded unfinished frames using eventsource-parser 4.1.2.
   - rule: The approved AYLUL idle artwork is bundled in the opt-in Linux preview.
     tested_by: 'integration: VITE_NYLRA_PROBE=1 npm run build'
     note: Vite output includes the idle PNG; this does not prove a native Tauri window rendered it.

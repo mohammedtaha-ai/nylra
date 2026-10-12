@@ -19,3 +19,21 @@ test('preview refuses a stream that ends without a terminal event', async () => 
   const body = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode('event: delta\ndata: {"text":"partial"}\n\n')); controller.close(); } });
   await assert.rejects(readProbeStream(new Response(body), () => {}), /probe_incomplete/);
 });
+
+test('preview accepts CRLF SSE and multiline JSON data', async () => {
+  const body = new ReadableStream({ start(controller) {
+    controller.enqueue(new TextEncoder().encode('event: delta\r\ndata: {"text":\r\ndata: "Synthetic"}\r\n\r\nevent: done\r\ndata: {"status":"complete"}\r\n\r\n'));
+    controller.close();
+  } });
+  const received = [];
+  await readProbeStream(new Response(body), text => received.push(text));
+  assert.deepEqual(received, ['Synthetic']);
+});
+
+test('preview bounds an unfinished SSE data frame', async () => {
+  const body = new ReadableStream({ start(controller) {
+    controller.enqueue(new TextEncoder().encode('data: ' + 'x'.repeat(65537)));
+    controller.close();
+  } });
+  await assert.rejects(readProbeStream(new Response(body), () => {}), /probe_stream_bound/);
+});
