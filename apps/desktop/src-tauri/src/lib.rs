@@ -1,8 +1,15 @@
+#[cfg(target_os = "windows")]
 pub mod auth;
+#[cfg(target_os = "windows")]
 mod commands;
+#[cfg(target_os = "linux")]
+mod linux_probe;
+#[cfg(target_os = "windows")]
 pub mod native_login;
+#[cfg(target_os = "windows")]
 mod windows;
 
+#[cfg(target_os = "windows")]
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -30,4 +37,9 @@ pub fn run() {
         })
         .run(tauri::generate_context!())
         .expect("NYLRA native runtime failed");
+}
+
+#[cfg(target_os = "linux")]
+pub fn run() {
+    linux_probe::run();
 }

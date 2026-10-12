@@ -1,14 +1,27 @@
 name: desktop-main-presentation
-version: 1
+version: 2
 status: current
 source: apps/desktop/src/app
-responsibility: Render the local shell with native account verification and truthful unavailable-companion state.
+responsibility: Render the local shell with native account verification, or an explicit disposable Linux conversation preview when VITE_NYLRA_PROBE is set.
 public_api:
   Shell: Show account identity only from a freshly validated native View; provide login, cancellation, session checks and explicit surrender actions.
+  LinuxProbe: Show approved AYLUL idle artwork and send a local synthetic conversation request.
+  readProbeStream: Assemble bounded SSE frames and require an explicit done terminal event; reject error or incomplete streams.
 obligations:
   - rule: Main remains usable without character artwork or backend access.
     tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'
     note: Current native screenshot and Tab/Space hide action; full screen-reader/RTL testing is missing.
+  - rule: The opt-in preview rejects error and incomplete conversation streams rather than reporting success.
+    tested_by: 'apps/desktop/src/app/probe-stream.test.mjs'
+    note: Tests cover split delta frames, error, and missing terminal events.
+  - rule: The approved AYLUL idle artwork is bundled in the opt-in Linux preview.
+    tested_by: 'integration: VITE_NYLRA_PROBE=1 npm run build'
+    note: Vite output includes the idle PNG; this does not prove a native Tauri window rendered it.
+  - rule: A native Linux click can display a completed SSE reply from a local fixture.
+    tested_by: 'integration: docs/evidence/probes/2026-10-12-linux/run-headless.sh <output> --mock-chat'
+    note: Screenshot evidence is retained in the dated probe; it does not involve Shadows or MiniMax.
 gaps:
   - at: Shell
     gap: Browser UI acceptance remains limited by Firefox trust and automation availability; renderer and full AYLUL acceptance remain separate.
+  - at: LinuxProbe
+    gap: The probe uses an unversioned local URL and has no product identity, reconnect, conversation persistence, or action confirmation.

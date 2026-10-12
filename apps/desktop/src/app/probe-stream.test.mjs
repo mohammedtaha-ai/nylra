@@ -14,3 +14,8 @@ test('preview refuses an error terminal event', async () => {
   const body = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode('event: error\ndata: {"code":"probe_failed"}\n\n')); controller.close(); } });
   await assert.rejects(readProbeStream(new Response(body), () => {}), /probe_failed/);
 });
+
+test('preview refuses a stream that ends without a terminal event', async () => {
+  const body = new ReadableStream({ start(controller) { controller.enqueue(new TextEncoder().encode('event: delta\ndata: {"text":"partial"}\n\n')); controller.close(); } });
+  await assert.rejects(readProbeStream(new Response(body), () => {}), /probe_incomplete/);
+});

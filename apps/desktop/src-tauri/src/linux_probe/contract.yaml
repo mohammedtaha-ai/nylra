@@ -1,0 +1,16 @@
+name: desktop-linux-probe-runtime
+version: 1
+status: probe
+source: apps/desktop/src-tauri/src/linux_probe/mod.rs
+responsibility: Open one local Tauri webview for the disposable Linux conversation and AYLUL preview.
+public_api:
+  run: Start the Tauri process and create its main window from the bundled index.html.
+obligations:
+  - rule: The Linux entry point does not compile the Windows login, commands, or tray modules.
+    tested_by: 'integration: cargo check --locked --manifest-path apps/desktop/src-tauri/Cargo.toml on Linux'
+  - rule: The approved AYLUL idle asset is visible in a native Linux window.
+    tested_by: 'integration: docs/evidence/probes/2026-10-12-linux/run-headless.sh'
+    note: Xvfb window screenshot is retained as docs/evidence/probes/2026-10-12-linux/window.png; a separate click used a deterministic local SSE fixture, not MiniMax.
+gaps:
+  - at: run
+    gap: The Linux runtime is a disposable single-window preview without account, tray, notification, or production connector integration.
