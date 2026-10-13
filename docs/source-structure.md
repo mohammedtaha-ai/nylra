@@ -57,10 +57,10 @@ apps/
       main.dart                  mobile entry point
       app/                       dependency composition and routing
       ui/
-        conversations/           views and view models
-        sources/                 evidence display
-        confirmations/           deliberate confirmation interaction
-        connections/             project-link presentation
+        chat/                    conversation views and view models
+        sessions/                live agent sessions and their steps
+        approvals/               pending requests and the person's decision
+        connections/             laptop pairing presentation
         preferences/             user settings presentation
         core/                    reusable visual primitives
       data/
