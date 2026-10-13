@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PermissionRequest": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 40 allow", "timeout": 60 }] }],
+    "Notification": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 0" }] }],
+    "PostToolUse": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 0", "async": true }] }],
+    "SessionStart": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 0" }] }],
+    "SessionEnd": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 0" }] }],
+    "Stop": [{ "hooks": [{ "type": "command", "command": "node <probe-dir>/log-hook.js 0" }] }]
+  }
+}
