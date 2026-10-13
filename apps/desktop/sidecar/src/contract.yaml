@@ -1,0 +1,21 @@
+name: sidecar-composition
+version: 1
+status: current
+source: apps/desktop/sidecar/src
+responsibility: Compose the sidecar and answer the window's calls over stdio.
+public_api:
+  serveRpc: One JSON line in, one out with the same id; unknown methods and unexpected errors become stable codes; ends with stdin.
+  makeHandlers: state, steps, request.answer, refusal.preview/approve/dismiss, hooks.preview/install; each validates its parameters; approve and install carry the previewed fingerprint.
+  main: Data under AYLUL_DATA_DIR, else %LOCALAPPDATA%\AYLUL; hold 580 s requests and 120 s refusals; stop and remove hook.json when stdin ends.
+obligations:
+  - rule: Only own handler names are callable; error text never leaves except as a code.
+    tested_by: unknown methods, stable errors and unexpected errors come back as codes
+  - rule: Hook install needs the executable; parameters are checked.
+    tested_by: without the hook executable, install is refused, missing or wrong parameters are bad_params
+  - rule: A refusal's rule reaches the root project's settings.local.json through preview and approve, even when Claude ran in a subfolder.
+    tested_by: a refusal is previewed and approved into the project settings
+  - rule: An approval against a settings file that changed since its preview writes nothing.
+    tested_by: an approval after the settings file changed since the preview writes nothing
+gaps:
+  - at: main
+    gap: Node prints an ExperimentalWarning for node:sqlite on stderr at start.

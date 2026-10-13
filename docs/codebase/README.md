@@ -21,5 +21,6 @@ consumer. Mobile and conversations remain future paths in the source-structure d
 | `apps/desktop/sidecar/src/agents/` | Narrow permission rules and safe settings edits | Colocated `contract.yaml` |
 | `apps/desktop/sidecar/src/approvals/` | Held requests and refusals with person supplied outcomes | Colocated `contract.yaml` |
 | `apps/desktop/sidecar/src/store/` | Local SQLite sessions, steps, decisions and rule records | Colocated `contract.yaml` |
+| `apps/desktop/sidecar/src/` | Sidecar composition and stdio RPC for the desktop window | Colocated `contract.yaml` |
 
 No backend source is imported by the client.
