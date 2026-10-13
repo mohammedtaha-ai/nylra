@@ -39,3 +39,17 @@ test('unknown methods, stable errors and unexpected errors come back as codes', 
     { id: null, error: 'bad_request' },
   ]);
 });
+
+test('unexpected error details are not written to stderr', async () => {
+  const written: string[] = [];
+  const original = process.stderr.write;
+  process.stderr.write = ((chunk: string | Uint8Array) => { written.push(String(chunk)); return true; }) as typeof process.stderr.write;
+  try {
+    assert.deepEqual(await exchange([JSON.stringify({ id: 1, method: 'fail', params: {} })], {
+      fail: () => { throw new Error('token=SECRET-CONTENT'); },
+    }), [{ id: 1, error: 'action_failed' }]);
+  } finally {
+    process.stderr.write = original;
+  }
+  assert.equal(written.join('').includes('SECRET-CONTENT'), false);
+});

@@ -10,6 +10,8 @@ public_api:
 obligations:
   - rule: Only own handler names are callable; error text never leaves except as a code.
     tested_by: unknown methods, stable errors and unexpected errors come back as codes
+  - rule: Unexpected error details, which may contain local content, are not written to stderr.
+    tested_by: unexpected error details are not written to stderr
   - rule: Hook install needs the executable; parameters are checked.
     tested_by: without the hook executable, install is refused, missing or wrong parameters are bad_params
   - rule: A refusal's rule reaches the root project's settings.local.json through preview and approve, even when Claude ran in a subfolder.

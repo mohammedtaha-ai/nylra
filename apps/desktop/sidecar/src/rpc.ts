@@ -26,6 +26,6 @@ export function serveRpc(input: NodeJS.ReadableStream, output: NodeJS.WritableSt
 function code(error: unknown): string {
   const message = error instanceof Error ? error.message : '';
   if (ERROR_CODES.has(message)) return message;
-  process.stderr.write(`aylul-sidecar: ${error instanceof Error ? error.stack : String(error)}\n`);
+  process.stderr.write('aylul-sidecar: action_failed\n');
   return 'action_failed';
 }
