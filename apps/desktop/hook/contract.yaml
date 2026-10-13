@@ -18,9 +18,9 @@ obligations:
   - rule: The request carries version, token, CLAUDE_PROJECT_DIR when set, and the event unchanged.
     tested_by: request_carries_version_token_and_event, no_project_dir_is_left_out
   - rule: A busy pipe is retried; other connect errors are not.
-    tested_by: a_busy_pipe_is_retried_and_other_errors_are_not
+    tested_by: a_busy_pipe_is_retried_and_other_errors_are_not, busy_code_is_231_and_a_forever_busy_pipe_is_tried_exactly_three_times
   - rule: The real executable round-trips with the sidecar's pipe server.
     tested_by: 'integration: apps/desktop/sidecar/src/hooks/roundtrip.test.ts'
 gaps:
   - at: main
-    gap: The process always exits 0; a failure is visible only as no output.
+    gap: The process exits 0 on every path, including a panic (silent hook, caught) and a closed stdout (write error ignored); a failure is visible only as no output. Exit 0 is checked manually on the release binary; no automated test covers it.

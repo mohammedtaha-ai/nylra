@@ -14,8 +14,23 @@ export function trimStep(event: HookEvent, at: string): Step {
     return { at, tool, target: command, summary: description || command };
   }
   const key = TARGET_KEYS.find(k => typeof input[k] === 'string');
-  const target = key ? oneLine(String(input[key])) : '';
+  const target = key ? targetOf(key, String(input[key])) : '';
   return { at, tool, target, summary: target ? `${tool} ${target}` : tool };
+}
+
+/** A URL keeps scheme, host and path only: its query and fragment can carry tokens. */
+function targetOf(key: string, value: string): string {
+  if (key !== 'url') return oneLine(value);
+  try {
+    const url = new URL(value);
+    url.search = '';
+    url.hash = '';
+    url.username = '';
+    url.password = '';
+    return oneLine(url.toString());
+  } catch {
+    return oneLine(value);
+  }
 }
 
 export function oneLine(text: string, max = 160): string {

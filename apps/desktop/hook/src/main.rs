@@ -1,6 +1,14 @@
-use std::io::Read;
+use std::io::{Read, Write};
 
+/// Every path exits 0 with no stdout beyond the sidecar's answer: a panic is
+/// silenced and caught, and a closed stdout is ignored.
 fn main() {
+    std::panic::set_hook(Box::new(|_| {}));
+    let _ = std::panic::catch_unwind(run);
+    std::process::exit(0);
+}
+
+fn run() {
     let mut input = String::new();
     if std::io::stdin().read_to_string(&mut input).is_err() {
         return;
@@ -29,6 +37,8 @@ fn main() {
         )
     };
     if let Some(output) = aylul_hook::run(&input, endpoint, project_dir, open) {
-        print!("{output}");
+        let mut stdout = std::io::stdout().lock();
+        let _ = stdout.write_all(output.as_bytes());
+        let _ = stdout.flush();
     }
 }

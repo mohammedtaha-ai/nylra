@@ -22,6 +22,13 @@ test('a Bash step is the command on one line with its description', () => {
   assert.deepEqual(step, { at, tool: 'Bash', target: 'npm test', summary: 'Run tests' });
 });
 
+test('a URL step keeps scheme, host and path, never the query or fragment', () => {
+  const step = trimStep({ session_id: 's1', hook_event_name: 'PostToolUse', tool_name: 'WebFetch',
+    tool_input: { url: 'https://example.com/a?token=SECRET#x' } }, at);
+  assert.deepEqual(step, { at, tool: 'WebFetch', target: 'https://example.com/a', summary: 'WebFetch https://example.com/a' });
+  assert.equal(JSON.stringify(step).includes('SECRET'), false);
+});
+
 test('oneLine collapses whitespace and cuts long text', () => {
   assert.equal(oneLine(' a\n\tb '), 'a b');
   assert.equal(oneLine('x'.repeat(200), 10), 'x'.repeat(9) + '…');
@@ -49,6 +56,9 @@ test('an auth_success notice does not mark the session waiting', () => {
 });
 
 test('the last message is kept whole up to its limit', () => {
+  const exact = 'a'.repeat(MAX_MESSAGE);
+  const kept = applyEvent(undefined, { session_id: 's1', hook_event_name: 'Stop', last_assistant_message: exact }, at);
+  assert.equal(kept.session.lastMessage, exact);
   const long = 'a'.repeat(MAX_MESSAGE + 50);
   const { session } = applyEvent(undefined, { session_id: 's1', hook_event_name: 'Stop', last_assistant_message: long }, at);
   assert.equal(session.lastMessage?.length, MAX_MESSAGE);

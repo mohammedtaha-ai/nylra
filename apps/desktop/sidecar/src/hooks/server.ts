@@ -23,9 +23,10 @@ function serve(socket: Socket, expected: Buffer, route: Route): void {
   const closed = new AbortController();
   let buffer = '';
   let handled = false;
+  let answered = false;
   socket.setEncoding('utf8');
   socket.on('error', () => {});
-  socket.on('close', () => closed.abort());
+  socket.on('close', () => { if (!answered) closed.abort(); });
   socket.on('data', chunk => {
     if (handled) return;
     buffer += chunk;
@@ -37,7 +38,11 @@ function serve(socket: Socket, expected: Buffer, route: Route): void {
     if (!event) { socket.destroy(); return; }
     route(event, closed.signal)
       .catch((): HookReply => ({}))
-      .then(reply => { if (!socket.destroyed) socket.end(JSON.stringify(reply) + '\n'); });
+      .then(reply => {
+        if (socket.destroyed) return;
+        answered = true;
+        socket.end(JSON.stringify(reply) + '\n');
+      });
   });
 }
 

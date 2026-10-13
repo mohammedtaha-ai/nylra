@@ -254,6 +254,22 @@ mod tests {
     }
 
     #[test]
+    fn busy_code_is_231_and_a_forever_busy_pipe_is_tried_exactly_three_times() {
+        assert_eq!(ERROR_PIPE_BUSY, 231);
+        let mut calls = 0;
+        let result: io::Result<()> = connect_retrying(
+            || {
+                calls += 1;
+                Err(io::Error::from_raw_os_error(231))
+            },
+            3,
+            Duration::from_millis(1),
+        );
+        assert_eq!(result.unwrap_err().raw_os_error(), Some(231));
+        assert_eq!(calls, 3);
+    }
+
+    #[test]
     fn stalled_sidecar_is_cut_at_the_deadline() {
         let stalled = |_: &str| -> io::Result<Fake> {
             thread::sleep(Duration::from_secs(5));

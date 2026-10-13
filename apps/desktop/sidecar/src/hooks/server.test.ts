@@ -65,6 +65,19 @@ test('a failing route answers with no decision', async () => {
   } finally { server.close(); }
 });
 
+test('an answered request does not abort the route signal', async () => {
+  const pipe = pipeName();
+  let signal: AbortSignal | undefined;
+  const route: Route = async (_event, closed) => { signal = closed; return { output: { ok: true } }; };
+  const server = await startHookServer(pipe, token, route);
+  try {
+    assert.deepEqual(JSON.parse(await call(pipe, line(token))), { output: { ok: true } });
+    await new Promise(resolve => setTimeout(resolve, 50));
+    assert.ok(signal);
+    assert.equal(signal.aborted, false);
+  } finally { server.close(); }
+});
+
 test('the route learns when the hook hangs up before the answer', async () => {
   const pipe = pipeName();
   let aborted: Promise<void> | undefined;
