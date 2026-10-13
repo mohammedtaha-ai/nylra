@@ -61,8 +61,8 @@ seen the change. Hook entries use exec form with the absolute path of
   `PostToolUse`.
 - **Keys.** Events are keyed by `session_id`; `Notification` arrives from idle
   sessions too. `PermissionRequest` has no `tool_use_id`, so a request is
-  matched to its later `PostToolUse` by session, `prompt_id`, tool name and
-  input.
+  matched to its later `PostToolUse` by session, tool name and trimmed target
+  (the latest unmatched one wins).
 
 ## 4. Answers
 
