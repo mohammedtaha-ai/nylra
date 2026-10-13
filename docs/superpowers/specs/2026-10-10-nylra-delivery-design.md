@@ -49,16 +49,19 @@ and carries the person's decisions to them.
   sidecar of the Tauri app and opens the outbound WebSocket to the backend; the
   laptop needs no inbound port.
 
-**Delegation.** AYLUL decides an agent's request only under an explicit grant
-the person created on the laptop: allowlist rules in Claude Code's permission
-syntax (`Edit(src/**)`, `Bash(npm test:*)`), per agent and project, with an
-expiry. Matching is deterministic code. Model output, file content and session
-text never decide a request. A request no rule covers goes to the person, on the
-laptop and the phone. Every decision records who made it: `person`, or
-`aylul_grant` with the grant's id. The phone and the cloud can revoke a grant,
-never create or widen one. AYLUL desktop stores and enforces grants for Claude
-Code and Codex; grants over Shadows operations are Shadows' own (§24.6) and are
-outside the first release. Create structure is never delegable.
+**Delegation.** A grant is a permission rule the person approved on the laptop,
+in Claude Code's syntax (`Edit(src/app.ts)`, `Bash(npm test)`), per agent and
+project, with an expiry. For Claude Code, AYLUL writes it into the project's
+`.claude/settings.local.json` and Claude Code enforces it; AYLUL never allows a
+call by a hook decision under a grant (amended 2026-10-13, see
+[step 2(a)](2026-10-13-aylul-hook-laptop-design.md#5-rules)). Model output, file
+content and session text never create or match a grant. A request no rule
+covers goes to the person, on the laptop and the phone. Every decision records
+who made it: `person`, or `aylul_grant` with the grant's id for a call a grant
+allowed. The phone and the cloud can revoke a grant, never create or widen one.
+Codex follows once its hooks are tested. Grants over Shadows operations are
+Shadows' own (§24.6) and are outside the first release. Create structure is
+never delegable.
 
 **Failure is not consent.** If AYLUL is off, the link is lost or a request
 times out, the hook hands control back to the agent's own prompt. Nothing is
@@ -283,8 +286,8 @@ The first release is accepted by a real run on Windows and a real phone:
 
 1. Claude Code asks to edit a file; the phone gets a push; the person allows it
    there; Claude Code continues.
-2. A grant covers `npm test`; AYLUL allows it alone, and the record says AYLUL
-   decided on the person's behalf under that grant.
+2. A grant covers `npm test`; Claude Code runs it without asking, and AYLUL's
+   record says it ran on the person's behalf under that grant.
 3. The laptop is turned off; the phone shows it offline and chat continues with
    the cloud brain.
 4. The grant is revoked from the phone; the next such request goes to the person.
