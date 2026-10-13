@@ -19,5 +19,6 @@ consumer. Mobile and conversations remain future paths in the source-structure d
 | `apps/desktop/sidecar/src/hooks/` | Token guarded hook endpoint and pipe server | Colocated `contract.yaml` |
 | `apps/desktop/sidecar/src/sessions/` | Session state and trimmed steps from hook events | Colocated `contract.yaml` |
 | `apps/desktop/sidecar/src/agents/` | Narrow permission rules and safe settings edits | Colocated `contract.yaml` |
+| `apps/desktop/sidecar/src/approvals/` | Held requests and refusals with person supplied outcomes | Colocated `contract.yaml` |
 
 No backend source is imported by the client.
