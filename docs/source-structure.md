@@ -132,10 +132,12 @@ AYLUL desktop is three processes on the laptop, each with one job:
 - **`agents/` changes another program's settings.** It backs up the agent's
   hook configuration and shows the diff before writing it.
 
-> **OPEN: what `aylul-hook` is written in.** A small Rust binary starts fastest
-> and needs no Node; a Node script reuses the sidecar's runtime. Closes in step
-> 2(a), by measuring both start times on Windows against Claude Code's hook
-> timeout.
+**`aylul-hook` is a Rust executable** (decided 2026-10-13). On Windows it
+started in about 30 ms against about 200 ms for a Node script, needs no path to
+`node.exe`, and is the real `.exe` that Claude Code's exec form requires
+([probe](evidence/2026-10-13-aylul-hook-probe.md)). It is its own crate in
+`apps/desktop/hook/`, not part of the Tauri crate, so an agent's hook never
+starts the desktop app.
 
 > **OPEN: how the installed app ships Node for the sidecar.** Closes at the
 > first installer build. Development runs the sidecar with the local Node.
