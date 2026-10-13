@@ -5,6 +5,7 @@ source: apps/desktop/src-tauri/src/auth
 responsibility: Consume backend auth-v1 1.1.0 through native HTTP and protected account storage.
 public_api:
   AuthController::perform: Serialize native actions; expose only the credential-free View.
+  AuthController::cancel: Ask an in-flight login to stop without waiting for the worker.
   AuthService::status: Validate a persisted handle with the backend before exposing a principal.
   AuthService::login: Bind S256 loopback return, open the reviewed browser URL and redeem once.
   AuthService::logout: Clear the session only after a confirmed backend revoke; preserve enrollment.
@@ -19,8 +20,10 @@ obligations:
     tested_by: pinned_backend_fixtures_deserialize_without_provider_tokens grant_rejects_extra_fields_and_projection_excludes_credentials
   - rule: Failed session verification exposes no identity, preserves credentials and permits validation after recovery.
     tested_by: refusal_and_outage_preserve_enrollment_and_require_live_validation
+    note: Asserts the refused and unavailable states and the kept credentials; that neither state carries a principal follows from status building them without one and is not asserted.
   - rule: Device surrender does not first require provider availability; only backend confirmation clears credentials.
     tested_by: current_device_revocation_does_not_require_provider_validation
+    note: The fixture always confirms DELETE; no case shows a refused revoke keeping the credentials.
   - rule: Native TCP return, backend login, stable reauthentication, protected-store fresh-process validation, revoke and logout run against real local Docker.
     tested_by: native_compose_login_reauthentication_revocation_and_logout
     note: Opt-in acceptance.rs; form driver, not browser UI acceptance. auth_state.rs is the fresh-process verifier.

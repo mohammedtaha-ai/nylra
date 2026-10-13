@@ -16,5 +16,4 @@ consumer. Mobile and conversations remain future paths in the source-structure d
 | `apps/desktop/src-tauri/examples/native_fixture.rs` | Explicit synthetic browser/protected-store process fixture | Test utility, no wire contract |
 | `apps/desktop/tests/` | Physical Windows shell and synthetic native acceptance drivers | Results in dated evidence |
 
-Retained N0 probes are separately mapped by their existing README and native
-contract. They are not product services. No backend source is imported by the client.
+No backend source is imported by the client.

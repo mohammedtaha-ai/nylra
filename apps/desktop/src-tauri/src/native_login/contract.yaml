@@ -10,10 +10,10 @@ public_api:
   ReturnBinding::new: Bind 127.0.0.1 on an OS-assigned port and generate 32 random bytes with BCryptGenRandom.
   ReturnBinding::challenge: Return unpadded base64url SHA-256 of the local verifier.
   ReturnBinding::wait_cancellable: Consume one structurally valid local callback, stop on deadline/cancellation and close the listener on return.
-  NativeReturn::verifier: Native-only verifier access for the future owner-contract consumer; never registered in IPC.
+  NativeReturn::verifier: Native-only verifier access for the auth module's return redemption; never registered in IPC.
   open_system_browser: Reject non-HTTPS, foreign-origin, credentialed or fragmented URLs before ShellExecuteW.
   save_session: DPAPI-encrypt opaque bytes before a random create-new sibling file and write-through replacement.
-  load_session: Return protected material or absence; never establish authenticated identity.
+  load_session: Return protected material or absence; never establish authenticated identity. The auth module validates a stored handle with the backend before the shell shows an account.
   clear_session: Remove local persisted material, idempotently when absent; no remote revocation.
 external_types:
   - url::Url
@@ -34,12 +34,8 @@ gaps:
   - at: ReturnBinding::wait_cancellable
     gap: >
       Any structurally valid local GET may consume the listener. This is not proof
-      of ticket authenticity. Backend redemption is not implemented; a future caller
-      must treat refusal/ambiguous exchange as a fresh login, not success or replay.
-  - at: load_session
-    gap: >
-      No backend validation or production app-data path is wired. Stored bytes
-      cannot establish a signed-in UI. No account/session state is shown by the shell.
+      of ticket authenticity: the auth module checks the query shape and the backend's
+      redemption decides; a refused or ambiguous redemption fails the login.
   - at: NativeReturn
     gap: Native material has no explicit memory zeroization. It is neither logged nor serialized but remains in process memory for its lifetime.
 open_questions:

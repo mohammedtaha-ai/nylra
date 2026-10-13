@@ -18,7 +18,8 @@ $env:NYLRA_DEV_CA=(Resolve-Path '..\shadows-backend\.local-runtime\tls\ca.pem').
 ```
 
 The Windows build requires MSVC/WebView2. The native icon is a synthetic build
-resource reproduced by the retained N0 `prepare-icon.ps1`; it is not AYLUL art.
+resource reproduced by the N0 `prepare-icon.ps1`, deleted with the probes and kept at
+`41b8e84` (`docs/evidence/probes/2026-10-10-n0/prepare-icon.ps1`); it is not AYLUL art.
 The public local CA configures only the native client. A system browser must trust
 that CA separately; do not bypass certificate verification. Windows CurrentUser
 trust does not by itself prove Firefox trust. Start the sibling Docker stack using
