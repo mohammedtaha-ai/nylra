@@ -1,0 +1,58 @@
+{
+  "state": "idle",
+  "version": 1,
+  "status": "local-preview-only",
+  "source": {
+    "file": "../../../states/v1/idle.png",
+    "sha256": "7aef454a43d3900381133014a0f866b305b80c58a78ba08652884c4351414d51",
+    "appearanceApproval": "Preserved canonical idle drawing; no redraw, recolor, rescale, or detail changes."
+  },
+  "canvas": {
+    "width": 1254,
+    "height": 1254,
+    "unit": "px",
+    "transparent": true
+  },
+  "playback": {
+    "fps": 12,
+    "loop": true,
+    "durationMs": 1000,
+    "stillFrame": "still.png"
+  },
+  "alignment": {
+    "pivotPx": [627, 1093],
+    "pivotBasis": "Canonical idle canvas horizontal center and bottom of its non-zero-alpha bounds.",
+    "assumptions": [
+      "Keep every frame on the full 1254x1254 canvas; never trim or recenter individual frames.",
+      "Use the same pivot for every frame.",
+      "The authored motion is an integer-pixel vertical translation around the fixed canvas registration point; scale and horizontal alignment never change."
+    ]
+  },
+  "motion": {
+    "type": "subtle vertical float",
+    "derivation": "Canonical decoded BGRA pixels copied without interpolation to integer vertical offsets on a transparent canvas.",
+    "generatedImageModelUsed": false
+  },
+  "frames": [
+    {"order": 0, "file": "frames/frame-000.png", "offsetYpx": 0, "sha256": "7aef454a43d3900381133014a0f866b305b80c58a78ba08652884c4351414d51"},
+    {"order": 1, "file": "frames/frame-001.png", "offsetYpx": -8, "sha256": "cc4697407cd8354556cf7866f2bab35ce7000fb55f96607b35e67bf4b7a2b72b"},
+    {"order": 2, "file": "frames/frame-002.png", "offsetYpx": -16, "sha256": "2262824a82fc53f15b817612bad2d45938039ee6bb4cd79152a435f234129d55"},
+    {"order": 3, "file": "frames/frame-003.png", "offsetYpx": -24, "sha256": "6705ead3c133021a8a118eee4f3d99314f79b075db3dbb45cd4c831175867a87"},
+    {"order": 4, "file": "frames/frame-004.png", "offsetYpx": -32, "sha256": "9ff118a172bbb0f3932807a89de92cf0a37cf39447cd31f7dc98c227b7d2154c"},
+    {"order": 5, "file": "frames/frame-005.png", "offsetYpx": -24, "sha256": "6705ead3c133021a8a118eee4f3d99314f79b075db3dbb45cd4c831175867a87"},
+    {"order": 6, "file": "frames/frame-006.png", "offsetYpx": -16, "sha256": "2262824a82fc53f15b817612bad2d45938039ee6bb4cd79152a435f234129d55"},
+    {"order": 7, "file": "frames/frame-007.png", "offsetYpx": -8, "sha256": "cc4697407cd8354556cf7866f2bab35ce7000fb55f96607b35e67bf4b7a2b72b"},
+    {"order": 8, "file": "frames/frame-008.png", "offsetYpx": 0, "sha256": "7aef454a43d3900381133014a0f866b305b80c58a78ba08652884c4351414d51"},
+    {"order": 9, "file": "frames/frame-009.png", "offsetYpx": 8, "sha256": "a83fc20ec1e0e23b693eed61951ed61882ad2bdb19b86b8756a7e2107bd485a4"},
+    {"order": 10, "file": "frames/frame-010.png", "offsetYpx": 16, "sha256": "918d553648447efc7ff9fd19d40b9fa95017a24647da67b5c528a21999a7a567"},
+    {"order": 11, "file": "frames/frame-011.png", "offsetYpx": 8, "sha256": "a83fc20ec1e0e23b693eed61951ed61882ad2bdb19b86b8756a7e2107bd485a4"}
+  ],
+  "still": {
+    "file": "still.png",
+    "sha256": "7aef454a43d3900381133014a0f866b305b80c58a78ba08652884c4351414d51"
+  },
+  "scope": {
+    "implemented": ["idle animation asset pack", "local test preview"],
+    "deferred": ["other AYLUL states", "runtime event binding", "native renderer integration", "performance acceptance"]
+  }
+}
