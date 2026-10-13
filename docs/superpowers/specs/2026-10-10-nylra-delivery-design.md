@@ -50,7 +50,7 @@ and carries the person's decisions to them.
   laptop needs no inbound port.
 
 **Delegation.** A grant is a permission rule the person approved on the laptop,
-in Claude Code's syntax (`Edit(src/app.ts)`, `Bash(npm test)`), per agent and
+in Claude Code's syntax (`Edit(/src/app.ts)`, `Bash(npm test)`), per agent and
 project, with an expiry. For Claude Code, AYLUL writes it into the project's
 `.claude/settings.local.json` and Claude Code enforces it; AYLUL never allows a
 call by a hook decision under a grant (amended 2026-10-13, see

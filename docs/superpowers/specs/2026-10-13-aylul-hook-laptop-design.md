@@ -52,9 +52,14 @@ seen the change. Hook entries use exec form with the absolute path of
   account. `aylul-hook` reads that file and sends the token with every message;
   the sidecar drops a connection whose first message lacks it. Node cannot set a
   pipe's access list, so the secret is the boundary.
-- **Messages.** One JSON line each way. Request: `{"v":1,"token":…,"event":<the
+- **Messages.** One JSON line each way. Request: `{"v":1,"token":…,"project_dir":…,"event":<the
   hook input as received>}`. Reply: `{"output":<hook output JSON>}` or `{}`.
   `aylul-hook` prints `output` as received and exits 0.
+- **The project is the session's root.** `aylul-hook` sends `CLAUDE_PROJECT_DIR`,
+  which Claude Code sets for every hook, as `project_dir`. The event's `cwd`
+  follows `cd` into subfolders, and a subfolder's `.claude/settings.local.json`
+  is not read by Claude Code, so sessions and rules use `project_dir`. Without it
+  no rule is proposed or written.
 - **Steps are trimmed in the sidecar** before they are stored or shown: tool
   name, path or command, and one line. `tool_response` content, `originalFile`,
   `structuredPatch` and file text are dropped; the probe saw them in
@@ -74,17 +79,26 @@ seen the change. Hook entries use exec form with the absolute path of
 
 ## 5. Rules
 
-- **Proposed narrow.** Bash: the exact command, `Bash(npm run deploy:staging)`.
-  Edit and Write: the exact path, `Edit(src/app.ts)`. WebFetch: the host,
-  `WebFetch(domain:example.com)`. Other tools: the tool name with the narrowest
-  argument Claude Code's rule syntax accepts. Never `Bash(*)` or a bare `Bash`.
-  The person may narrow or edit it before approving.
+- **Proposed exact.** Bash and PowerShell: the exact command,
+  `Bash(npm run deploy:staging)`. Edit, Write and Read: one file from the project
+  root, `Edit(/src/app.ts)`. WebFetch: the host, `WebFetch(domain:example.com)`.
+  An MCP tool: its full name. Nothing else is proposed.
+- **No wildcard, ever.** Claude Code reads `*` in a Bash rule as any text, so
+  `Bash(rm -rf build/*)` would allow more than that command; a path without a
+  leading `/` matches the same name in every folder, so `Edit(a.txt)` would
+  allow every `a.txt`. A command containing `*`, or a path containing `*`, `?`,
+  `[` or `]`, gets no proposal. The person may edit the rule before approving,
+  and an edited rule is accepted only in the same exact shapes
+  ([permissions reference](https://code.claude.com/docs/en/permissions), read
+  2026-10-13).
 - **Written where.** The project's `.claude/settings.local.json`, under
   `permissions.allow`. It stays with that project, is not committed, and does not
   reach the person's other projects.
 - **Written how.** Read the file; refuse and report if it is not valid JSON;
   copy it to `%LOCALAPPDATA%\AYLUL\backups\` with a timestamp; show the diff; on
-  approval write a temporary file and rename it over the original.
+  approval write a temporary file and rename it over the original. The approval
+  carries a fingerprint of the file the preview showed; if the file changed
+  since, nothing is written and the person previews again.
 - **Recorded.** Each rule: the text, the project, the time, the person's
   approval and the backup path. A later `PostToolUse` that the rule covers is
   recorded as `aylul_grant` with the rule's id.

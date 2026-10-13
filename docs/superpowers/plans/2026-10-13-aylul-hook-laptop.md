@@ -35,8 +35,13 @@ Tauri 2.11 and React 19 (existing desktop app).
   no merge unless the person says so.
 - AYLUL never answers `allow` and never writes a rule without the person.
 - A step never carries file contents, patches or tool output (spec §3).
-- A proposed or approved rule is never `Bash(*)`, bare `Bash`, bare `Edit`, `*`
-  or a whole MCP server (spec §5).
+- A proposed or approved rule is exact (spec §5): one command with no `*`, one
+  file as `/path` from the project root, one `domain:host`, or one MCP tool.
+  Claude Code reads `*` in a Bash rule as any text and a path without a leading
+  `/` as any folder, so both are refused.
+- The project is the session's root, `CLAUDE_PROJECT_DIR`, carried by
+  `aylul-hook` as `project_dir`. The event's `cwd` follows `cd` into subfolders,
+  whose `.claude/settings.local.json` Claude Code does not read.
 - Every source module gets a colocated `contract.yaml` in the
   [template](../../../../shadows-backend/docs/contracts/TEMPLATE.yaml)'s shape;
   `docs/codebase/README.md` gets one row per new module.
@@ -51,13 +56,17 @@ Tauri 2.11 and React 19 (existing desktop app).
 2. The person approves a rule after the two-minute hold ended: the rule is still
    written, nothing is sent to the finished hook (Task 5, `a late approval still
    writes the rule`).
-3. A Bash command with a newline or `)`, or a file outside the project or on
-   another drive: no rule is proposed, so the person must write one (Task 4).
+3. Claude ran `cd src` before the refusal: the rule still lands in the root's
+   `.claude/settings.local.json`, anchored there (Task 3 `the project is the root`,
+   Task 8 `a refusal is previewed and approved into the project settings`).
 4. `~/.claude/settings.json` holds the person's own hooks next to AYLUL's:
    install keeps theirs and replaces only AYLUL's entries (Task 7).
 5. The sidecar restarted while a hook waited, so the pipe in `hook.json` is gone:
    the hook prints nothing and exits 0 (Task 1 `connect_error_gives_no_output`,
    Task 2 round trip `no sidecar`).
+6. The person edits the proposed rule into a wider one (`Bash(git *)`,
+   `Edit(src/**)`, `WebFetch(domain:*)`): it is refused before anything is
+   written (Task 4 `only exact rules are accepted`).
 
 ---
 
@@ -72,9 +81,14 @@ Tauri 2.11 and React 19 (existing desktop app).
 **Interfaces:**
 - Produces: `aylul-hook.exe`. Reads stdin (one Claude Code hook event, JSON),
   reads `%LOCALAPPDATA%\AYLUL\hook.json` (`{"pipe": "...", "token": "..."}`),
-  writes `{"v":1,"token":...,"event":<input>}\n` to the pipe, reads one line
-  `{"output": <object>}` or `{}`, prints `output` (if any) to stdout, exits 0
-  always.
+  writes `{"v":1,"token":...,"project_dir":<CLAUDE_PROJECT_DIR or omitted>,"event":<input>}\n`
+  to the pipe, reads one line `{"output": <object>}` or `{}`, prints `output`
+  (if any) to stdout, exits 0 always.
+- `project_dir` is the session's project root, from the `CLAUDE_PROJECT_DIR`
+  variable Claude Code sets for every hook. The event's own `cwd` follows `cd`
+  into subfolders, so rules and sessions use `project_dir`, never `cwd`.
+- A pipe busy with another hook (`ERROR_PIPE_BUSY`, 231) is retried every 20 ms,
+  50 times, inside the event's deadline.
 
 - [ ] **Step 1: Create the crate manifest**
 
@@ -137,9 +151,30 @@ pub fn deadline(event: &Value) -> Duration {
     }
 }
 
+/// Windows `ERROR_PIPE_BUSY`: every instance of the pipe is serving another hook.
+const ERROR_PIPE_BUSY: i32 = 231;
+
+/// Opens the pipe, retrying while it is busy. Any other error returns at once.
+pub fn connect_retrying<S>(mut open: impl FnMut() -> io::Result<S>, tries: u32, pause: Duration) -> io::Result<S> {
+    let mut left = tries;
+    loop {
+        match open() {
+            Err(error) if error.raw_os_error() == Some(ERROR_PIPE_BUSY) && left > 1 => {
+                left -= 1;
+                thread::sleep(pause);
+            }
+            result => return result,
+        }
+    }
+}
+
 /// Sends one request line and returns the reply's `output`, if any.
-pub fn exchange<S: Read + Write>(mut stream: S, token: &str, event: Value) -> Option<String> {
-    let mut line = json!({ "v": 1, "token": token, "event": event }).to_string();
+pub fn exchange<S: Read + Write>(mut stream: S, token: &str, project_dir: Option<&str>, event: Value) -> Option<String> {
+    let mut request = json!({ "v": 1, "token": token, "event": event });
+    if let Some(dir) = project_dir {
+        request["project_dir"] = Value::from(dir);
+    }
+    let mut line = request.to_string();
     line.push('\n');
     stream.write_all(line.as_bytes()).ok()?;
     stream.flush().ok()?;
@@ -153,7 +188,13 @@ pub fn exchange<S: Read + Write>(mut stream: S, token: &str, event: Value) -> Op
 }
 
 /// The whole call, cut at `wait`.
-pub fn run_within<S, C>(input: &str, endpoint: Option<Endpoint>, connect: C, wait: Duration) -> Option<String>
+pub fn run_within<S, C>(
+    input: &str,
+    endpoint: Option<Endpoint>,
+    project_dir: Option<String>,
+    connect: C,
+    wait: Duration,
+) -> Option<String>
 where
     S: Read + Write + Send + 'static,
     C: FnOnce(&str) -> io::Result<S> + Send + 'static,
@@ -164,14 +205,14 @@ where
     thread::spawn(move || {
         let result = connect(&endpoint.pipe)
             .ok()
-            .and_then(|stream| exchange(stream, &endpoint.token, event));
+            .and_then(|stream| exchange(stream, &endpoint.token, project_dir.as_deref(), event));
         let _ = tx.send(result);
     });
     rx.recv_timeout(wait).ok().flatten()
 }
 
 /// The whole call with the event's own deadline.
-pub fn run<S, C>(input: &str, endpoint: Option<Endpoint>, connect: C) -> Option<String>
+pub fn run<S, C>(input: &str, endpoint: Option<Endpoint>, project_dir: Option<String>, connect: C) -> Option<String>
 where
     S: Read + Write + Send + 'static,
     C: FnOnce(&str) -> io::Result<S> + Send + 'static,
@@ -179,7 +220,7 @@ where
     let wait = serde_json::from_str::<Value>(input)
         .map(|event| deadline(&event))
         .unwrap_or(Duration::from_secs(3));
-    run_within(input, endpoint, connect, wait)
+    run_within(input, endpoint, project_dir, connect, wait)
 }
 
 #[cfg(test)]
@@ -220,26 +261,26 @@ mod tests {
     #[test]
     fn no_endpoint_gives_no_output() {
         let (stream, _) = fake("{\"output\":{\"a\":1}}\n");
-        assert_eq!(run(EVENT, None, move |_| Ok(stream)), None);
+        assert_eq!(run(EVENT, None, None, move |_| Ok(stream)), None);
     }
 
     #[test]
     fn malformed_input_gives_no_output() {
         let (stream, _) = fake("{\"output\":{\"a\":1}}\n");
-        assert_eq!(run("not json", endpoint(), move |_| Ok(stream)), None);
+        assert_eq!(run("not json", endpoint(), None, move |_| Ok(stream)), None);
     }
 
     #[test]
     fn connect_error_gives_no_output() {
         let failing = |_: &str| -> io::Result<Fake> { Err(io::Error::from(io::ErrorKind::NotFound)) };
-        assert_eq!(run(EVENT, endpoint(), failing), None);
+        assert_eq!(run(EVENT, endpoint(), None, failing), None);
     }
 
     #[test]
     fn reply_output_is_returned() {
         let reply = r#"{"output":{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}}"#;
         let (stream, _) = fake(&format!("{reply}\n"));
-        let out = run(EVENT, endpoint(), move |_| Ok(stream)).expect("output");
+        let out = run(EVENT, endpoint(), None, move |_| Ok(stream)).expect("output");
         let expected: Value = serde_json::from_str(reply).unwrap();
         assert_eq!(serde_json::from_str::<Value>(&out).unwrap(), expected["output"]);
     }
@@ -247,19 +288,58 @@ mod tests {
     #[test]
     fn empty_reply_gives_no_output() {
         let (stream, _) = fake("{}\n");
-        assert_eq!(run(EVENT, endpoint(), move |_| Ok(stream)), None);
+        assert_eq!(run(EVENT, endpoint(), None, move |_| Ok(stream)), None);
     }
 
     #[test]
     fn request_carries_version_token_and_event() {
         let (stream, sent) = fake("{}\n");
-        run(EVENT, endpoint(), move |_| Ok(stream));
+        run(EVENT, endpoint(), Some(r"C:\work\proj".into()), move |_| Ok(stream));
         let line = String::from_utf8(sent.lock().unwrap().clone()).unwrap();
         assert!(line.ends_with('\n'));
         let request: Value = serde_json::from_str(line.trim()).unwrap();
         assert_eq!(request["v"], 1);
         assert_eq!(request["token"], "t0k");
+        assert_eq!(request["project_dir"], r"C:\work\proj");
         assert_eq!(request["event"]["hook_event_name"], "Stop");
+    }
+
+    #[test]
+    fn no_project_dir_is_left_out() {
+        let (stream, sent) = fake("{}\n");
+        run(EVENT, endpoint(), None, move |_| Ok(stream));
+        let line = String::from_utf8(sent.lock().unwrap().clone()).unwrap();
+        let request: Value = serde_json::from_str(line.trim()).unwrap();
+        assert!(request.get("project_dir").is_none());
+    }
+
+    #[test]
+    fn a_busy_pipe_is_retried_and_other_errors_are_not() {
+        let mut busy = 2;
+        let opened = connect_retrying(
+            || {
+                if busy > 0 {
+                    busy -= 1;
+                    Err(io::Error::from_raw_os_error(ERROR_PIPE_BUSY))
+                } else {
+                    Ok(())
+                }
+            },
+            50,
+            Duration::from_millis(1),
+        );
+        assert!(opened.is_ok());
+        let mut calls = 0;
+        let missing = connect_retrying(
+            || -> io::Result<()> {
+                calls += 1;
+                Err(io::Error::from(io::ErrorKind::NotFound))
+            },
+            50,
+            Duration::from_millis(1),
+        );
+        assert!(missing.is_err());
+        assert_eq!(calls, 1);
     }
 
     #[test]
@@ -269,7 +349,7 @@ mod tests {
             Err(io::Error::from(io::ErrorKind::TimedOut))
         };
         let started = std::time::Instant::now();
-        assert_eq!(run_within(EVENT, endpoint(), stalled, Duration::from_millis(100)), None);
+        assert_eq!(run_within(EVENT, endpoint(), None, stalled, Duration::from_millis(100)), None);
         assert!(started.elapsed() < Duration::from_secs(2));
     }
 
@@ -312,8 +392,16 @@ fn main() {
     let endpoint = std::env::var_os("LOCALAPPDATA")
         .map(|dir| std::path::PathBuf::from(dir).join("AYLUL").join("hook.json"))
         .and_then(|path| aylul_hook::read_endpoint(&path));
-    let open = |pipe: &str| std::fs::OpenOptions::new().read(true).write(true).open(pipe);
-    if let Some(output) = aylul_hook::run(&input, endpoint, open) {
+    let project_dir = std::env::var("CLAUDE_PROJECT_DIR").ok().filter(|dir| !dir.is_empty());
+    let open = |pipe: &str| {
+        let pipe = pipe.to_owned();
+        aylul_hook::connect_retrying(
+            || std::fs::OpenOptions::new().read(true).write(true).open(&pipe),
+            50,
+            std::time::Duration::from_millis(20),
+        )
+    };
+    if let Some(output) = aylul_hook::run(&input, endpoint, project_dir, open) {
         print!("{output}");
     }
 }
@@ -323,7 +411,7 @@ fn main() {
 
 Run (from `apps/desktop`):
 `cargo test --manifest-path hook/Cargo.toml`
-Expected: 9 passed. If a test fails, fix `lib.rs`, not the test.
+Expected: 11 passed. If a test fails, fix `lib.rs`, not the test.
 
 - [ ] **Step 4: Format, lint, build release**
 
@@ -346,7 +434,8 @@ responsibility: Carry one Claude Code hook event to AYLUL's sidecar and print it
 public_api:
   run: Parse the event, take the endpoint, exchange one line each way within the event's deadline; None on any failure.
   run_within: run with an explicit deadline (tests).
-  exchange: Write {"v":1,"token","event"} and a newline; read one line; return its object `output`.
+  exchange: Write {"v":1,"token","project_dir"?,"event"} and a newline; read one line; return its object `output`.
+  connect_retrying: Retry opening while the pipe is busy (231); any other error returns at once.
   deadline: 590 s PermissionRequest, 125 s PermissionDenied, 3 s otherwise.
   read_endpoint: Read {"pipe","token"} from hook.json; None when missing or malformed.
 obligations:
@@ -354,8 +443,10 @@ obligations:
     tested_by: no_endpoint_gives_no_output, malformed_input_gives_no_output, connect_error_gives_no_output, empty_reply_gives_no_output
   - rule: A stalled sidecar is cut at the deadline.
     tested_by: stalled_sidecar_is_cut_at_the_deadline
-  - rule: The request carries version, token and the event unchanged.
-    tested_by: request_carries_version_token_and_event
+  - rule: The request carries version, token, CLAUDE_PROJECT_DIR when set, and the event unchanged.
+    tested_by: request_carries_version_token_and_event, no_project_dir_is_left_out
+  - rule: A busy pipe is retried; other connect errors are not.
+    tested_by: a_busy_pipe_is_retried_and_other_errors_are_not
   - rule: The real executable round-trips with the sidecar's pipe server.
     tested_by: 'integration: apps/desktop/sidecar/src/hooks/roundtrip.test.ts'
 gaps:
@@ -456,6 +547,12 @@ export type HookEvent = {
   message?: string;
   last_assistant_message?: string;
   source?: string;
+  /**
+   * The session's project root (CLAUDE_PROJECT_DIR), added by the server from
+   * aylul-hook's request; Claude Code does not send it. `cwd` follows `cd`, so
+   * rules and sessions use this, never `cwd`.
+   */
+  project_dir?: string;
 };
 
 export type HookReply = { output?: Record<string, unknown> };
@@ -511,6 +608,17 @@ test('a malformed line is dropped unanswered', async () => {
   const server = await startHookServer(pipe, token, async () => ({}));
   try {
     assert.equal(await call(pipe, '{not json\n'), '');
+  } finally { server.close(); }
+});
+
+test('the project root from aylul-hook reaches the route; one sent inside the event does not', async () => {
+  const pipe = pipeName();
+  const seen: Array<string | undefined> = [];
+  const server = await startHookServer(pipe, token, async e => { seen.push(e.project_dir); return {}; });
+  try {
+    await call(pipe, JSON.stringify({ v: 1, token, project_dir: 'C:\\proj', event }) + '\n');
+    await call(pipe, JSON.stringify({ v: 1, token, event: { ...event, project_dir: 'C:\\other' } }) + '\n');
+    assert.deepEqual(seen, ['C:\\proj', undefined]);
   } finally { server.close(); }
 });
 
@@ -628,7 +736,8 @@ function parse(line: string, expected: Buffer): HookEvent | undefined {
     if (value?.v !== 1 || got.length !== expected.length || !timingSafeEqual(got, expected)) return undefined;
     const event = value.event;
     if (typeof event?.hook_event_name !== 'string' || typeof event?.session_id !== 'string') return undefined;
-    return event as HookEvent;
+    const projectDir = typeof value.project_dir === 'string' && value.project_dir ? value.project_dir : undefined;
+    return { ...event, project_dir: projectDir } as HookEvent;
   } catch {
     return undefined;
   }
@@ -637,7 +746,7 @@ function parse(line: string, expected: Buffer): HookEvent | undefined {
 
 - [ ] **Step 5: Run the server tests**
 
-Run: `npm test`. Expected: 5 passed.
+Run: `npm test`. Expected: 6 passed.
 
 - [ ] **Step 6: Round trip with the real hook**
 
@@ -658,7 +767,7 @@ const event = JSON.stringify({ session_id: 's1', hook_event_name: 'Stop' });
 
 function runHook(localAppData: string): Promise<{ code: number | null; stdout: string }> {
   return new Promise((resolve, reject) => {
-    const child = spawn(exe!, [], { env: { ...process.env, LOCALAPPDATA: localAppData } });
+    const child = spawn(exe!, [], { env: { ...process.env, LOCALAPPDATA: localAppData, CLAUDE_PROJECT_DIR: 'C:\\proj-x' } });
     let stdout = '';
     child.stdout.setEncoding('utf8').on('data', d => { stdout += d; });
     child.on('error', reject);
@@ -670,11 +779,12 @@ function runHook(localAppData: string): Promise<{ code: number | null; stdout: s
 test('aylul-hook.exe carries an event and prints the answer', { skip: !exe && 'set AYLUL_HOOK_EXE' }, async () => {
   const home = mkdtempSync(join(tmpdir(), 'aylul-'));
   const endpoint = createEndpoint(join(home, 'AYLUL'));
-  const server = await startHookServer(endpoint.pipe, endpoint.token, async e => ({ output: { got: e.hook_event_name } }));
+  const server = await startHookServer(endpoint.pipe, endpoint.token,
+    async e => ({ output: { got: e.hook_event_name, project: e.project_dir } }));
   try {
     const result = await runHook(home);
     assert.equal(result.code, 0);
-    assert.deepEqual(JSON.parse(result.stdout), { got: 'Stop' });
+    assert.deepEqual(JSON.parse(result.stdout), { got: 'Stop', project: 'C:\\proj-x' });
   } finally {
     server.close();
     removeEndpoint(endpoint);
@@ -696,7 +806,7 @@ test('aylul-hook.exe with no sidecar prints nothing and exits 0', { skip: !exe &
 
 Run (PowerShell, in `apps/desktop/sidecar`):
 `$env:AYLUL_HOOK_EXE='C:/Users/Mohammed/AppData/Local/shadows-target/release/aylul-hook.exe'; npm test`
-Expected: 7 passed, 0 skipped. CI sets the variable too (Task 11), so the round
+Expected: 8 passed, 0 skipped. CI sets the variable too (Task 11), so the round
 trip is never skipped there.
 
 - [ ] **Step 7: Typecheck**
@@ -716,10 +826,12 @@ responsibility: Accept aylul-hook connections on a per-run pipe and hand each ev
 public_api:
   createEndpoint: New random pipe name and 32-byte token, written to hook.json under the given directory.
   removeEndpoint: Delete hook.json.
-  startHookServer: Listen on the pipe; first line must carry v 1 and the token; reply one line with the route's answer.
+  startHookServer: Listen on the pipe; first line must carry v 1 and the token; set event.project_dir from the line's project_dir; reply one line with the route's answer.
 obligations:
   - rule: A line without the right token, or malformed, is dropped unanswered.
     tested_by: a request without the right token is dropped unanswered, a malformed line is dropped unanswered
+  - rule: Only the request's top-level project_dir (from CLAUDE_PROJECT_DIR) sets event.project_dir.
+    tested_by: the project root from aylul-hook reaches the route; one sent inside the event does not
   - rule: A failing route answers {} (no decision).
     tested_by: a failing route answers with no decision
   - rule: The route's signal aborts when the hook hangs up first.
@@ -817,6 +929,13 @@ test('the last message is kept whole up to its limit', () => {
   assert.equal(session.lastMessage?.length, MAX_MESSAGE);
 });
 
+test('the project is the root from aylul-hook, not the folder Claude moved into', () => {
+  const first = applyEvent(undefined, { session_id: 's1', hook_event_name: 'SessionStart', cwd: 'C:\\p\\src', project_dir: 'C:\\p' }, at).session;
+  assert.equal(first.project, 'C:\\p');
+  const later = applyEvent(first, { session_id: 's1', hook_event_name: 'Stop', cwd: 'C:\\p\\src\\deep' }, at).session;
+  assert.equal(later.project, 'C:\\p');
+});
+
 test('applyEvent does not change the session it was given', () => {
   const first = applyEvent(undefined, { session_id: 's1', hook_event_name: 'SessionStart', cwd: 'C:\\p' }, at).session;
   applyEvent(first, { session_id: 's1', hook_event_name: 'SessionEnd' }, at);
@@ -882,9 +1001,11 @@ const WAITING_NOTICES = new Set(['permission_prompt', 'idle_prompt', 'elicitatio
 export function applyEvent(current: Session | undefined, event: HookEvent, at: string): { session: Session; step?: Step } {
   const session: Session = current
     ? { ...current, updatedAt: at }
-    : { id: event.session_id, agent: 'claude_code', project: event.cwd ?? '', state: 'running',
+    : { id: event.session_id, agent: 'claude_code', project: '', state: 'running',
         startedAt: at, updatedAt: at, lastStep: null, lastMessage: null };
-  if (!session.project && event.cwd) session.project = event.cwd;
+  // The project root wins; cwd (which follows `cd`) only fills in when the root never arrived.
+  if (event.project_dir) session.project = event.project_dir;
+  else if (!session.project && event.cwd) session.project = event.cwd;
   switch (event.hook_event_name) {
     case 'SessionStart':
       session.state = 'running';
@@ -919,7 +1040,7 @@ function clip(text: string): string {
 
 - [ ] **Step 3: Run tests and typecheck**
 
-Run: `npm test` then `npm run typecheck`. Expected: all pass (14 tests so far with
+Run: `npm test` then `npm run typecheck`. Expected: all pass (16 tests so far with
 `AYLUL_HOOK_EXE` set).
 
 - [ ] **Step 4: Contract**
@@ -943,6 +1064,8 @@ obligations:
     tested_by: a session moves through its states and keeps the last step and message, an auth_success notice does not mark the session waiting
   - rule: The last message is kept up to MAX_MESSAGE characters.
     tested_by: the last message is kept whole up to its limit
+  - rule: The session's project is project_dir; cwd only fills in when it never arrived.
+    tested_by: the project is the root from aylul-hook, not the folder Claude moved into
 gaps:
   - at: trimStep
     gap: A Bash command is kept as typed, so a secret written inline in a command is stored on the laptop.
@@ -966,11 +1089,14 @@ git commit -m "feat(sidecar): sessions and steps trimmed of file contents"
 
 **Interfaces:**
 - Produces:
-  - `proposeRule(tool: string, input: Record<string, unknown>, cwd: string): string | null`
+  - `proposeRule(tool: string, input: Record<string, unknown>, project: string): string | null`
+    (`project` is the session's `project_dir`, never `cwd`)
   - `isNarrowRule(rule: string): boolean`
   - `type Plan = { path: string; before: string; after: string }`
   - `planEdit(path: string, change: (settings: Record<string, unknown>) => void): Plan`
   - `planAllowRule(path: string, rule: string): Plan`
+  - `fingerprint(text: string): string` (sha-256 hex of the file text a preview saw)
+  - `expectBefore(plan: Plan, seen: string): Plan` (`settings_changed` unless `fingerprint(plan.before) === seen`)
   - `writePlan(plan: Plan, backupDir: string, now: Date): string` (backup path, `''` when the file did not exist)
   - `diffLines(plan: Plan): string[]` (`'+ '` / `'- '` prefixed changed lines)
   - Errors thrown as `Error(code)`: `settings_invalid`, `settings_changed`
@@ -984,42 +1110,67 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { proposeRule, isNarrowRule } from './rules.ts';
 
-const cwd = 'C:\\work\\proj';
+const project = 'C:\\work\\proj';
 
-test('Bash proposes the exact command', () => {
-  assert.equal(proposeRule('Bash', { command: 'npm run deploy:staging' }, cwd), 'Bash(npm run deploy:staging)');
+test('Bash and PowerShell propose the exact command', () => {
+  assert.equal(proposeRule('Bash', { command: 'npm run deploy:staging' }, project), 'Bash(npm run deploy:staging)');
+  assert.equal(proposeRule('PowerShell', { command: 'Get-ChildItem src' }, project), 'PowerShell(Get-ChildItem src)');
 });
 
-test('Bash with a newline or a closing parenthesis proposes nothing', () => {
-  assert.equal(proposeRule('Bash', { command: 'a\nb' }, cwd), null);
-  assert.equal(proposeRule('Bash', { command: 'echo $(date)' }, cwd), null);
-  assert.equal(proposeRule('Bash', { command: '  ' }, cwd), null);
+test('a command with a newline, a closing parenthesis or a * proposes nothing', () => {
+  assert.equal(proposeRule('Bash', { command: 'a\nb' }, project), null);
+  assert.equal(proposeRule('Bash', { command: 'echo $(date)' }, project), null);
+  assert.equal(proposeRule('Bash', { command: '  ' }, project), null);
+  // Claude Code reads * in a Bash rule as "any text", so the rule would cover more than this command.
+  assert.equal(proposeRule('Bash', { command: 'rm -rf build/*' }, project), null);
 });
 
-test('file tools propose the project-relative path with forward slashes', () => {
-  assert.equal(proposeRule('Write', { file_path: 'C:\\work\\proj\\src\\app.ts' }, cwd), 'Edit(src/app.ts)');
-  assert.equal(proposeRule('Edit', { file_path: 'c:\\WORK\\proj\\a.txt' }, cwd), 'Edit(a.txt)');
-  assert.equal(proposeRule('Read', { file_path: 'C:\\work\\proj\\x.md' }, cwd), 'Read(x.md)');
+test('file tools propose the path anchored at the project root', () => {
+  assert.equal(proposeRule('Write', { file_path: 'C:\\work\\proj\\src\\app.ts' }, project), 'Edit(/src/app.ts)');
+  // Without the leading /, Edit(a.txt) would match an a.txt in every folder.
+  assert.equal(proposeRule('Edit', { file_path: 'c:\\WORK\\proj\\a.txt' }, project), 'Edit(/a.txt)');
+  assert.equal(proposeRule('Read', { file_path: 'C:\\work\\proj\\x.md' }, project), 'Read(/x.md)');
 });
 
-test('a file outside the project or on another drive proposes nothing', () => {
-  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\other\\a.txt' }, cwd), null);
-  assert.equal(proposeRule('Edit', { file_path: 'D:\\proj\\a.txt' }, cwd), null);
-  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\proj' }, cwd), null);
+test('a file outside the project, on another drive, or with a pattern character proposes nothing', () => {
+  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\other\\a.txt' }, project), null);
+  assert.equal(proposeRule('Edit', { file_path: 'D:\\proj\\a.txt' }, project), null);
+  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\proj' }, project), null);
+  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\proj\\[draft].md' }, project), null);
+  assert.equal(proposeRule('Edit', { file_path: 'C:\\work\\proj\\a.txt' }, ''), null);
 });
 
 test('WebFetch proposes the host and MCP the single tool', () => {
-  assert.equal(proposeRule('WebFetch', { url: 'https://example.com/a?b=1' }, cwd), 'WebFetch(domain:example.com)');
-  assert.equal(proposeRule('WebFetch', { url: 'not a url' }, cwd), null);
-  assert.equal(proposeRule('mcp__github__create_issue', {}, cwd), 'mcp__github__create_issue');
-  assert.equal(proposeRule('Task', {}, cwd), null);
+  assert.equal(proposeRule('WebFetch', { url: 'https://example.com/a?b=1' }, project), 'WebFetch(domain:example.com)');
+  assert.equal(proposeRule('WebFetch', { url: 'not a url' }, project), null);
+  assert.equal(proposeRule('mcp__github__create_issue', {}, project), 'mcp__github__create_issue');
+  assert.equal(proposeRule('Task', {}, project), null);
 });
 
-test('broad rules are refused, narrow ones accepted', () => {
-  for (const broad of ['Bash', 'Bash(*)', 'Bash(:*)', 'Bash( )', 'Edit', 'Edit(**)', 'Edit(/**)', 'Write', '*', '', 'mcp__github', 'mcp__github__*'])
+test('only exact rules are accepted', () => {
+  for (const broad of [
+    'Bash', 'Bash(*)', 'Bash(:*)', 'Bash( )', 'Bash(npm test:*)', 'Bash(git *)', 'Bash(rm -rf build/*)', 'PowerShell(*)',
+    'Edit', 'Edit(**)', 'Edit(/**)', 'Edit(**/*)', 'Edit(src/**)', 'Edit(/src/**)', 'Edit(a.txt)', 'Edit(/)', 'Edit(/src/)',
+    'Edit(//c/x.txt)', 'Edit(~/x.txt)', 'Edit(/../x.txt)', 'Read(/a?.md)', 'Write(/a.txt)',
+    'WebFetch(domain:*)', 'WebFetch(domain:*.example.com)', 'WebFetch(example.com)',
+    '*', '', 'mcp__github', 'mcp__github__*', 'Task(x)',
+  ])
     assert.equal(isNarrowRule(broad), false, broad);
-  for (const narrow of ['Bash(npm test)', 'Bash(npm test:*)', 'Edit(src/app.ts)', 'WebFetch(domain:example.com)', 'mcp__github__create_issue'])
+  for (const narrow of ['Bash(npm test)', 'PowerShell(npm test)', 'Edit(/src/app.ts)', 'Read(/docs/x.md)',
+    'WebFetch(domain:example.com)', 'mcp__github__create_issue'])
     assert.equal(isNarrowRule(narrow), true, narrow);
+});
+
+test('every proposed rule is accepted as narrow', () => {
+  const proposed = [
+    proposeRule('Bash', { command: 'npm run deploy:staging' }, project),
+    proposeRule('PowerShell', { command: 'Get-ChildItem src' }, project),
+    proposeRule('Write', { file_path: 'C:\\work\\proj\\src\\app.ts' }, project),
+    proposeRule('Read', { file_path: 'C:\\work\\proj\\x.md' }, project),
+    proposeRule('WebFetch', { url: 'https://example.com/a' }, project),
+    proposeRule('mcp__github__create_issue', {}, project),
+  ];
+  for (const rule of proposed) assert.equal(rule !== null && isNarrowRule(rule), true, String(rule));
 });
 ```
 
@@ -1032,38 +1183,56 @@ Run: `npm test`. Expected: FAIL, `./rules.ts` not found.
 ```ts
 import { win32 } from 'node:path';
 
+const SHELL_TOOLS = new Set(['Bash', 'PowerShell']);
 const FILE_TOOLS = new Set(['Edit', 'Write', 'MultiEdit', 'NotebookEdit', 'Read']);
+/** Characters Claude Code's path rules read as a pattern, not as themselves. */
+const PATTERN = /[*?[\]]/;
 
-/** The narrowest Claude Code permission rule covering this call, or null when none can be proposed safely. */
-export function proposeRule(tool: string, input: Record<string, unknown>, cwd: string): string | null {
-  if (tool === 'Bash') {
+/**
+ * The narrowest Claude Code permission rule covering this call, or null when
+ * none can be proposed safely. `project` is the session's project root
+ * (CLAUDE_PROJECT_DIR); a `/path` rule in settings.local.json is anchored there.
+ */
+export function proposeRule(tool: string, input: Record<string, unknown>, project: string): string | null {
+  if (SHELL_TOOLS.has(tool)) {
     const command = typeof input.command === 'string' ? input.command.trim() : '';
-    if (!command || /[\r\n]/.test(command) || command.includes(')')) return null;
-    return `Bash(${command})`;
+    if (!command || /[\r\n*]/.test(command) || command.includes(')')) return null;
+    return `${tool}(${command})`;
   }
   if (FILE_TOOLS.has(tool)) {
     const file = input.file_path ?? input.notebook_path;
-    if (typeof file !== 'string' || !cwd) return null;
-    const rel = win32.relative(cwd, file);
+    if (typeof file !== 'string' || !project) return null;
+    const rel = win32.relative(project, file);
     if (!rel || rel.startsWith('..') || win32.isAbsolute(rel)) return null;
-    return `${tool === 'Read' ? 'Read' : 'Edit'}(${rel.split('\\').join('/')})`;
+    const path = rel.split('\\').join('/');
+    if (PATTERN.test(path)) return null;
+    return `${tool === 'Read' ? 'Read' : 'Edit'}(/${path})`;
   }
   if (tool === 'WebFetch') {
     try { return `WebFetch(domain:${new URL(String(input.url)).hostname})`; } catch { return null; }
   }
-  if (/^mcp__[^_]+(?:_[^_]+)*__\w+$/.test(tool)) return tool;
+  if (/^mcp__[^*\s()]+__[^*\s()]+$/.test(tool)) return tool;
   return null;
 }
 
-/** False for a rule that would cover a whole tool, every path or a whole MCP server. */
+/**
+ * True only for the shapes proposeRule makes: an exact command, one file
+ * anchored at the project root, one host, or one MCP tool. Everything else,
+ * including any wildcard, is refused; this is the only check before a rule
+ * the person typed is written.
+ */
 export function isNarrowRule(rule: string): boolean {
-  const match = /^([A-Za-z][\w-]*)(?:\((.*)\))?$/.exec(rule.trim());
+  const text = rule.trim();
+  if (/^mcp__[^*\s()]+__[^*\s()]+$/.test(text)) return true;
+  const match = /^(\w+)\((.*)\)$/s.exec(text);
   if (!match) return false;
   const [, tool, arg] = match;
-  if (tool.startsWith('mcp__')) return arg === undefined && /^mcp__.+__[^*]+$/.test(tool);
-  if (arg === undefined) return false;
-  const value = arg.trim();
-  return !/^[*:\s]*$/.test(value) && !['**', '/**', '//**', '~/**', './**'].includes(value);
+  if (!arg || arg.trim() !== arg || arg.includes(')') || /[\r\n*]/.test(arg)) return false;
+  if (SHELL_TOOLS.has(tool)) return true;
+  if (tool === 'Edit' || tool === 'Read')
+    return /^\/[^/~]/.test(arg) && !arg.endsWith('/') && !PATTERN.test(arg) && !arg.split('/').includes('..');
+  if (tool === 'WebFetch') return /^domain:[a-z0-9-]+(\.[a-z0-9-]+)+$/i.test(arg);
+  return false;
 }
 ```
 
@@ -1079,7 +1248,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { planAllowRule, writePlan, diffLines } from './settings-file.ts';
+import { planAllowRule, writePlan, diffLines, fingerprint, expectBefore } from './settings-file.ts';
 
 const now = new Date('2026-10-13T19:00:00.000Z');
 function project() {
@@ -1139,6 +1308,24 @@ test('no temporary file is left after a write', () => {
   writePlan(planAllowRule(p.settings, 'Bash(npm test)'), p.backups, now);
   assert.deepEqual(readdirSync(join(p.dir, '.claude')), ['settings.local.json']);
 });
+
+test('a file holding only whitespace is treated as empty, in the plan and the diff', () => {
+  const p = project();
+  mkdirSync(join(p.dir, '.claude'));
+  writeFileSync(p.settings, '  \n');
+  const plan = planAllowRule(p.settings, 'Bash(npm test)');
+  assert.ok(diffLines(plan).every(l => l.startsWith('+ ')));
+});
+
+test('approving against a preview of a file that changed since is refused', () => {
+  const p = project();
+  mkdirSync(join(p.dir, '.claude'));
+  writeFileSync(p.settings, '{}');
+  const seen = fingerprint(planAllowRule(p.settings, 'Bash(npm test)').before);
+  assert.doesNotThrow(() => expectBefore(planAllowRule(p.settings, 'Bash(npm test)'), seen));
+  writeFileSync(p.settings, '{"model": "x"}');
+  assert.throws(() => expectBefore(planAllowRule(p.settings, 'Bash(npm test)'), seen), { message: 'settings_changed' });
+});
 ```
 
 Run: `npm test`. Expected: FAIL, `./settings-file.ts` not found.
@@ -1148,7 +1335,7 @@ Run: `npm test`. Expected: FAIL, `./settings-file.ts` not found.
 `apps/desktop/sidecar/src/agents/settings-file.ts`:
 
 ```ts
-import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { basename, dirname, join } from 'node:path';
 
@@ -1183,6 +1370,17 @@ export function planAllowRule(path: string, rule: string): Plan {
   });
 }
 
+/** The sha-256 of the file text a preview showed; the approval sends it back. */
+export function fingerprint(text: string): string {
+  return createHash('sha256').update(text).digest('hex');
+}
+
+/** The plan, if the file still holds what the person previewed; settings_changed otherwise. */
+export function expectBefore(plan: Plan, seen: string): Plan {
+  if (fingerprint(plan.before) !== seen) throw new Error('settings_changed');
+  return plan;
+}
+
 /** Backs up, then replaces the file in one rename. Refuses if it changed since the plan. */
 export function writePlan(plan: Plan, backupDir: string, now: Date): string {
   const current = existsSync(plan.path) ? readFileSync(plan.path, 'utf8') : '';
@@ -1197,13 +1395,30 @@ export function writePlan(plan: Plan, backupDir: string, now: Date): string {
   mkdirSync(dirname(plan.path), { recursive: true });
   const temp = `${plan.path}.aylul-${process.pid}.tmp`;
   writeFileSync(temp, plan.after);
-  renameSync(temp, plan.path);
+  renameRetrying(temp, plan.path);
   return backupPath;
+}
+
+/**
+ * Windows refuses a rename with EPERM, EACCES or EBUSY while another program
+ * (Claude Code, an antivirus) has the file open; that passes within moments.
+ */
+function renameRetrying(from: string, to: string): void {
+  for (let attempt = 1; ; attempt++) {
+    try { renameSync(from, to); return; } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (attempt >= 10 || !['EPERM', 'EACCES', 'EBUSY'].includes(code ?? '')) {
+        rmSync(from, { force: true });
+        throw error;
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50);
+    }
+  }
 }
 
 /** Changed lines only, from a longest-common-subsequence line diff. */
 export function diffLines(plan: Plan): string[] {
-  const a = plan.before ? JSON.stringify(JSON.parse(plan.before), null, 2).split('\n') : [];
+  const a = plan.before.trim() ? JSON.stringify(JSON.parse(plan.before), null, 2).split('\n') : [];
   const b = plan.after.trimEnd().split('\n');
   const lcs: number[][] = Array.from({ length: a.length + 1 }, () => new Array<number>(b.length + 1).fill(0));
   for (let i = a.length - 1; i >= 0; i--)
@@ -1241,24 +1456,28 @@ status: current
 source: apps/desktop/sidecar/src/agents
 responsibility: Propose narrow permission rules and change Claude Code settings files safely.
 public_api:
-  proposeRule: Exact Bash command, project-relative Edit/Read path, WebFetch host, or one MCP tool; null otherwise.
-  isNarrowRule: Refuse a bare tool, *, **-style paths and whole MCP servers.
-  planEdit: Parse the file (missing means {}), apply a change to a copy; settings_invalid for non-object JSON.
+  proposeRule: Exact Bash or PowerShell command, Edit/Read path anchored at the project root (/path), WebFetch host, or one MCP tool; null otherwise.
+  isNarrowRule: Accept only the shapes proposeRule makes; any *, ?, [ ], unanchored or directory path, ~ or // path is refused.
+  planEdit: Parse the file (missing or whitespace means {}), apply a change to a copy; settings_invalid for non-object JSON.
   planAllowRule: Append the rule to permissions.allow once.
-  writePlan: settings_changed if the file differs from the plan; timestamped backup; write temp then rename.
+  fingerprint: sha-256 of the file text a preview showed.
+  expectBefore: settings_changed unless the file still matches the previewed fingerprint.
+  writePlan: settings_changed if the file differs from the plan; timestamped backup; write temp then rename, retrying a locked file.
   diffLines: Changed lines with + and - prefixes.
 obligations:
-  - rule: Multi-line, parenthesised, outside-project and other-drive calls get no proposal.
-    tested_by: Bash with a newline or a closing parenthesis proposes nothing, a file outside the project or on another drive proposes nothing
-  - rule: Broad rules are refused.
-    tested_by: broad rules are refused, narrow ones accepted
+  - rule: Multi-line, parenthesised, wildcard, pattern-character, outside-project and other-drive calls get no proposal.
+    tested_by: a command with a newline, a closing parenthesis or a * proposes nothing, a file outside the project, on another drive, or with a pattern character proposes nothing
+  - rule: Only exact rules are accepted, and every proposal is one.
+    tested_by: only exact rules are accepted, every proposed rule is accepted as narrow
   - rule: Invalid settings are never written; existing keys survive; a backup precedes the write.
     tested_by: invalid JSON or a wrong shape is refused and the file is untouched, existing settings are kept, a backup is written, and the diff shows the rule
   - rule: A file changed after the preview is not overwritten.
-    tested_by: a file changed after the preview is not overwritten
+    tested_by: a file changed after the preview is not overwritten, approving against a preview of a file that changed since is refused
 gaps:
   - at: proposeRule
     gap: Whether Claude Code's Bash rule matches a compound command (a && b) as typed is not checked here.
+  - at: writePlan
+    gap: The retry on a locked file (EPERM, EACCES, EBUSY) is not exercised by a test.
 ```
 
 - [ ] **Step 7: Commit**
@@ -1282,9 +1501,11 @@ git commit -m "feat(sidecar): narrow rule proposals and a backed-up settings wri
 - Produces:
   - `type Pending = { id: string; kind: 'request' | 'refusal'; sessionId: string; project: string; tool: string; target: string; reason: string | null; proposedRule: string | null; at: string; held: boolean }`
   - `type Outcome = 'allowed' | 'denied' | 'answered_in_terminal' | 'timed_out' | 'listed' | 'rule_written' | 'dismissed'`
-  - `type ApprovalsDeps = { now: () => Date; newId: () => string; writeRule: (project: string, rule: string) => { ruleId: string; backupPath: string }; record: (item: Pending, outcome: Outcome) => void; requestHoldMs: number; refusalHoldMs: number }`
-  - `class Approvals { constructor(d: ApprovalsDeps); pending(): Pending[]; request(event, closed): Promise<HookReply>; refusal(event, closed): Promise<HookReply>; answer(id: string, behavior: 'allow' | 'deny'): void; approveRule(id: string, rule: string): { backupPath: string }; dismiss(id: string): void }`
-  - Errors: `not_pending`, `rule_too_broad`
+  - `type ApprovalsDeps = { now: () => Date; newId: () => string; writeRule: (project: string, rule: string, seen: string) => { ruleId: string; backupPath: string }; record: (item: Pending, outcome: Outcome) => void; requestHoldMs: number; refusalHoldMs: number }`
+    (`seen` is the settings fingerprint the person previewed; `writeRule` refuses with `settings_changed` if the file moved on)
+  - `class Approvals { constructor(d: ApprovalsDeps); pending(): Pending[]; request(event, closed): Promise<HookReply>; refusal(event, closed): Promise<HookReply>; answer(id: string, behavior: 'allow' | 'deny'): void; approveRule(id: string, rule: string, seen: string): { backupPath: string }; dismiss(id: string): void }`
+  - `project` is the event's `project_dir` (set by the hook server), never `cwd`
+  - Errors: `not_pending`, `rule_too_broad`, `project_unknown`
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -1302,15 +1523,15 @@ function setup(hold = { request: 200, refusal: 200 }) {
   const approvals = new Approvals({
     now: () => new Date('2026-10-13T19:00:00.000Z'),
     newId: () => `id${++n}`,
-    writeRule: (project, rule) => { written.push([project, rule]); return { ruleId: 'r1', backupPath: 'b1' }; },
+    writeRule: (project, rule, _seen) => { written.push([project, rule]); return { ruleId: 'r1', backupPath: 'b1' }; },
     record: (item: Pending, outcome) => { records.push([item.id, outcome]); },
     requestHoldMs: hold.request,
     refusalHoldMs: hold.refusal,
   });
   return { approvals, records, written };
 }
-const request = { session_id: 's1', hook_event_name: 'PermissionRequest', cwd: 'C:\\p', tool_name: 'Bash', tool_input: { command: 'npm test' } };
-const refusal = { session_id: 's1', hook_event_name: 'PermissionDenied', cwd: 'C:\\p', tool_name: 'Bash', tool_input: { command: 'npm run deploy' }, reason: '[Prod Deploy]' };
+const request = { session_id: 's1', hook_event_name: 'PermissionRequest', cwd: 'C:\\p\\src', project_dir: 'C:\\p', tool_name: 'Bash', tool_input: { command: 'npm test' } };
+const refusal = { session_id: 's1', hook_event_name: 'PermissionDenied', cwd: 'C:\\p\\src', project_dir: 'C:\\p', tool_name: 'Bash', tool_input: { command: 'npm run deploy' }, reason: '[Prod Deploy]' };
 const open = () => new AbortController();
 
 test('allow from AYLUL answers the hook with allow', async () => {
@@ -1382,7 +1603,7 @@ test('a refusal carries its reason and a proposed rule', async () => {
 test('approving the rule within the hold writes it, then asks Claude to retry', async () => {
   const { approvals, written, records } = setup();
   const reply = approvals.refusal(refusal, open().signal);
-  const result = approvals.approveRule(approvals.pending()[0].id, 'Bash(npm run deploy)');
+  const result = approvals.approveRule(approvals.pending()[0].id, 'Bash(npm run deploy)', 'seen');
   assert.deepEqual(result, { backupPath: 'b1' });
   assert.deepEqual(written, [['C:\\p', 'Bash(npm run deploy)']]);
   assert.deepEqual(await reply, { output: { hookSpecificOutput: { hookEventName: 'PermissionDenied', retry: true } } });
@@ -1394,7 +1615,7 @@ test('a late approval still writes the rule', async () => {
   assert.deepEqual(await approvals.refusal(refusal, open().signal), {});
   const [item] = approvals.pending();
   assert.equal(item.held, false);
-  approvals.approveRule(item.id, 'Bash(npm run deploy)');
+  approvals.approveRule(item.id, 'Bash(npm run deploy)', 'seen');
   assert.deepEqual(written, [['C:\\p', 'Bash(npm run deploy)']]);
   assert.deepEqual(records, [['id1', 'listed'], ['id1', 'rule_written']]);
   assert.deepEqual(approvals.pending(), []);
@@ -1404,9 +1625,20 @@ test('a broad rule is refused and nothing is written', () => {
   const { approvals, written } = setup();
   void approvals.refusal(refusal, open().signal);
   const id = approvals.pending()[0].id;
-  assert.throws(() => approvals.approveRule(id, 'Bash(*)'), { message: 'rule_too_broad' });
+  assert.throws(() => approvals.approveRule(id, 'Bash(*)', 'seen'), { message: 'rule_too_broad' });
   assert.deepEqual(written, []);
   assert.equal(approvals.pending().length, 1);
+});
+
+test('a refusal with no project root proposes nothing and cannot be approved', () => {
+  const { approvals, written } = setup();
+  const { project_dir: _root, ...withoutRoot } = refusal;
+  void approvals.refusal(withoutRoot, open().signal);
+  const [item] = approvals.pending();
+  assert.equal(item.project, '');
+  assert.equal(item.proposedRule, null);
+  assert.throws(() => approvals.approveRule(item.id, 'Bash(npm run deploy)', 'seen'), { message: 'project_unknown' });
+  assert.deepEqual(written, []);
 });
 
 test('a dismissed refusal leaves the list and answers a held hook with no decision', async () => {
@@ -1446,7 +1678,8 @@ export type Outcome = 'allowed' | 'denied' | 'answered_in_terminal' | 'timed_out
 export type ApprovalsDeps = {
   now: () => Date;
   newId: () => string;
-  writeRule: (project: string, rule: string) => { ruleId: string; backupPath: string };
+  /** Writes the rule if the file still matches the fingerprint `seen` the person previewed. */
+  writeRule: (project: string, rule: string, seen: string) => { ruleId: string; backupPath: string };
   record: (item: Pending, outcome: Outcome) => void;
   requestHoldMs: number;
   refusalHoldMs: number;
@@ -1480,7 +1713,8 @@ export class Approvals {
   }
 
   refusal(event: HookEvent, closed: AbortSignal): Promise<HookReply> {
-    const rule = proposeRule(event.tool_name ?? '', event.tool_input ?? {}, event.cwd ?? '');
+    // No root, no rule: it could not be written to the settings file Claude Code reads.
+    const rule = event.project_dir ? proposeRule(event.tool_name ?? '', event.tool_input ?? {}, event.project_dir) : null;
     const item = this.#item('refusal', event, rule);
     const list = () => this.#d.record(item, 'listed');
     return this.#hold(item, closed, this.#d.refusalHoldMs, list, list);
@@ -1495,11 +1729,13 @@ export class Approvals {
     reply(behavior === 'allow' ? ALLOW : DENY);
   }
 
-  approveRule(id: string, rule: string): { backupPath: string } {
+  approveRule(id: string, rule: string, seen: string): { backupPath: string } {
     const item = this.#items.get(id);
     if (!item || item.kind !== 'refusal') throw new Error('not_pending');
     if (!isNarrowRule(rule)) throw new Error('rule_too_broad');
-    const written = this.#d.writeRule(item.project, rule.trim());
+    // Without the root a rule could land in a subfolder's settings, which Claude Code never reads.
+    if (!item.project) throw new Error('project_unknown');
+    const written = this.#d.writeRule(item.project, rule.trim(), seen);
     const reply = item.reply;
     this.#items.delete(id);
     this.#d.record(item, 'rule_written');
@@ -1518,7 +1754,7 @@ export class Approvals {
 
   #item(kind: Pending['kind'], event: HookEvent, proposedRule: string | null): Item {
     const step = trimStep(event, '');
-    return { id: this.#d.newId(), kind, sessionId: event.session_id, project: event.cwd ?? '',
+    return { id: this.#d.newId(), kind, sessionId: event.session_id, project: event.project_dir ?? '',
       tool: step.tool, target: step.target, reason: event.reason ?? null, proposedRule,
       at: this.#d.now().toISOString(), held: true };
   }
@@ -1565,7 +1801,7 @@ public_api:
   request: Hold until answer, hang-up (answered in terminal) or requestHoldMs (timed out); reply allow, deny or {}.
   refusal: Propose a rule; hold up to refusalHoldMs; stays listed after the hold.
   answer: allow or deny one held request; not_pending otherwise.
-  approveRule: Narrow rule only; write it, record rule_written, then retry a still-held hook.
+  approveRule: Narrow rule and a known project root only; write it against the previewed fingerprint, record rule_written, then retry a still-held hook.
   dismiss: Remove a refusal; a held hook gets {}.
   pending: Current items, oldest first.
 obligations:
@@ -1579,6 +1815,8 @@ obligations:
     tested_by: approving the rule within the hold writes it, then asks Claude to retry, a late approval still writes the rule
   - rule: Broad rules are refused.
     tested_by: a broad rule is refused and nothing is written
+  - rule: A refusal without project_dir gets no proposal and is never written.
+    tested_by: a refusal with no project root proposes nothing and cannot be approved
 gaps:
   - at: Approvals
     gap: Items live in memory; a sidecar restart drops listed refusals (their records stay in the store).
@@ -1754,9 +1992,10 @@ export class Store {
       VALUES (?, ?, ?, ?, ?, ?, ?)`).run(item.id, item.sessionId, item.kind, item.tool, item.target, outcome, at);
   }
 
+  // node:sqlite returns rows with a null prototype; `plain` copies them into ordinary objects.
   decisions(): Decision[] {
-    return this.#db.prepare(`SELECT item_id AS itemId, session_id AS sessionId, kind, tool, target, outcome, at
-      FROM decisions ORDER BY seq`).all() as Decision[];
+    return plain(this.#db.prepare(`SELECT item_id AS itemId, session_id AS sessionId, kind, tool, target, outcome, at
+      FROM decisions ORDER BY seq`).all()) as Decision[];
   }
 
   /** A step after a terminal answer shows the person allowed it there. */
@@ -1775,8 +2014,8 @@ export class Store {
   }
 
   rulesFor(project: string): RuleRow[] {
-    return this.#db.prepare(`SELECT id, project, rule, backup_path AS backupPath, at FROM rules
-      WHERE project = ? ORDER BY at, id`).all(project) as RuleRow[];
+    return plain(this.#db.prepare(`SELECT id, project, rule, backup_path AS backupPath, at FROM rules
+      WHERE project = ? ORDER BY at, id`).all(project)) as RuleRow[];
   }
 
   addGrantUse(ruleId: string, sessionId: string, toolUseId: string, at: string): void {
@@ -1785,11 +2024,15 @@ export class Store {
   }
 
   grantUses(): Array<{ ruleId: string; sessionId: string; toolUseId: string }> {
-    return this.#db.prepare(`SELECT rule_id AS ruleId, session_id AS sessionId, tool_use_id AS toolUseId
-      FROM grant_uses ORDER BY seq`).all() as Array<{ ruleId: string; sessionId: string; toolUseId: string }>;
+    return plain(this.#db.prepare(`SELECT rule_id AS ruleId, session_id AS sessionId, tool_use_id AS toolUseId
+      FROM grant_uses ORDER BY seq`).all()) as Array<{ ruleId: string; sessionId: string; toolUseId: string }>;
   }
 
   close(): void { this.#db.close(); }
+}
+
+function plain(rows: unknown[]): Array<Record<string, unknown>> {
+  return rows.map(row => ({ ...(row as Record<string, unknown>) }));
 }
 ```
 
@@ -2025,6 +2268,9 @@ git commit -m "feat(sidecar): install AYLUL's hooks into Claude Code, keeping th
   - `makeHandlers(d: HandlerDeps): Handlers` with methods `state`, `steps`,
     `request.answer`, `refusal.preview`, `refusal.approve`, `refusal.dismiss`,
     `hooks.preview`, `hooks.install`; `settingsFor(project: string): string`
+  - Both previews return `{ path, lines, before }`, where `before` is `fingerprint` of the file
+    they read; `refusal.approve` and `hooks.install` take that `before` back and refuse with
+    `settings_changed` if the file moved on since
   - Wire: stdin lines `{"id": number, "method": string, "params": object}`;
     stdout lines `{"id", "result"}` or `{"id", "error": code}`. Logs go to stderr only.
 
@@ -2070,9 +2316,9 @@ test('a PermissionRequest waits in approvals', async () => {
 test('a call covered by a recorded rule is noted as a grant use', async () => {
   const { store, route } = setup();
   const ruleId = store.addRule('C:\\p', 'Bash(npm test)', '', '2026-10-13T18:00:00.000Z');
-  await route({ session_id: 's1', hook_event_name: 'PostToolUse', cwd: 'C:\\p', tool_name: 'Bash',
+  await route({ session_id: 's1', hook_event_name: 'PostToolUse', cwd: 'C:\\p\\src', project_dir: 'C:\\p', tool_name: 'Bash',
     tool_input: { command: 'npm test' }, tool_use_id: 't9' }, never);
-  await route({ session_id: 's1', hook_event_name: 'PostToolUse', cwd: 'C:\\p', tool_name: 'Bash',
+  await route({ session_id: 's1', hook_event_name: 'PostToolUse', cwd: 'C:\\p', project_dir: 'C:\\p', tool_name: 'Bash',
     tool_input: { command: 'npm run build' }, tool_use_id: 't10' }, never);
   assert.deepEqual(store.grantUses(), [{ ruleId, sessionId: 's1', toolUseId: 't9' }]);
 });
@@ -2123,10 +2369,10 @@ export function makeRoute(d: { store: Store; approvals: Approvals; now: () => Da
 }
 
 function noteGrantUse(store: Store, event: HookEvent, at: string): void {
-  const cwd = event.cwd ?? '';
-  const covering = proposeRule(event.tool_name ?? '', event.tool_input ?? {}, cwd);
+  const project = event.project_dir ?? '';
+  const covering = proposeRule(event.tool_name ?? '', event.tool_input ?? {}, project);
   if (!covering) return;
-  const rule = store.rulesFor(cwd).find(r => r.rule === covering);
+  const rule = store.rulesFor(project).find(r => r.rule === covering);
   if (rule) store.addGrantUse(rule.id, event.session_id, event.tool_use_id ?? '', at);
 }
 ```
@@ -2186,13 +2432,13 @@ test('unknown methods, stable errors and unexpected errors come back as codes', 
 ```ts
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { makeHandlers, settingsFor } from './handlers.ts';
 import { Store } from './store/store.ts';
 import { Approvals } from './approvals/approvals.ts';
-import { planAllowRule, writePlan } from './agents/settings-file.ts';
+import { expectBefore, planAllowRule, writePlan } from './agents/settings-file.ts';
 
 function setup(withExe = true) {
   const home = mkdtempSync(join(tmpdir(), 'aylul-h-'));
@@ -2201,7 +2447,8 @@ function setup(withExe = true) {
   const store = new Store(':memory:');
   const now = () => new Date('2026-10-13T19:00:00.000Z');
   const approvals = new Approvals({ now, newId: () => 'id1', record: () => {}, requestHoldMs: 500, refusalHoldMs: 500,
-    writeRule: (project, rule) => ({ ruleId: 'r', backupPath: writePlan(planAllowRule(settingsFor(project), rule), join(home, 'b'), now()) }) });
+    writeRule: (project, rule, seen) => ({ ruleId: 'r',
+      backupPath: writePlan(expectBefore(planAllowRule(settingsFor(project), rule), seen), join(home, 'b'), now()) }) });
   const handlers = makeHandlers({ store, approvals, claudeSettings: join(home, '.claude', 'settings.json'),
     hookExe: withExe ? exe : undefined, backupDir: join(home, 'b'), now });
   return { home, exe, approvals, handlers };
@@ -2210,28 +2457,43 @@ function setup(withExe = true) {
 test('state reports hooks not installed, then installed after hooks.install', async () => {
   const { handlers, home } = setup();
   assert.equal((await handlers.state({}) as { hooksInstalled: boolean }).hooksInstalled, false);
-  const preview = await handlers['hooks.preview']({}) as { path: string; lines: string[] };
+  const preview = await handlers['hooks.preview']({}) as { path: string; lines: string[]; before: string };
   assert.equal(preview.path, join(home, '.claude', 'settings.json'));
   assert.ok(preview.lines.some(l => l.includes('aylul-hook.exe')));
-  await handlers['hooks.install']({});
+  await handlers['hooks.install']({ before: preview.before });
   assert.equal((await handlers.state({}) as { hooksInstalled: boolean }).hooksInstalled, true);
 });
 
 test('without the hook executable, install is refused', () => {
   const { handlers } = setup(false);
-  assert.throws(() => handlers['hooks.install']({}), { message: 'hook_exe_missing' });
+  assert.throws(() => handlers['hooks.install']({ before: 'x' }), { message: 'hook_exe_missing' });
 });
 
 test('a refusal is previewed and approved into the project settings', async () => {
   const { handlers, approvals, home } = setup();
   const project = join(home, 'proj');
-  void approvals.refusal({ session_id: 's1', hook_event_name: 'PermissionDenied', cwd: project, tool_name: 'Bash',
+  void approvals.refusal({ session_id: 's1', hook_event_name: 'PermissionDenied', cwd: join(project, 'src'), project_dir: project,
+    tool_name: 'Bash', tool_input: { command: 'npm run deploy' }, reason: '[X]' }, new AbortController().signal);
+  const id = approvals.pending()[0].id;
+  const preview = await handlers['refusal.preview']({ id, rule: 'Bash(npm run deploy)' }) as { lines: string[]; before: string };
+  assert.ok(preview.lines.some(l => l.includes('Bash(npm run deploy)')));
+  await handlers['refusal.approve']({ id, rule: 'Bash(npm run deploy)', before: preview.before });
+  assert.deepEqual(JSON.parse(readFileSync(settingsFor(project), 'utf8')).permissions.allow, ['Bash(npm run deploy)']);
+});
+
+test('an approval after the settings file changed since the preview writes nothing', async () => {
+  const { handlers, approvals, home } = setup();
+  const project = join(home, 'proj');
+  void approvals.refusal({ session_id: 's1', hook_event_name: 'PermissionDenied', project_dir: project, tool_name: 'Bash',
     tool_input: { command: 'npm run deploy' }, reason: '[X]' }, new AbortController().signal);
   const id = approvals.pending()[0].id;
-  const preview = await handlers['refusal.preview']({ id, rule: 'Bash(npm run deploy)' }) as { lines: string[] };
-  assert.ok(preview.lines.some(l => l.includes('Bash(npm run deploy)')));
-  await handlers['refusal.approve']({ id, rule: 'Bash(npm run deploy)' });
-  assert.deepEqual(JSON.parse(readFileSync(settingsFor(project), 'utf8')).permissions.allow, ['Bash(npm run deploy)']);
+  const preview = await handlers['refusal.preview']({ id, rule: 'Bash(npm run deploy)' }) as { before: string };
+  mkdirSync(join(project, '.claude'), { recursive: true });
+  writeFileSync(settingsFor(project), '{"model": "x"}');
+  assert.throws(() => handlers['refusal.approve']({ id, rule: 'Bash(npm run deploy)', before: preview.before }),
+    { message: 'settings_changed' });
+  assert.equal(readFileSync(settingsFor(project), 'utf8'), '{"model": "x"}');
+  assert.equal(approvals.pending().length, 1);
 });
 
 test('missing or wrong parameters are bad_params', () => {
@@ -2254,7 +2516,7 @@ import { createInterface } from 'node:readline';
 export type Handlers = Record<string, (params: Record<string, unknown>) => unknown>;
 
 export const ERROR_CODES = new Set(['unknown_method', 'bad_params', 'bad_request', 'not_pending', 'rule_too_broad',
-  'settings_invalid', 'settings_changed', 'hook_exe_missing']);
+  'project_unknown', 'settings_invalid', 'settings_changed', 'hook_exe_missing']);
 
 /** One JSON line per call on input, one per answer on output. Errors leave as stable codes only. */
 export function serveRpc(input: NodeJS.ReadableStream, output: NodeJS.WritableStream, handlers: Handlers, onEnd: () => void): void {
@@ -2291,7 +2553,7 @@ import type { Handlers } from './rpc.ts';
 import type { Store } from './store/store.ts';
 import type { Approvals } from './approvals/approvals.ts';
 import { isNarrowRule } from './agents/rules.ts';
-import { diffLines, planAllowRule, writePlan } from './agents/settings-file.ts';
+import { diffLines, expectBefore, fingerprint, planAllowRule, writePlan, type Plan } from './agents/settings-file.ts';
 import { hooksInstalled, planHookInstall } from './agents/install.ts';
 
 export type HandlerDeps = {
@@ -2320,8 +2582,11 @@ export function makeHandlers(d: HandlerDeps): Handlers {
   const refusal = (id: string) => {
     const item = d.approvals.pending().find(p => p.id === id && p.kind === 'refusal');
     if (!item) throw new Error('not_pending');
+    if (!item.project) throw new Error('project_unknown');
     return item;
   };
+  // What a preview shows, plus the fingerprint its approval must send back.
+  const shown = (plan: Plan) => ({ path: plan.path, lines: diffLines(plan), before: fingerprint(plan.before) });
   return {
     state: () => ({
       sessions: d.store.listSessions(),
@@ -2339,16 +2604,15 @@ export function makeHandlers(d: HandlerDeps): Handlers {
       const item = refusal(text(p, 'id'));
       const rule = text(p, 'rule').trim();
       if (!isNarrowRule(rule)) throw new Error('rule_too_broad');
-      const plan = planAllowRule(settingsFor(item.project), rule);
-      return { path: plan.path, lines: diffLines(plan) };
+      return shown(planAllowRule(settingsFor(item.project), rule));
     },
-    'refusal.approve': p => d.approvals.approveRule(text(p, 'id'), text(p, 'rule')),
+    'refusal.approve': p => d.approvals.approveRule(text(p, 'id'), text(p, 'rule'), text(p, 'before')),
     'refusal.dismiss': p => { d.approvals.dismiss(text(p, 'id')); return null; },
-    'hooks.preview': () => {
-      const plan = planHookInstall(d.claudeSettings, exe());
-      return { path: plan.path, lines: diffLines(plan) };
+    'hooks.preview': () => shown(planHookInstall(d.claudeSettings, exe())),
+    'hooks.install': p => {
+      const plan = expectBefore(planHookInstall(d.claudeSettings, exe()), text(p, 'before'));
+      return { backupPath: writePlan(plan, d.backupDir, d.now()) };
     },
-    'hooks.install': () => ({ backupPath: writePlan(planHookInstall(d.claudeSettings, exe()), d.backupDir, d.now()) }),
   };
 }
 ```
@@ -2365,11 +2629,12 @@ import { Approvals } from './approvals/approvals.ts';
 import { createEndpoint, removeEndpoint } from './hooks/endpoint.ts';
 import { startHookServer } from './hooks/server.ts';
 import { makeRoute } from './hooks/route.ts';
-import { planAllowRule, writePlan } from './agents/settings-file.ts';
+import { expectBefore, planAllowRule, writePlan } from './agents/settings-file.ts';
 import { makeHandlers, settingsFor } from './handlers.ts';
 import { serveRpc } from './rpc.ts';
 
-const dataDir = join(process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'), 'AYLUL');
+// AYLUL_DATA_DIR keeps a smoke run away from the real hook.json and database.
+const dataDir = process.env.AYLUL_DATA_DIR ?? join(process.env.LOCALAPPDATA ?? join(homedir(), 'AppData', 'Local'), 'AYLUL');
 const backupDir = join(dataDir, 'backups');
 const claudeDir = process.env.CLAUDE_CONFIG_DIR ?? join(homedir(), '.claude');
 const now = () => new Date();
@@ -2379,8 +2644,8 @@ const approvals = new Approvals({
   now,
   newId: randomUUID,
   record: (item, outcome) => store.recordDecision(item, outcome, now().toISOString()),
-  writeRule: (project, rule) => {
-    const backupPath = writePlan(planAllowRule(settingsFor(project), rule), backupDir, now());
+  writeRule: (project, rule, seen) => {
+    const backupPath = writePlan(expectBefore(planAllowRule(settingsFor(project), rule), seen), backupDir, now());
     return { ruleId: store.addRule(project, rule, backupPath, now().toISOString()), backupPath };
   },
   requestHoldMs: 580_000,
@@ -2407,11 +2672,13 @@ and exits, so a stale pipe name is not left for the hook.
 
 Run: `npm test` then `npm run typecheck`. Expected: all pass.
 
-Smoke (PowerShell, in `apps/desktop/sidecar`):
-`'{"id":1,"method":"state","params":{}}' | node src/main.ts`
-Expected stdout: one line `{"id":1,"result":{"sessions":[...],"pending":[],"hooksInstalled":false}}`;
+Smoke (PowerShell, in `apps/desktop/sidecar`). It uses a scratch data folder, so a
+running AYLUL keeps its own `hook.json` and database:
+`$env:AYLUL_DATA_DIR = "$env:TEMP\aylul-smoke"; '{"id":1,"method":"state","params":{}}' | node src/main.ts; Remove-Item Env:AYLUL_DATA_DIR`
+Expected stdout: one line `{"id":1,"result":{"sessions":[],"pending":[],"hooksInstalled":...}}`;
 stderr shows `aylul-sidecar: ready`; the process exits by itself when the input
-ends, and `%LOCALAPPDATA%\AYLUL\hook.json` no longer exists afterwards.
+ends, and `$env:TEMP\aylul-smoke\hook.json` no longer exists afterwards.
+`%LOCALAPPDATA%\AYLUL\hook.json`, if AYLUL is running, is untouched.
 
 - [ ] **Step 6: Contracts**
 
@@ -2438,15 +2705,17 @@ source: apps/desktop/sidecar/src
 responsibility: Compose the sidecar and answer the window's calls over stdio.
 public_api:
   serveRpc: One JSON line in, one out with the same id; unknown methods and unexpected errors become stable codes; ends with stdin.
-  makeHandlers: state, steps, request.answer, refusal.preview/approve/dismiss, hooks.preview/install; each validates its parameters.
-  main: Data under %LOCALAPPDATA%\AYLUL; hold 580 s requests and 120 s refusals; stop and remove hook.json when stdin ends.
+  makeHandlers: state, steps, request.answer, refusal.preview/approve/dismiss, hooks.preview/install; each validates its parameters; approve and install carry the previewed fingerprint.
+  main: Data under AYLUL_DATA_DIR, else %LOCALAPPDATA%\AYLUL; hold 580 s requests and 120 s refusals; stop and remove hook.json when stdin ends.
 obligations:
   - rule: Only own handler names are callable; error text never leaves except as a code.
     tested_by: unknown methods, stable errors and unexpected errors come back as codes
   - rule: Hook install needs the executable; parameters are checked.
     tested_by: without the hook executable, install is refused, missing or wrong parameters are bad_params
-  - rule: A refusal's rule reaches the project's settings.local.json through preview and approve.
+  - rule: A refusal's rule reaches the root project's settings.local.json through preview and approve, even when Claude ran in a subfolder.
     tested_by: a refusal is previewed and approved into the project settings
+  - rule: An approval against a settings file that changed since its preview writes nothing.
+    tested_by: an approval after the settings file changed since the preview writes nothing
 gaps:
   - at: main
     gap: Node prints an ExperimentalWarning for node:sqlite on stderr at start.
@@ -2524,6 +2793,16 @@ mod tests {
     }
 
     #[test]
+    fn stop_lets_the_sidecar_exit_by_itself() {
+        let sidecar = echo();
+        sidecar.stop();
+        // A killed process exits with code 1 on Windows; closing stdin lets it end with 0.
+        let status = sidecar.child.lock().unwrap().try_wait().unwrap().expect("exited");
+        assert!(status.success());
+        assert_eq!(sidecar.call("state", json!({})), Err("sidecar_unavailable".to_string()));
+    }
+
+    #[test]
     fn no_sidecar_answers_unavailable() {
         let state = SidecarState(None);
         assert_eq!(state.call("state", json!({})), Err("sidecar_unavailable".to_string()));
@@ -2567,7 +2846,8 @@ type Waiting = Arc<Mutex<HashMap<u64, Sender<Value>>>>;
 
 pub struct Sidecar {
     child: Mutex<Child>,
-    stdin: Mutex<ChildStdin>,
+    /// `None` once `stop` has closed it.
+    stdin: Mutex<Option<ChildStdin>>,
     waiting: Waiting,
     next: AtomicU64,
 }
@@ -2600,7 +2880,7 @@ impl Sidecar {
                 }
             }
         });
-        Ok(Self { child: Mutex::new(child), stdin: Mutex::new(stdin), waiting, next: AtomicU64::new(1) })
+        Ok(Self { child: Mutex::new(child), stdin: Mutex::new(Some(stdin)), waiting, next: AtomicU64::new(1) })
     }
 
     pub fn call(&self, method: &str, params: Value) -> Result<Value, String> {
@@ -2612,9 +2892,9 @@ impl Sidecar {
         self.waiting.lock().unwrap().insert(id, sender);
         let mut line = json!({ "id": id, "method": method, "params": params }).to_string();
         line.push('\n');
-        let sent = {
-            let mut stdin = self.stdin.lock().unwrap();
-            stdin.write_all(line.as_bytes()).and_then(|_| stdin.flush())
+        let sent = match self.stdin.lock().unwrap().as_mut() {
+            Some(stdin) => stdin.write_all(line.as_bytes()).and_then(|_| stdin.flush()),
+            None => Err(std::io::ErrorKind::BrokenPipe.into()),
         };
         if sent.is_err() {
             self.waiting.lock().unwrap().remove(&id);
@@ -2630,8 +2910,19 @@ impl Sidecar {
         }
     }
 
+    /// Closes stdin, so the sidecar removes hook.json and exits by itself;
+    /// kills it only if it is still running 3 s later.
     pub fn stop(&self) {
-        let _ = self.child.lock().unwrap().kill();
+        drop(self.stdin.lock().unwrap().take());
+        let mut child = self.child.lock().unwrap();
+        for _ in 0..60 {
+            if matches!(child.try_wait(), Ok(Some(_))) {
+                return;
+            }
+            std::thread::sleep(Duration::from_millis(50));
+        }
+        let _ = child.kill();
+        let _ = child.wait();
     }
 }
 
@@ -2753,7 +3044,7 @@ Run (from `apps/desktop`):
 `cargo test --manifest-path src-tauri/Cargo.toml` then
 `cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings` then
 `cargo fmt --manifest-path src-tauri/Cargo.toml --all --check`
-Expected: the 4 new sidecar tests pass with the existing 17; no warnings. If
+Expected: the 5 new sidecar tests pass with the existing 17; no warnings. If
 `tauri-build` rewrote `src-tauri/gen/schemas/*.json` with line endings only,
 restore them: `git checkout -- src-tauri/gen`.
 
@@ -2770,6 +3061,7 @@ responsibility: Start the Node sidecar, relay allowed calls over stdio, stop it 
 public_api:
   Sidecar::start: Spawn node with the script, AYLUL_HOOK_EXE set, no console window; one reader thread routes replies by id.
   Sidecar::call: Listed METHODS only; 10 s reply limit; the sidecar's error code is returned as the error.
+  Sidecar::stop: Close stdin so the sidecar removes hook.json and exits; kill only after 3 s.
   SidecarState: None when start failed; every call then answers sidecar_unavailable.
   start_default: AYLUL_NODE, AYLUL_SIDECAR, AYLUL_HOOK_EXE, else node on PATH, ../sidecar/src/main.ts and the cargo target's release hook.
 obligations:
@@ -2779,6 +3071,8 @@ obligations:
     tested_by: an_unlisted_method_is_refused_before_it_reaches_the_sidecar
   - rule: A failed start leaves the app running and calls unavailable.
     tested_by: no_sidecar_answers_unavailable
+  - rule: Stopping lets the sidecar exit by itself, so hook.json is removed; later calls are unavailable.
+    tested_by: stop_lets_the_sidecar_exit_by_itself
 gaps:
   - at: start_default
     gap: Paths are development paths; how the installer ships Node and the sidecar is OPEN.
@@ -2831,23 +3125,26 @@ export type Pending = {
   reason: string | null; proposedRule: string | null; at: string; held: boolean;
 };
 export type AylulState = { sessions: Session[]; pending: Pending[]; hooksInstalled: boolean };
-export type Plan = { path: string; lines: string[] };
+/** A preview; `before` goes back with the approval so a file changed since is not overwritten. */
+export type Plan = { path: string; lines: string[]; before: string };
 
 const call = <T>(method: string, params: object = {}) => invoke<T>('aylul_call', { method, params });
 
 export const getState = () => call<AylulState>('state');
 export const answerRequest = (id: string, behavior: 'allow' | 'deny') => call<null>('request.answer', { id, behavior });
 export const previewRule = (id: string, rule: string) => call<Plan>('refusal.preview', { id, rule });
-export const approveRule = (id: string, rule: string) => call<{ backupPath: string }>('refusal.approve', { id, rule });
+export const approveRule = (id: string, rule: string, before: string) =>
+  call<{ backupPath: string }>('refusal.approve', { id, rule, before });
 export const dismissRefusal = (id: string) => call<null>('refusal.dismiss', { id });
 export const previewHooks = () => call<Plan>('hooks.preview');
-export const installHooks = () => call<{ backupPath: string }>('hooks.install');
+export const installHooks = (before: string) => call<{ backupPath: string }>('hooks.install', { before });
 
 const MESSAGES: Record<string, string> = {
   sidecar_unavailable: "AYLUL's local service is not running. Restart AYLUL.",
   sidecar_timeout: "AYLUL's local service did not answer. Try again.",
   not_pending: 'This item was already answered or has ended.',
-  rule_too_broad: 'That rule would allow too much. Name the exact command, file or site.',
+  rule_too_broad: 'That rule would allow too much. Name the exact command, one file as /path from the project root, or one site.',
+  project_unknown: 'AYLUL does not know this session\'s project folder, so it cannot write the rule.',
   settings_invalid: 'The settings file is not valid JSON. AYLUL did not change it.',
   settings_changed: 'The settings file changed since the preview. Preview again.',
   hook_exe_missing: 'aylul-hook.exe was not found. Build it first.',
@@ -2901,7 +3198,7 @@ export function SessionsPanel({ state, refresh }: { state: AylulState | null; re
       {plan ? <>
         <p>AYLUL will change <code>{plan.path}</code> (a backup is kept):</p>
         <pre>{plan.lines.join('\n')}</pre>
-        <button onClick={() => void installHooks()
+        <button onClick={() => void installHooks(plan.before)
           .then(r => { setPlan(null); setNote(r.backupPath ? `Backup: ${r.backupPath}` : ''); return refresh(); })
           .catch(fail)}>Connect</button>
         <button onClick={() => setPlan(null)}>Cancel</button>
@@ -2965,7 +3262,7 @@ function RefusalItem({ item, refresh }: { item: Pending; refresh: () => Promise<
     {plan ? <>
       <p>AYLUL will change <code>{plan.path}</code> (a backup is kept):</p>
       <pre>{plan.lines.join('\n') || 'The rule is already there.'}</pre>
-      <button onClick={() => void approveRule(item.id, rule).then(refresh).catch(fail)}>Approve rule</button>
+      <button onClick={() => void approveRule(item.id, rule, plan.before).then(refresh).catch(fail)}>Approve rule</button>
     </> : <button disabled={!rule.trim()} onClick={() => void previewRule(item.id, rule).then(setPlan).catch(fail)}>Preview</button>}
     <button onClick={() => void dismissRefusal(item.id).then(refresh).catch(fail)}>Dismiss</button>
     {item.held ? <p>Claude is waiting; after approval it tries again by itself.</p>
@@ -3144,7 +3441,9 @@ after `npm run build`), then:
    exist.
 6. The OPEN in the spec (§5): at the first real auto-mode refusal in the
    person's work, approve the proposed rule in AYLUL; record whether Claude ran
-   the call after `retry` or after the person asked again.
+   the call after `retry` or after the person asked again, and that the rule
+   landed in the project root's `.claude/settings.local.json` even if Claude
+   had moved into a subfolder.
 
 Write `docs/evidence/<date>-aylul-hook-laptop-acceptance.md` with each step's
 result and screenshots of AYLUL's window only (never the whole desktop). Do not
