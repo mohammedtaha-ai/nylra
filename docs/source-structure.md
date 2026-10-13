@@ -1,6 +1,7 @@
 # NYLRA source organization
 
-Date: 2026-10-10. Updated: 2026-10-11. Status: layout design; the implemented
+Date: 2026-10-10. Updated: 2026-10-11, and for AYLUL on 2026-10-13.
+Status: layout design; the implemented
 main-only Windows slice is mapped in [the inspected code map](codebase/README.md).
 This file owns client source placement. [Vision](../Vision.md) owns experience;
 the [shared architecture](../../shadows-backend/docs/architecture.md) owns system
@@ -31,10 +32,11 @@ apps/
     src/
       app/                       composition, navigation and application lifecycle
       features/
-        conversations/           topic dialogue presentation
-        sources/                 evidence and freshness presentation
-        confirmations/           deliberate confirmation interaction
-        connections/             project-link presentation
+        chat/                    conversation with AYLUL
+        sessions/                live agent sessions and their steps
+        approvals/               pending agent requests and their decisions
+        grants/                  creating, listing and revoking grants
+        connections/             phone pairing code and linked state
         preferences/             user settings presentation
         companion/               AYLUL presence
       api/generated/             generated cloud wire client/types
@@ -46,11 +48,26 @@ apps/
         lib.rs                   native composition
         main.rs                  desktop entry point
         commands/                typed native operation boundary
-        local_shadows/           local presentation/navigation integration
+        auth/                    backend session for this installation
+        native_login/            system-browser login primitives
+        sidecar/                 starts, watches and stops the Node sidecar
         windows/                 window lifecycle
         notifications/           native notification integration
-        audio/                   native capture/playback integration if needed
+        audio/                   native capture/playback integration (later)
       capabilities/              minimal permissions per window
+    sidecar/                     AYLUL's laptop process, Node and TypeScript
+      src/
+        main.ts                  entry: started by Tauri, stopped when AYLUL quits
+        brain/                   runs aylul-brain with the laptop's tool adapters
+        link/                    outbound WebSocket to shadows-backend
+        agents/                  installs aylul-hook into each agent's hook config
+        hooks/                   named-pipe server receiving aylul-hook events
+        sessions/                agent sessions and steps built from hook events
+        approvals/               holds an agent's request until decided or timed out
+        grants/                  grant store and deterministic rule matching
+        shadows/                 client for the local Shadows API's projection
+      tests/                     sidecar unit and pipe tests
+    hook/                        aylul-hook, the command an agent's hook runs
     tests/                       desktop journeys
   mobile/
     lib/
@@ -83,10 +100,51 @@ Android/iOS and build configuration follow the tool-generated Flutter layout.
 Each app keeps its own dependencies and lockfile. Asset packaging copies required
 formats into build inputs; one asset manifest records origin, version and license.
 
+## AYLUL desktop's sidecar
+
+Decided 2026-10-13 in the
+[delivery spec](superpowers/specs/2026-10-10-nylra-delivery-design.md#independent-companion).
+AYLUL desktop is three processes on the laptop, each with one job:
+
+| Process | Owns |
+| --- | --- |
+| Tauri (Rust) | Windows, tray, login, the backend session, and the sidecar's lifetime |
+| Sidecar (Node) | AYLUL's laptop brain, the cloud link, agent sessions, approvals and grants |
+| `aylul-hook` | One agent hook call: send the event over the pipe, return the answer |
+
+- **The UI never reaches the sidecar directly.** It calls Tauri commands, and
+  `src-tauri/src/sidecar/` relays them over the sidecar's standard input and
+  output. The sidecar opens no local port.
+- **The sidecar keeps no credential on disk.** Tauri's `auth` module holds the
+  backend session and hands it to the sidecar when it starts.
+- **The pipe is restricted to the current Windows user.** `aylul-hook` refuses
+  to run when the pipe is missing or owned by another user.
+- **Failure is not consent.** If the sidecar is off, the pipe is missing or a
+  request times out, `aylul-hook` returns control to the agent's own prompt.
+  It never answers "allow" by itself.
+- **Grants match by code.** `grants/` compares a request with the person's rules
+  deterministically. Model output, file content and session text never decide.
+  Only the laptop creates or widens a grant; a revocation from the phone arrives
+  through `link/`.
+- **The brain package is not copied here.** `brain/` runs `aylul-brain` from
+  shadows-backend as a versioned package; how it is delivered is OPEN in the
+  backend's [source structure](../../shadows-backend/docs/source-structure.md).
+- **`agents/` changes another program's settings.** It backs up the agent's
+  hook configuration and shows the diff before writing it.
+
+> **OPEN: what `aylul-hook` is written in.** A small Rust binary starts fastest
+> and needs no Node; a Node script reuses the sidecar's runtime. Closes in step
+> 2(a), by measuring both start times on Windows against Claude Code's hook
+> timeout.
+
+> **OPEN: how the installed app ships Node for the sidecar.** Closes at the
+> first installer build. Development runs the sidecar with the local Node.
+
 ## Client boundaries
 
 Desktop components call feature state/actions, which use the data layer or narrow
-platform wrappers. They do not import a database client, model SDK or raw Tauri
+platform wrappers. Sessions, approvals and grants come from the sidecar through
+those wrappers, not from the cloud. They do not import a database client, model SDK or raw Tauri
 commands throughout the UI. Tauri Rust owns native operations, not a second NYLRA
 engine. Local Shadows navigation cannot become an alternate approval route.
 Remote content is displayed as data, never privileged application code. Scope
