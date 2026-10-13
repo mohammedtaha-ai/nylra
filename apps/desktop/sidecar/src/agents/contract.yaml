@@ -12,6 +12,8 @@ public_api:
   expectBefore: settings_changed unless the file still matches the previewed fingerprint.
   writePlan: settings_changed if the file differs from the plan; timestamped backup; write temp then rename, retrying a locked file.
   diffLines: Changed lines with + and - prefixes.
+  planHookInstall: Replace entries whose command ends in aylul-hook.exe with one exec-form entry per HOOK_EVENTS; keep all other hooks and settings.
+  hooksInstalled: Every HOOK_EVENTS event has an entry with exactly this executable.
 obligations:
   - rule: Multi-line, parenthesised, wildcard, pattern-character, outside-project and other-drive calls get no proposal.
     tested_by: a command with a newline, a closing parenthesis or a * proposes nothing, a file outside the project, on another drive, or with a pattern character proposes nothing
@@ -23,6 +25,10 @@ obligations:
     tested_by: invalid JSON or a wrong shape is refused and the file is untouched, existing settings are kept, a backup is written, and the diff shows the rule
   - rule: A file changed after the preview is not overwritten.
     tested_by: a file changed after the preview is not overwritten, approving against a preview of a file that changed since is refused
+  - rule: The person's own hooks survive; AYLUL's entry appears once per event after repeated installs.
+    tested_by: "the person's own hooks and settings are kept; AYLUL's are replaced, not repeated"
+  - rule: Entries use exec form, async PostToolUse, 600 s PermissionRequest and 130 s PermissionDenied.
+    tested_by: every event gets one exec-form entry with its options
 gaps:
   - at: proposeRule
     gap: Whether Claude Code's Bash rule matches a compound command (a && b) as typed is not checked here.
