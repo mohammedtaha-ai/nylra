@@ -1,0 +1,15 @@
+name: desktop-aylul-screens
+version: 1
+status: current
+source: apps/desktop/src/features
+responsibility: Show sessions and the items waiting for the person, and carry the person's answers.
+public_api:
+  SessionsPanel: Connect Claude Code after showing the settings diff; list sessions with state, last step and last message.
+  ApprovalsPanel: Allow once or deny a request; for a refusal, edit the rule, preview the diff, approve or dismiss.
+obligations:
+  - rule: A rule is approved only after its diff was shown.
+    tested_by: none
+    note: Approve appears only after Preview returned a plan; real UI acceptance is still required.
+gaps:
+  - at: ApprovalsPanel
+    gap: No component tests; the desktop app has no frontend test runner yet.

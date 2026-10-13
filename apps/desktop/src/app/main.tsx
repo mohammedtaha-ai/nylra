@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client';
 import './shell.css';
 import { hideToTray } from '../platform/windows';
 import { authAction, cancelLogin, type AuthView, type AuthAction } from '../platform/auth';
+import { useAylulState } from '../data/aylul-state';
+import { SessionsPanel } from '../features/sessions/SessionsPanel';
+import { ApprovalsPanel } from '../features/approvals/ApprovalsPanel';
 
 function Shell() {
+  const aylul=useAylulState();
   const [error,setError]=React.useState('');
   const [auth,setAuth]=React.useState<AuthView|null>(null);
   const [busy,setBusy]=React.useState(false);
@@ -37,6 +41,8 @@ function Shell() {
       </div>
       {auth?.providerLogout==='pending' && <p>Backend session revoked. Provider sign-out was handed to your browser; completion is not confirmed here.</p>}
     </section>
+    <SessionsPanel state={aylul.state} refresh={aylul.refresh} />
+    <ApprovalsPanel state={aylul.state} refresh={aylul.refresh} />
     <section aria-labelledby="presence"><h2 id="presence">AYLUL</h2>
       <p>The animated companion is not available yet. You can still use this panel.</p>
     </section>

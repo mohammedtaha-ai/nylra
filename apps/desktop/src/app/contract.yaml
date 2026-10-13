@@ -2,9 +2,9 @@ name: desktop-main-presentation
 version: 1
 status: current
 source: apps/desktop/src/app
-responsibility: Render the local shell with native account verification and truthful unavailable-companion state.
+responsibility: Compose the local account shell, sessions and requests while keeping native account state distinct.
 public_api:
-  Shell: Show account identity only from a freshly validated native View; provide login, cancellation, session checks and explicit surrender actions.
+  Shell: Show account identity only from a freshly validated native View; mount sessions and requests from sidecar state; provide login, cancellation, session checks and explicit surrender actions.
 obligations:
   - rule: Main remains usable without character artwork or backend access.
     tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'
