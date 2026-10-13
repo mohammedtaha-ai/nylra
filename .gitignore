@@ -3,3 +3,4 @@
 apps/desktop/dist/
 .superpowers/
 **/native/icons/
+apps/desktop/tests/.runs/

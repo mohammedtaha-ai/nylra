@@ -1,12 +1,9 @@
-param([string]$RunName='2026-10-11-release')
+param([string]$RunName='windows-shell')
 # Real Windows shell acceptance. No direct invocation of tray callbacks.
 $ErrorActionPreference='Stop'
-$root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
-$probe=Join-Path $root 'docs/evidence/probes/2026-10-10-n0'
-$out=Join-Path $probe "artifacts/$RunName"
-New-Item -ItemType Directory -Force $out|Out-Null
+. (Join-Path $PSScriptRoot 'windows-support.ps1')
+$out=New-NylraRunDir $RunName
 if(Test-Path (Join-Path $out 'shell-observations.json')){throw 'Use a fresh RunName to preserve evidence'}
-. (Join-Path $probe 'windows-support.ps1')
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
 Add-Type @'
@@ -31,7 +28,7 @@ function Shortcut {
  foreach($key in @(0x7B,0x10,0x12,0x11)){[N0Win]::keybd_event($key,0,2,[UIntPtr]::Zero)}
  Start-Sleep -Milliseconds 700
 }
-$exe=Join-Path $probe 'target/release/nylra-desktop.exe'
+$exe=Join-Path (Get-NylraTarget) 'release/nylra-desktop.exe'
 $p=Start-Process $exe -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try {

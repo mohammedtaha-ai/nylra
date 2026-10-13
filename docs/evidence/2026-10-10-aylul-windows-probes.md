@@ -1,5 +1,8 @@
 # AYLUL Windows probes - N0
 
+Probe sources and raw artifacts named here were removed from the tree on
+2026-10-13; `git show 41b8e84:<path>` retrieves any of them.
+
 Run date: **2026-10-10**, Asia/Aden (UTC+03). Local Windows experiments only.
 Documentation finalized: **2026-10-11**; no new device trial is implied by that date.
 For actual additional October 11 trials and corrected comparison conditions, see
@@ -22,7 +25,7 @@ budget, or completed native-device acceptance in this change.
 - During the run Mohammed explicitly selected **AYLUL Companion Character
   Reference Board.png**. The richer sheet remains a preserved comparison input.
 - All trial source, synthetic state, screenshots and measurements are under
-  [the retained probe directory](probes/2026-10-10-n0/README.md). No daemon commands,
+  the retained probe directory (`docs/evidence/probes/2026-10-10-n0/README.md` at `41b8e84`). No daemon commands,
   daemon configuration, Shadows data, account content or cloud calls were used.
 - No commit, staging, push, deployment, PR or later-task implementation occurred.
   Cargo downloaded dependencies needed for the native probe; no npm, PixiJS,
@@ -30,8 +33,8 @@ budget, or completed native-device acceptance in this change.
 
 ## Machine and versions
 
-[Machine inventory](probes/2026-10-10-n0/artifacts/machine.json) and
-[display inventory](probes/2026-10-10-n0/artifacts/displays.json) preserve details.
+Machine inventory (`docs/evidence/probes/2026-10-10-n0/artifacts/machine.json` at `41b8e84`) and
+display inventory (`docs/evidence/probes/2026-10-10-n0/artifacts/displays.json` at `41b8e84`) preserve details.
 
 | Item | Observed value |
 | --- | --- |
@@ -47,7 +50,7 @@ budget, or completed native-device acceptance in this change.
 | Asset tool | Built-in imagegen, two calls; internal model/version not exposed |
 
 The exact dependency checksums and graph are retained in
-[Cargo.lock](probes/2026-10-10-n0/native/Cargo.lock). This is the tested graph,
+Cargo.lock (`docs/evidence/probes/2026-10-10-n0/native/Cargo.lock` at `41b8e84`). This is the tested graph,
 not a claim that these are the newest releases. No Rive editor/CLI, authored
 `.riv` interaction, Inkscape, Blender, Photoshop, Krita or ImageMagick was found
 through the limited installed-app/command checks. A browser-based Rive account
@@ -56,7 +59,7 @@ and authoring workflow were not established.
 ## Commands and reproduction
 
 Commands below were run from the repository root unless stated otherwise.
-The [probe README](probes/2026-10-10-n0/README.md) gives the retained source map,
+The probe README (`docs/evidence/probes/2026-10-10-n0/README.md` at `41b8e84`) gives the retained source map,
 safe reproduction sequence and paths for the rejected variants.
 
 ```powershell
@@ -82,9 +85,9 @@ python docs/evidence/probes/2026-10-10-n0/inspect-assets.py
 Source/license snapshots were downloaded using `Invoke-WebRequest -Uri
 ($base+'/'+$upstreamPath) -OutFile $localPath`, where `$base` was exactly
 `https://raw.githubusercontent.com/Louis-CFM/coucou/08393b657c79e99382eaf15185f480e6745997b0`.
-The [provenance map](probes/2026-10-10-n0/provenance/README.md) enumerates every file.
+The provenance map (`docs/evidence/probes/2026-10-10-n0/provenance/README.md` at `41b8e84`) enumerates every file.
 Imagegen inputs, exact prompts, output IDs and copy destinations are in
-[asset-prompts.md](probes/2026-10-10-n0/asset-prompts.md).
+asset-prompts.md (`docs/evidence/probes/2026-10-10-n0/asset-prompts.md` at `41b8e84`).
 
 ```powershell
 cargo build --manifest-path docs/evidence/probes/2026-10-10-n0/native/Cargo.toml --target-dir docs/evidence/probes/2026-10-10-n0/target
@@ -106,7 +109,7 @@ For the CSS trial the executable was launched with `Start-Process -PassThru
 -WindowStyle Hidden`, `N0_LOG=.../artifacts/runtime-css.jsonl` and
 `N0_CONTROL=.../artifacts/control.txt`. Its PID was saved to `owned-pid.txt`.
 After four seconds, `Set-Content $env:N0_CONTROL 'css' -NoNewline` selected CSS;
-one second later `measure.ps1` ran. [run-renderer.ps1](probes/2026-10-10-n0/run-renderer.ps1)
+one second later `measure.ps1` ran. run-renderer.ps1 (`docs/evidence/probes/2026-10-10-n0/run-renderer.ps1` at `41b8e84`)
 retains that equivalent launch sequence. Earlier canvas runs used the default
 canvas renderer. No probe changed OS display settings or put the computer to sleep.
 
@@ -125,19 +128,19 @@ Original SHA-256:
 - Selected reference: `a1ef31bc867e3905a5f40092032afc3c817dfe82c651060835fcf5f312785717`.
 - Richer comparison: `7479d63424c01a66a7cd6d58ad684f97d7762fc0936ec12f1623b19a1d8553e3`.
 
-The [asset metrics](probes/2026-10-10-n0/artifacts/asset-metrics.json) include full
+The asset metrics (`docs/evidence/probes/2026-10-10-n0/artifacts/asset-metrics.json` at `41b8e84`) include full
 alpha counts and cell bounds. Many partial-alpha pixels are nearly opaque:
 v1 has 532,662 pixels at alpha 240-254, and sampled hood pixels were alpha 252-253.
 The partial-alpha total alone does **not** demonstrate a translucent body.
 The production rejection rests on alignment, clipped halo/padding and expression
-distinction. A declared equal pivot in [the trial manifest](probes/2026-10-10-n0/asset-manifest.json)
+distinction. A declared equal pivot in the trial manifest (`docs/evidence/probes/2026-10-10-n0/asset-manifest.json` at `41b8e84`)
 does not establish that the drawn subjects obey it.
 
-Screenshots: [v1 contact sheet](probes/2026-10-10-n0/artifacts/asset-comparison.png),
-[v2 contact sheet](probes/2026-10-10-n0/artifacts/asset-comparison-v2.png).
+Screenshots: v1 contact sheet (`docs/evidence/probes/2026-10-10-n0/artifacts/asset-comparison.png` at `41b8e84`),
+v2 contact sheet (`docs/evidence/probes/2026-10-10-n0/artifacts/asset-comparison-v2.png` at `41b8e84`).
 Original generated PNGs remain byte-for-byte intact in
-[v1](probes/2026-10-10-n0/native/ui/trial-atlas.png) and
-[v2](probes/2026-10-10-n0/native/ui/trial-atlas-v2.png). These are derivative trial
+v1 (`docs/evidence/probes/2026-10-10-n0/native/ui/trial-atlas.png` at `41b8e84`) and
+v2 (`docs/evidence/probes/2026-10-10-n0/native/ui/trial-atlas-v2.png` at `41b8e84`). These are derivative trial
 art from the supplied AYLUL reference, with no Coucou art input. Original-board
 distribution rights and final generated-asset terms are not documented; close
 that provenance gate before shipping.
@@ -148,13 +151,13 @@ preliminary visual feedback on this machine, **not** acceptance of the nine-stat
 pack, directional animation, production assets, or native lifecycle. The trial
 only bobs a raster and swaps three states once a second; it has no turn animation,
 rig, lip sync or real listening/product state. Motion snapshots:
-[1](probes/2026-10-10-n0/artifacts/motion-1.png),
-[2](probes/2026-10-10-n0/artifacts/motion-2.png),
-[3](probes/2026-10-10-n0/artifacts/motion-3.png).
+1 (`docs/evidence/probes/2026-10-10-n0/artifacts/motion-1.png` at `41b8e84`),
+2 (`docs/evidence/probes/2026-10-10-n0/artifacts/motion-2.png` at `41b8e84`),
+3 (`docs/evidence/probes/2026-10-10-n0/artifacts/motion-3.png` at `41b8e84`).
 
 ## Rendering and performance experiments
 
-[Provisional budgets](probes/2026-10-10-n0/budgets.json) were written before the
+Provisional budgets (`docs/evidence/probes/2026-10-10-n0/budgets.json` at `41b8e84`) were written before the
 performance trials: mean idle <=1% of one core, active <=10%, hidden no more than
 idle+0.5 percentage points; working set <=512 MiB; rAF p95 <=20ms; no steady-state
 hidden callbacks. These were experiment thresholds, not a user-approved SLA.
@@ -177,13 +180,13 @@ no statistical significance, battery claim or GPU attribution follows.
 | Canvas; resize on size change; explicit native visibility | 1.32% | 18.28% | 0.35% | 17.40% | 0.89% | 413.00 MiB |
 | CSS background atlas + Web Animations; explicit native visibility | 0.63% | 18.27% | 1.82% | 11.64% | 0.70% | 440.21 MiB |
 
-Raw inputs: [initial CSV](probes/2026-10-10-n0/artifacts/performance-initial.csv),
-[corrected canvas CSV](probes/2026-10-10-n0/artifacts/performance-canvas.csv),
-[CSS CSV](probes/2026-10-10-n0/artifacts/performance.csv),
-[aggregate summary](probes/2026-10-10-n0/artifacts/summary.json).
-Corresponding runtime logs: [initial](probes/2026-10-10-n0/artifacts/runtime-initial.jsonl),
-[canvas](probes/2026-10-10-n0/artifacts/runtime-canvas.jsonl),
-[CSS](probes/2026-10-10-n0/artifacts/runtime-css.jsonl).
+Raw inputs: initial CSV (`docs/evidence/probes/2026-10-10-n0/artifacts/performance-initial.csv` at `41b8e84`),
+corrected canvas CSV (`docs/evidence/probes/2026-10-10-n0/artifacts/performance-canvas.csv` at `41b8e84`),
+CSS CSV (`docs/evidence/probes/2026-10-10-n0/artifacts/performance.csv` at `41b8e84`),
+aggregate summary (`docs/evidence/probes/2026-10-10-n0/artifacts/summary.json` at `41b8e84`).
+Corresponding runtime logs: initial (`docs/evidence/probes/2026-10-10-n0/artifacts/runtime-initial.jsonl` at `41b8e84`),
+canvas (`docs/evidence/probes/2026-10-10-n0/artifacts/runtime-canvas.jsonl` at `41b8e84`),
+CSS (`docs/evidence/probes/2026-10-10-n0/artifacts/runtime-css.jsonl` at `41b8e84`).
 
 - **FAIL initial hidden behavior:** native hide did not change document.hidden;
   full frame callbacks continued. The initial run had active full bins while hidden.
@@ -238,34 +241,34 @@ Expected outcomes are below; API success is separated from behavioral proof.
 | Physical display removal | Both surfaces remain reachable | No second removable display available in this run | BLOCKED |
 | Actual suspend/resume | Reachable surfaces, resumed rendering/shortcut/tray lifecycle | powercfg reports S3/hibernate support; no attended wake/resume harness available, computer was not suspended | BLOCKED; capability listing is not a resume test |
 
-Evidence: [native observations](probes/2026-10-10-n0/artifacts/native-observations.json),
-[initial observations](probes/2026-10-10-n0/artifacts/native-observations-initial.json),
-[supplemental observations](probes/2026-10-10-n0/artifacts/supplemental-observations.json),
-[supplemental runtime](probes/2026-10-10-n0/artifacts/runtime-supplemental.jsonl),
-[power states](probes/2026-10-10-n0/artifacts/power-states.txt).
-Screenshots: [transparency](probes/2026-10-10-n0/artifacts/transparency.png),
-[keyboard main](probes/2026-10-10-n0/artifacts/keyboard-main.png),
-[128px](probes/2026-10-10-n0/artifacts/size100.png),
-[192px](probes/2026-10-10-n0/artifacts/size150.png),
-[256px](probes/2026-10-10-n0/artifacts/size200.png).
+Evidence: native observations (`docs/evidence/probes/2026-10-10-n0/artifacts/native-observations.json` at `41b8e84`),
+initial observations (`docs/evidence/probes/2026-10-10-n0/artifacts/native-observations-initial.json` at `41b8e84`),
+supplemental observations (`docs/evidence/probes/2026-10-10-n0/artifacts/supplemental-observations.json` at `41b8e84`),
+supplemental runtime (`docs/evidence/probes/2026-10-10-n0/artifacts/runtime-supplemental.jsonl` at `41b8e84`),
+power states (`docs/evidence/probes/2026-10-10-n0/artifacts/power-states.txt` at `41b8e84`).
+Screenshots: transparency (`docs/evidence/probes/2026-10-10-n0/artifacts/transparency.png` at `41b8e84`),
+keyboard main (`docs/evidence/probes/2026-10-10-n0/artifacts/keyboard-main.png` at `41b8e84`),
+128px (`docs/evidence/probes/2026-10-10-n0/artifacts/size100.png` at `41b8e84`),
+192px (`docs/evidence/probes/2026-10-10-n0/artifacts/size150.png` at `41b8e84`),
+256px (`docs/evidence/probes/2026-10-10-n0/artifacts/size200.png` at `41b8e84`).
 Arabic/English text rendered in the synthetic main surface; full RTL layouts,
 screen readers and production navigation were not tested.
 
 ## Build failures and limitations preserved
 
 1. Initial build lacked the required Windows `icons/icon.ico`; the icon generator
-   now produces a synthetic purple square. [Initial log](probes/2026-10-10-n0/artifacts/build.log).
+   now produces a synthetic purple square. Initial log (`docs/evidence/probes/2026-10-10-n0/artifacts/build.log` at `41b8e84`).
 2. Tauri 2.11.5 with broadly resolved runtime/runtime-wry 2.12.1 and macros 2.7.1
    failed with monitor signature and menu macro errors. Matching internal versions
    were constrained explicitly; no dependency source was patched.
-   [Failure](probes/2026-10-10-n0/artifacts/build-retry.log),
-   [pinned success](probes/2026-10-10-n0/artifacts/build-pinned.log).
+   Failure (`docs/evidence/probes/2026-10-10-n0/artifacts/build-retry.log` at `41b8e84`),
+   pinned success (`docs/evidence/probes/2026-10-10-n0/artifacts/build-pinned.log` at `41b8e84`).
 3. The screenshot helper initially marshalled a null class as an empty string.
    Enumeration confirmed owned windows existed; `FindWindow(IntPtr.Zero,title)`
-   repaired the helper. [Failed-helper runtime](probes/2026-10-10-n0/artifacts/runtime-failed-helper.jsonl).
+   repaired the helper. Failed-helper runtime (`docs/evidence/probes/2026-10-10-n0/artifacts/runtime-failed-helper.jsonl` at `41b8e84`).
 4. One rebuild while the measured probe was alive failed with Windows error 5
    because its executable was locked. Waited for owned-probe exit before rebuilding;
-   no other process was stopped. [Locked executable log](probes/2026-10-10-n0/artifacts/build-optimized.log).
+   no other process was stopped. Locked executable log (`docs/evidence/probes/2026-10-10-n0/artifacts/build-optimized.log` at `41b8e84`).
 5. Shell UI Automation initially did not expose the tray icon; a later tooltip
    match was insufficient. The final attempt used Tauri's native icon rectangle,
    but no callback was observed. Keep end-to-end tray activation unresolved.
@@ -299,8 +302,8 @@ and [island FSM](https://github.com/Louis-CFM/coucou/blob/08393b657c79e99382eaf1
 were inspected for lifecycle/port separation. No character-dependent rules were
 ported. The synthetic rectangular hit target and drivers were authored independently.
 
-The [source MIT notice](probes/2026-10-10-n0/provenance/LICENSE) and
-[separate asset restrictions](probes/2026-10-10-n0/provenance/LICENSE-ASSETS.md)
+The source MIT notice (`docs/evidence/probes/2026-10-10-n0/provenance/LICENSE` at `41b8e84`) and
+separate asset restrictions (`docs/evidence/probes/2026-10-10-n0/provenance/LICENSE-ASSETS.md` at `41b8e84`)
 are retained intact with the source snapshots. MIT source permission does not
 cover Coucou/Mochi branding, character, animations, artwork, icons or sounds.
 No such media were downloaded or copied. Future code reuse needs exact per-file

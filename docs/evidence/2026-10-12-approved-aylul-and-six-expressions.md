@@ -1,5 +1,8 @@
 # Approved AYLUL appearance and six additional expressions
 
+Probe sources and raw artifacts named here were removed from the tree on
+2026-10-13; `git show 41b8e84:<path>` retrieves any of them.
+
 Publication amendment, 2026-10-12: Mohammed subsequently requested a commit and
 push of the current NYLRA branch so another developer can continue. References
 below to uncommitted/unpublished work describe the original preparation snapshot.
@@ -35,7 +38,7 @@ reference. No approved drawing was regenerated or overwritten.
 Eight built-in image_gen calls: six initial expressions, then focused corrections
 for working/success. Input was the approved idle appearance; the first happy/sleeping
 calls used its byte-identical cleaned evidence path, the rest its canonical copy.
-Full [prompts and output filenames](probes/2026-10-10-n0/six-expression-prompts.json)
+Full prompts and output filenames (`docs/evidence/probes/2026-10-10-n0/six-expression-prompts.json` at `41b8e84`)
 are retained; internal generator model version was not exposed. No provider API
 key or MiniMax calls were used. No Coucou artwork was imported.
 
@@ -54,19 +57,19 @@ returned working to a source-sized focused expression and bounded success glows.
 Their v2 derivatives replace only those candidate selections, not the approved pack.
 
 All six selected final PNGs are 1254x1254 and have zero alpha on every edge and
-the entire outer8% margin. [Final metrics](probes/2026-10-10-n0/artifacts/2026-10-11-release/six-final-state-metrics.json)
+the entire outer8% margin. Final metrics (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/six-final-state-metrics.json` at `41b8e84`)
 and both failed first-trial measurements are retained. Candidate copy hashes match
 the selected evidence PNGs. These checks prove file/padding integrity, not identical
 body pixels or human approval. New expressions retain generated lighting variation.
 
 ## Preview and actual validation
 
-Updated [preview](probes/2026-10-10-n0/character-preview.html) shows nine controls,
+Updated preview (`docs/evidence/probes/2026-10-10-n0/character-preview.html` at `41b8e84`) shows nine controls,
 three approved labels and six review labels. Added compact nine-card comparison;
 detail mode retains64/96/128 samples, background choices and synthetic float.
 Actual browser checks: nine cards, nine enabled state controls, all PNGs loaded;
 each of the six controls selected its correct final1254px image. Compact mode and
-light background worked. [Rendered review sheet](probes/2026-10-10-n0/artifacts/2026-10-11-release/nine-state-review.png)
+light background worked. Rendered review sheet (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/nine-state-review.png` at `41b8e84`)
 was saved and the fresh preview tab kept open. This is browser/static-asset evidence,
 not a Windows companion renderer/performance or real product-state assertion.
 

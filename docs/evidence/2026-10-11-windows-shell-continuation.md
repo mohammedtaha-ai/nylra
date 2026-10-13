@@ -1,5 +1,8 @@
 # Windows shell and N0 continuation
 
+Probe sources and raw artifacts named here were removed from the tree on
+2026-10-13; `git show 41b8e84:<path>` retrieves any of them.
+
 Date: **2026-10-11, Asia/Aden**. Started on `main` at
 `94534bbfdeb141564b0f603bb7702422e6af663a`, with modified plan/spec and untracked
 October 10/11 probe evidence. Continued on `codex/windows-shell-n0` in the existing
@@ -28,7 +31,7 @@ root sheet to avoid reference confusion; the historical original remains in Git.
 Historical board comparison artifacts remain labelled evidence, not active assets.
 
 Re-inspected the selected board, three-state v2 atlas and idle-v3 visually; read-only
-alpha/geometry inspection retained at [asset-readiness.json](probes/2026-10-10-n0/artifacts/2026-10-11-release/asset-readiness.json).
+alpha/geometry inspection retained at asset-readiness.json (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/asset-readiness.json` at `41b8e84`).
 The atlas still has unequal body alignment and nonzero alpha touching top/bottom
 edges (v2: 93/121/95 nonzero edge positions). Idle/listening eyes remain similar;
 the blocked eyes differ. Idle-v3 retains the failed preparation recorded in the
@@ -73,10 +76,10 @@ Renderer adoption remains OPEN pending a reviewed motion/cadence target and actu
 visual timing evidence. CPU improvement is bounded to this release run; no controlled
 release CSS comparison or general renderer superiority is claimed.
 
-Artifacts: [CSV](probes/2026-10-10-n0/artifacts/2026-10-11-release/performance-canvas.csv),
-[summary](probes/2026-10-10-n0/artifacts/2026-10-11-release/summary.json),
-[runtime](probes/2026-10-10-n0/artifacts/2026-10-11-release/runtime-canvas.jsonl),
-[build log](probes/2026-10-10-n0/artifacts/2026-10-11-release/build.log).
+Artifacts: CSV (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/performance-canvas.csv` at `41b8e84`),
+summary (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/summary.json` at `41b8e84`),
+runtime (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/runtime-canvas.jsonl` at `41b8e84`),
+build log (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/build.log` at `41b8e84`).
 Earlier matched passes were not repeated. CSS, old drag/hit testing and duplicate
 launch acceptance were not re-run without a reason.
 
@@ -84,7 +87,7 @@ launch acceptance were not re-run without a reason.
 
 Release hide/show-noactivate with explicit renderer visibility passed **20 paired
 cycles at 100%**: foreground remained the main window; companion HWND remained
-available. [Observations](probes/2026-10-10-n0/artifacts/2026-10-11-release/focus-observations.json).
+available. Observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/focus-observations.json` at `41b8e84`).
 This extends the single earlier paired probe; it does not prove every application,
 notification policy or mixed-DPI configuration.
 
@@ -95,8 +98,8 @@ companion HWND **69734**, position (760,200), 128x128 and DPI 96 before/after;
 owned process alive and active samples continued after return. The user confirmed:
 "I woke it and the face was still present." Accept this single current-device
 suspend/resume scenario; no hibernate, repeated sleep or hidden-during-sleep claim.
-[Observation](probes/2026-10-10-n0/artifacts/2026-10-11-release/suspend-observations.json),
-[runtime](probes/2026-10-10-n0/artifacts/2026-10-11-release/runtime-suspend.jsonl).
+Observation (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/suspend-observations.json` at `41b8e84`),
+runtime (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/runtime-suspend.jsonl` at `41b8e84`).
 Kernel event timestamps alone do not establish full sleep duration; native elapsed
 time and the user's wake observation supplement them.
 
@@ -118,10 +121,10 @@ margins from the current monitor's physical work area; startup also calls the
 same explicit-open recovery path. Final Release at 150% measured **1102x944 at
 (228,64)**, entirely within work area (0,0)-(1920,1008). Driver asserts that
 containment, actual tray activation, ten hide/restore cycles and keyboard hide.
-[Final observations](probes/2026-10-10-n0/artifacts/2026-10-11-dpi150-final/shell-observations.json),
-[screenshot](probes/2026-10-10-n0/artifacts/2026-10-11-dpi150-final/shell-main.png).
+Final observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-dpi150-final/shell-observations.json` at `41b8e84`),
+screenshot (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-dpi150-final/shell-main.png` at `41b8e84`).
 Twenty release probe paired no-activate cycles also passed at **144 DPI**;
-[observations](probes/2026-10-10-n0/artifacts/2026-10-11-dpi150/focus-observations.json).
+observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-dpi150/focus-observations.json` at `41b8e84`).
 This is actual single-monitor DPI, not resized 96-DPI evidence and not a transition
 between simultaneous mixed-DPI displays. The pre-fix screenshot/observations and
 size regression failure are retained separately.
@@ -129,8 +132,8 @@ size regression failure are retained separately.
 **Actual 175% evidence:** Windows native DPI returned **168**. Final shell
 measured 1284x932 at (176,0) in work area (0,0)-(1920,996). Native work-area
 containment, actual tray activation, ten close/hide/shortcut cycles and Tab/Space
-hide passed. [Observations](probes/2026-10-10-n0/artifacts/2026-10-11-dpi175/shell-observations.json),
-[screenshot](probes/2026-10-10-n0/artifacts/2026-10-11-dpi175/shell-main.png).
+hide passed. Observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-dpi175/shell-observations.json` at `41b8e84`),
+screenshot (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-dpi175/shell-main.png` at `41b8e84`).
 This additional available setting does not replace the unavailable 200% case.
 
 ## Implemented Windows slice
@@ -150,15 +153,15 @@ Actual Release shell at **96 DPI** passed owned tray icon left-click at (1606,83
 restoring visible foreground; ten close/hide/shortcut cycles; keyboard Tab+Space
 hide through React/platform/IPC. Main-process-only idle was 0% CPU and 26.88MiB;
 this excludes WebView2 descendants and is not another aggregate renderer test.
-[Observations](probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-observations.json),
-[native screenshot](probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-main.png).
+Observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-observations.json` at `41b8e84`),
+native screenshot (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-main.png` at `41b8e84`).
 
 The first tray driver could not locate overflow because the actual Button name was
 `Show Hidden Icons`; exact-case correction and the owned `NYLRA` Button produced
 the actual click above. The earlier failed observation is retained. One build
 failed with access denied when the owned test app locked its EXE; it was rebuilt
-after that test exited. Failed [build log](probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-build-locked.log)
-and [earlier shell evidence](probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-before-ipc.json)
+after that test exited. Failed build log (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-build-locked.log` at `41b8e84`)
+and earlier shell evidence (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/shell-before-ipc.json` at `41b8e84`)
 remain explicit, rather than mixed into final-source acceptance.
 The subsequent DPI size fix changes the executable hash; final 150% observations
 identify the latest tested binary. Earlier 100% observations are attributed to
@@ -169,7 +172,7 @@ owned-item availability failures are kept as failed evidence, not menu acceptanc
 The final focused driver locates the actual visible MenuItem by its exact owned
 name and clicks its native rectangle. **Open NYLRA restored/focused the main HWND
 22024398; Quit NYLRA exited the owned process within five seconds. Both PASS.**
-[Menu observations](probes/2026-10-10-n0/artifacts/2026-10-11-release/tray-menu-observations.json).
+Menu observations (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/tray-menu-observations.json` at `41b8e84`).
 This closes actual native menu activation on the current single-display setup;
 prior keyboard-selection failures do not contradict the corrected owned-item trial.
 
@@ -192,7 +195,7 @@ No account identity is trusted from the callback; no backend identity rules copi
 **Fixture results:** real default system browser reached the owned native loopback
 listener. Synthetic opaque material was saved, loaded by a fresh native process,
 cleared by another process, then confirmed absent by a further process.
-[Fixture log](probes/2026-10-10-n0/artifacts/2026-10-11-release/native-fixture.log).
+Fixture log (`docs/evidence/probes/2026-10-10-n0/artifacts/2026-10-11-release/native-fixture.log` at `41b8e84`).
 The browser fixture intentionally uses its owned HTTP loopback test utility; the
 production launcher rejects HTTP and non-reviewed origins. This does not test
 backend-mediated identity, ticket redemption, authenticated restart or remote logout.

@@ -1,2 +1,0 @@
-# Preserve raw process/evidence output, including terminal blank lines.
-docs/evidence/probes/**/artifacts/** whitespace=-blank-at-eof

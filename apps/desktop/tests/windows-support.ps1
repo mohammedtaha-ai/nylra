@@ -1,4 +1,5 @@
-# NON-PRODUCT Windows probe helpers. Capture only owned windows, never the full desktop.
+# Windows acceptance helpers shared by the scripts in this folder. Capture only
+# owned windows, never the full desktop. Moved here from the N0 probe at 41b8e84.
 Add-Type -AssemblyName System.Drawing
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type @'
@@ -18,7 +19,15 @@ public class N0Win {
 }
 '@
 [N0Win]::SetProcessDpiAwarenessContext([IntPtr](-4)) | Out-Null
-function Send-N0Control([string]$Command) {Set-Content -LiteralPath $env:N0_CONTROL -Value $Command -NoNewline; Start-Sleep -Milliseconds 450}
+# Release builds land in CARGO_TARGET_DIR when it is set, else in src-tauri/target.
+function Get-NylraTarget {
+ if($env:CARGO_TARGET_DIR){return $env:CARGO_TARGET_DIR}
+ Join-Path $PSScriptRoot '../src-tauri/target'
+}
+# Run output stays out of Git; a dated evidence file copies what it cites.
+function New-NylraRunDir([string]$RunName) {
+ $dir=Join-Path $PSScriptRoot ".runs/$RunName";New-Item -ItemType Directory -Force $dir|Out-Null;(Resolve-Path $dir).Path
+}
 function Get-N0Rect([string]$Title) {
  $h=[N0Win]::FindWindow([IntPtr]::Zero,$Title);if($h -eq [IntPtr]::Zero){throw "Window missing: $Title"}
  $rect=New-Object N0Win+Rect;[N0Win]::GetWindowRect($h,[ref]$rect)|Out-Null

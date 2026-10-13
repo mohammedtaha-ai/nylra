@@ -1,8 +1,8 @@
+param([string]$RunName='tray-menu')
 # Focused unresolved case only: real right-click menu Open and Quit.
 $ErrorActionPreference='Stop'
-$root=(Resolve-Path (Join-Path $PSScriptRoot '../../..')).Path
-$probe=Join-Path $root 'docs/evidence/probes/2026-10-10-n0'
-. (Join-Path $probe 'windows-support.ps1')
+. (Join-Path $PSScriptRoot 'windows-support.ps1')
+$out=New-NylraRunDir $RunName
 Add-Type -AssemblyName UIAutomationClient
 Add-Type -AssemblyName UIAutomationTypes
 Add-Type @'
@@ -37,7 +37,7 @@ function SelectOwnedMenuItem([string]$Name){
  $r=$item.Current.BoundingRectangle;if($r.IsEmpty -or $r.Width -le 0){throw 'Owned menu rectangle unavailable'}
  Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2))
 }
-$p=Start-Process (Join-Path $probe 'target/release/nylra-desktop.exe') -PassThru -WindowStyle Hidden
+$p=Start-Process (Join-Path (Get-NylraTarget) 'release/nylra-desktop.exe') -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try{
  Start-Sleep -Seconds 3;$w=Get-N0Rect 'NYLRA';$h=[IntPtr]$w.Handle
@@ -50,6 +50,6 @@ try{
  $quit=$p.WaitForExit(5000);$results.Add([pscustomobject]@{Scenario='actual-tray-menu-quit';Passed=$quit})
  if(!$quit){throw 'Menu Quit did not exit app'}
 }finally{
- $results|ConvertTo-Json -Depth 4|Set-Content (Join-Path $probe 'artifacts/2026-10-11-release/tray-menu-observations.json')
+ $results|ConvertTo-Json -Depth 4|Set-Content (Join-Path $out 'tray-menu-observations.json')
  if(!$p.HasExited){Stop-Process -Id $p.Id;$p.WaitForExit(5000)|Out-Null}
 }
