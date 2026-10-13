@@ -1,5 +1,5 @@
 import type { HookEvent, HookReply } from '../protocol.ts';
-import { trimStep } from '../sessions/steps.ts';
+import { oneLine, trimStep } from '../sessions/steps.ts';
 import { isNarrowRule, proposeRule } from '../agents/rules.ts';
 
 export type Pending = {
@@ -94,8 +94,11 @@ export class Approvals {
 
   #item(kind: Pending['kind'], event: HookEvent, proposedRule: string | null): Item {
     const step = trimStep(event, '');
+    const shellCommand = (event.tool_name === 'Bash' || event.tool_name === 'PowerShell') &&
+      typeof event.tool_input?.command === 'string' ? oneLine(event.tool_input.command, Number.MAX_SAFE_INTEGER) : null;
     return { id: this.#d.newId(), kind, sessionId: event.session_id, project: event.project_dir ?? '',
-      tool: step.tool, target: step.target, reason: event.reason ?? null, proposedRule,
+      tool: step.tool, target: kind === 'request' && shellCommand !== null ? shellCommand : step.target,
+      reason: event.reason ?? null, proposedRule,
       at: this.#d.now().toISOString(), held: true };
   }
 

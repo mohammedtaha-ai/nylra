@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdirSync, mkdtempSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { makeHandlers, settingsFor } from './handlers.ts';
@@ -62,6 +62,32 @@ test('an approval after the settings file changed since the preview writes nothi
     { message: 'settings_changed' });
   assert.equal(readFileSync(settingsFor(project), 'utf8'), '{"model": "x"}');
   assert.equal(approvals.pending().length, 1);
+});
+
+test('a preview for one rule cannot approve a different rule', async () => {
+  const { handlers, approvals, home } = setup();
+  const project = join(home, 'proj');
+  void approvals.refusal({ session_id: 's1', hook_event_name: 'PermissionDenied', project_dir: project,
+    tool_name: 'Bash', tool_input: { command: 'npm run deploy' } }, new AbortController().signal);
+  const id = approvals.pending()[0].id;
+  const preview = handlers['refusal.preview']({ id, rule: 'Bash(npm run deploy)' }) as { before: string };
+  assert.throws(() => handlers['refusal.approve']({ id, rule: 'Bash(npm test)', before: preview.before }),
+    { message: 'preview_mismatch' });
+  assert.equal(existsSync(settingsFor(project)), false);
+  assert.equal(approvals.pending().length, 1);
+});
+
+test('a newer rule preview invalidates the earlier one', () => {
+  const { handlers, approvals, home } = setup();
+  const project = join(home, 'proj');
+  void approvals.refusal({ session_id: 's1', hook_event_name: 'PermissionDenied', project_dir: project,
+    tool_name: 'Bash', tool_input: { command: 'npm run deploy' } }, new AbortController().signal);
+  const id = approvals.pending()[0].id;
+  const first = handlers['refusal.preview']({ id, rule: 'Bash(npm run deploy)' }) as { before: string };
+  handlers['refusal.preview']({ id, rule: 'Bash(npm test)' });
+  assert.throws(() => handlers['refusal.approve']({ id, rule: 'Bash(npm run deploy)', before: first.before }),
+    { message: 'preview_mismatch' });
+  assert.equal(existsSync(settingsFor(project)), false);
 });
 
 test('missing or wrong parameters are bad_params', () => {

@@ -3,7 +3,7 @@ import { createInterface } from 'node:readline';
 export type Handlers = Record<string, (params: Record<string, unknown>) => unknown>;
 
 export const ERROR_CODES = new Set(['unknown_method', 'bad_params', 'bad_request', 'not_pending', 'rule_too_broad',
-  'project_unknown', 'settings_invalid', 'settings_changed', 'hook_exe_missing']);
+  'project_unknown', 'settings_invalid', 'settings_changed', 'preview_mismatch', 'hook_exe_missing']);
 
 /** One JSON line per call on input, one per answer on output. Errors leave as stable codes only. */
 export function serveRpc(input: NodeJS.ReadableStream, output: NodeJS.WritableStream, handlers: Handlers, onEnd: () => void): void {

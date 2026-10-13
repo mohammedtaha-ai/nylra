@@ -32,6 +32,7 @@ const MESSAGES: Record<string, string> = {
   project_unknown: 'AYLUL does not know this session\'s project folder, so it cannot write the rule.',
   settings_invalid: 'The settings file is not valid JSON. AYLUL did not change it.',
   settings_changed: 'The settings file changed since the preview. Preview again.',
+  preview_mismatch: 'The rule changed since the preview. Preview it again.',
   hook_exe_missing: 'aylul-hook.exe was not found. Build it first.',
 };
 export const aylulMessage = (code: string) => MESSAGES[code] ?? 'Unable to complete this action. Please retry.';

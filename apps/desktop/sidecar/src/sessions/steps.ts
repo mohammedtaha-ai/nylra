@@ -8,7 +8,7 @@ const TARGET_KEYS = ['file_path', 'notebook_path', 'path', 'url', 'pattern'];
 export function trimStep(event: HookEvent, at: string): Step {
   const tool = event.tool_name ?? 'unknown';
   const input = event.tool_input ?? {};
-  if (tool === 'Bash') {
+  if (tool === 'Bash' || tool === 'PowerShell') {
     const command = oneLine(String(input.command ?? ''));
     const description = typeof input.description === 'string' ? oneLine(input.description) : '';
     return { at, tool, target: command, summary: description || command };

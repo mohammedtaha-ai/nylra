@@ -26,6 +26,7 @@ const text = (params: Record<string, unknown>, key: string): string => {
 
 /** The calls AYLUL's window can make. Each reads its parameters and calls one owner. */
 export function makeHandlers(d: HandlerDeps): Handlers {
+  const rulePreviews = new Map<string, { rule: string; before: string }>();
   const exe = () => {
     if (!d.hookExe || !existsSync(d.hookExe)) throw new Error('hook_exe_missing');
     return d.hookExe;
@@ -55,10 +56,21 @@ export function makeHandlers(d: HandlerDeps): Handlers {
       const item = refusal(text(p, 'id'));
       const rule = text(p, 'rule').trim();
       if (!isNarrowRule(rule)) throw new Error('rule_too_broad');
-      return shown(planAllowRule(settingsFor(item.project), rule));
+      const preview = shown(planAllowRule(settingsFor(item.project), rule));
+      rulePreviews.set(item.id, { rule, before: preview.before });
+      return preview;
     },
-    'refusal.approve': p => d.approvals.approveRule(text(p, 'id'), text(p, 'rule'), text(p, 'before')),
-    'refusal.dismiss': p => { d.approvals.dismiss(text(p, 'id')); return null; },
+    'refusal.approve': p => {
+      const id = text(p, 'id');
+      const rule = text(p, 'rule').trim();
+      const before = text(p, 'before');
+      const preview = rulePreviews.get(id);
+      if (!preview || preview.rule !== rule || preview.before !== before) throw new Error('preview_mismatch');
+      const result = d.approvals.approveRule(id, rule, before);
+      rulePreviews.delete(id);
+      return result;
+    },
+    'refusal.dismiss': p => { const id = text(p, 'id'); d.approvals.dismiss(id); rulePreviews.delete(id); return null; },
     'hooks.preview': () => shown(planHookInstall(d.claudeSettings, exe())),
     'hooks.install': p => {
       const plan = expectBefore(planHookInstall(d.claudeSettings, exe()), text(p, 'before'));

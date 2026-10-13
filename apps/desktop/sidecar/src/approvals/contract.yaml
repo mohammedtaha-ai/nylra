@@ -13,6 +13,10 @@ public_api:
 obligations:
   - rule: Nothing is allowed without answer or approveRule.
     tested_by: allow from AYLUL answers the hook with allow, an unanswered request times out with no decision
+  - rule: A PowerShell request exposes its command in the pending item before an answer.
+    tested_by: a PowerShell request shows the command before it can be answered
+  - rule: A request shows the complete one-line shell command, including a tail beyond the step summary limit.
+    tested_by: a request keeps the command tail visible before approval
   - rule: The terminal answering first ends the request without a decision.
     tested_by: an answer in the terminal ends the request without a decision
   - rule: Concurrent requests are independent; an id is answered once.

@@ -31,6 +31,19 @@ test('allow from AYLUL answers the hook with allow', async () => {
   assert.deepEqual(approvals.pending(), []);
 });
 
+test('a PowerShell request shows the command before it can be answered', () => {
+  const { approvals } = setup();
+  void approvals.request({ ...request, tool_name: 'PowerShell', tool_input: { command: 'Remove-Item -Recurse C:/work/project' } }, open().signal);
+  assert.equal(approvals.pending()[0].target, 'Remove-Item -Recurse C:/work/project');
+});
+
+test('a request keeps the command tail visible before approval', () => {
+  const { approvals } = setup();
+  const command = `echo ${'x'.repeat(180)} && rm -rf important`;
+  void approvals.request({ ...request, tool_input: { command } }, open().signal);
+  assert.equal(approvals.pending()[0].target, command);
+});
+
 test('deny from AYLUL answers with deny and a message', async () => {
   const { approvals } = setup();
   const reply = approvals.request(request, open().signal);
