@@ -1,5 +1,8 @@
 # AYLUL third-master continuation
 
+Probe sources and raw artifacts named here were removed from the tree on
+2026-10-13; `git show 41b8e84:<path>` retrieves any of them.
+
 Date: 2026-10-11, Asia/Aden. Baseline NYLRA `5801c9f`, clean before this work.
 Mohammed liked idle-v3's drawing, requested continuation, then explicitly approved
 Python cleanup of alpha=1 while preserving the art. Work stays in the NYLRA N0
@@ -45,7 +48,7 @@ fixed-body/layer or reviewed visual-transition acceptance before product use.
 
 ## Preview and actual checks
 
-[Character preview](probes/2026-10-10-n0/character-preview.html) compares original
+Character preview (`docs/evidence/probes/2026-10-10-n0/character-preview.html` at `41b8e84`) compares original
 v3, cleaned v3, expression trials and the unselected regenerated idle. It offers
 dark/light/checkerboard backgrounds,64/96/128/256px display, manual three-state
 switching on one fixed stage and optional4px CSS float. Reduced motion disables
@@ -78,7 +81,7 @@ python -m http.server 5488 --bind 127.0.0.1 --directory docs/evidence/probes/202
 ```
 
 The first three are run from the probe directory; the server command from NYLRA
-root. Exact [generation prompts](probes/2026-10-10-n0/asset-prompts-v4-v5.md),
+root. Exact generation prompts (`docs/evidence/probes/2026-10-10-n0/asset-prompts-v4-v5.md` at `41b8e84`),
 source/output paths, SHA provenance, metrics and body-comparison JSON are retained.
 No prior evidence/artwork overwritten, no product code, commit or push in this trial.
 

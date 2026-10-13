@@ -10,7 +10,7 @@ project authority remain in their existing owners.
 **Tech Stack:** React/TypeScript/Vite/Tauri 2, renderer decided by N0; Flutter later.
 **Spec:** [NYLRA delivery](../specs/2026-10-10-nylra-delivery-design.md).
 **Status:** N0 experiments run on 2026-10-10 and 2026-10-11. Full N0 exit
-OPEN. Continue on `codex/windows-shell-n0`; preserve historical probes. The user
+OPEN. `codex/windows-shell-n0` merged as PR #1; historical probe sources are at `41b8e84`. The user
 authorized local commits on 2026-10-11, but no push or deployment.
 N1a main shell/local native primitives are implemented; joint login and N1b remain
 unaccepted. See [continuation evidence](../../evidence/2026-10-11-windows-shell-continuation.md).
@@ -91,7 +91,7 @@ dependency by making NYLRA approve locally.
 **Evidence:** [Windows probe report](../../evidence/2026-10-10-aylul-windows-probes.md).
 The [dated follow-up](../../evidence/2026-10-11-aylul-windows-probes.md) corrects
 historical comparison conditions and records matched-window trials at 144Hz.
-**Retention:** keep [probe source](../../evidence/probes/2026-10-10-n0/README.md)
+**Retention:** keep probe source (`docs/evidence/probes/2026-10-10-n0/README.md` at `41b8e84`)
 until reviewer inspection; no deletion of the only reproduction.
 
 - [x] Preserve originals and compare the two silhouettes at 64/96/128 logical pixels.
