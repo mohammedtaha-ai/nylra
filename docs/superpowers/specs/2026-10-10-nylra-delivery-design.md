@@ -1,6 +1,6 @@
 # NYLRA delivery design
 
-Date: 2026-10-10. Updated: 2026-10-11. Status: N0 measured; acceptance exit OPEN.
+Date: 2026-10-10. Updated: 2026-10-13. Status: N0 measured; acceptance exit OPEN.
 Windows first, mobile afterward. Libraries and rendering choices are evaluated at
 the start; initial plans must change to follow the evidence before dependent work.
 
@@ -16,6 +16,75 @@ data and authority. Backend J1 owns the wire protocol. Shadows §1.7, §24.6 and
 The product is an unobtrusive companion that explains real work and brings the
 person's decisions to the owner. It must remain useful as text with the character
 hidden or animation reduced. AYLUL is optional presence, not a condition for access.
+
+### Independent companion
+
+Decided with Mohammed on 2026-10-13. AYLUL is an independent assistant, not a
+Shadows client. It observes and talks to the agents the person works with
+(Shadows, Claude Code and Codex now, others later) and is none of them.
+[Coucou](../../evidence/2026-10-10-coucou-and-library-research.md) is the
+reference shape: a companion with its own model that shows live agent sessions
+and carries the person's decisions to them.
+
+- **Its own brain.** One TypeScript agent loop on the AI SDK, the `aylul-brain`
+  package, runs on the laptop and in the cloud with the same instructions and
+  tools; only the reachable tools differ. Locally: Shadows, project files and
+  agent sessions. In the cloud: memory, notifications and, later, AWS. The model
+  provider is configuration (OpenRouter, Anthropic API, MiniMax, a local model).
+  No coding harness is its brain, so Claude Code's or Codex's memory and settings
+  never mix with AYLUL's.
+- **Hybrid placement.** The laptop brain serves conversation while the laptop is
+  on. The cloud brain answers the phone while it is off, and runs what must keep
+  running. Neither keeps a second copy of memory.
+- **Memory** lives in shadows-backend's PostgreSQL; the laptop brain reads and
+  writes it through the backend. Project data stays with its owner and is read
+  at question time, never copied into memory.
+- **Agents.** Claude Code and Codex are reached through their hooks: `aylul-hook`
+  is installed into each agent's hook configuration, with a backup and a shown
+  diff, and relays events over a named pipe (Windows) or Unix socket restricted
+  to the current user. ACP, for AYLUL starting work itself, follows when that
+  need is real. Shadows is read through its local API's NYLRA projection
+  ([Shadows §1.7](../../../../shadows/docs/superpowers/specs/2026-09-21-architecture-design.md#17-workspace-authority-and-deployment)).
+- **The cloud link belongs to AYLUL desktop.** The laptop brain runs as a Node
+  sidecar of the Tauri app and opens the outbound WebSocket to the backend; the
+  laptop needs no inbound port.
+
+**Delegation.** AYLUL decides an agent's request only under an explicit grant
+the person created on the laptop: allowlist rules in Claude Code's permission
+syntax (`Edit(src/**)`, `Bash(npm test:*)`), per agent and project, with an
+expiry. Matching is deterministic code. Model output, file content and session
+text never decide a request. A request no rule covers goes to the person, on the
+laptop and the phone. Every decision records who made it: `person`, or
+`aylul_grant` with the grant's id. The phone and the cloud can revoke a grant,
+never create or widen one. AYLUL desktop stores and enforces grants for Claude
+Code and Codex; grants over Shadows operations are Shadows' own (§24.6) and are
+outside the first release. Create structure is never delegable.
+
+**Failure is not consent.** If AYLUL is off, the link is lost or a request
+times out, the hook hands control back to the agent's own prompt. Nothing is
+approved by default.
+
+### First release and who builds it
+
+The phone has three screens: chat, live sessions with their steps, and pending
+approvals. Grants are managed on the laptop. Session steps sent to the cloud
+carry the tool name, file path and a one-line summary, never diffs or file
+contents, until architecture §5's lifecycle closes.
+
+0. **Cleanup.** Each probe's findings go into a dated evidence file naming its
+   commit; probe code and probe branches are then deleted. One review of the
+   kept authentication code against the project's structure rules, fixing what
+   it finds.
+1. **Contract.** nylra-v1 0.2 with fixtures and a mock server that replays them,
+   SSE included; the backend's J1 owns it. Both tracks start after it is agreed.
+2. **In parallel.** Mohammed's friend: AYLUL's avatar states, which can start
+   now, and the Flutter app's three screens against the mock server. Mohammed:
+   (a) `aylul-hook` with sessions and approvals on the laptop against Claude Code
+   on Windows, no cloud; (b) the backend relay, session and approval routes, and
+   push; (c) `aylul-brain`, memory, chat and the Shadows read; (d) grants.
+3. **Integration** of the real phone, backend and laptop.
+
+Outside the first release: AWS, voice, Shadows approvals through AYLUL, ACP.
 
 ## 2. AYLUL asset direction
 
@@ -73,8 +142,8 @@ provenance. Never copy its protected Mochi character, branding, sounds or animat
 Use native/window patterns only where they satisfy NYLRA's capabilities and trust.
 
 **Exit:** choose renderer/native libraries from results, amend this spec and plan,
-pin dependencies and record rejected alternatives. Retain reproducible non-product
-probe sources until reviewer inspection and explicit archival/removal approval.
+pin dependencies and record rejected alternatives. Mohammed approved removing
+probe sources on 2026-10-13: each probe's evidence names the commit that holds it.
 
 ### N0 observations and remaining gates
 
@@ -172,8 +241,10 @@ Use ordinary local state for simple view interaction; add a state-machine librar
 only if the measured transition complexity benefits. Select server-cache/UI utility
 libraries at N0/N2 against actual reconnect and accessibility needs, not by inventory.
 
-Cloud chat goes to shadows-backend; local Shadows access is presentation/navigation.
-The daemon owns the cloud connector. Closing NYLRA must not close that connector.
+Chat goes to the laptop brain, or to the cloud brain when the laptop is off.
+AYLUL desktop owns the cloud link (§1); closing the main window must not close
+it, only quitting AYLUL does. Local Shadows access is the NYLRA projection plus
+presentation/navigation.
 Workspace/account switches isolate cached evidence and pending input. Reconnect
 resumes through J1, with explicit resnapshot when needed; a cached view is not fresh.
 
@@ -193,7 +264,9 @@ capture stopped, playback stopped and no stale audio after topic switch. STT and
 remain separate from reasoning; the client owns capture/playback, not cloud dialogue.
 Voice-only human approval remains gated by Shadows §24.6.
 
-Flutter follows the Windows journey using the same versioned protocol and fixtures.
+Flutter is built in parallel with Windows against the same versioned protocol,
+its fixtures and its mock server (§1); it generates Dart from the backend's
+OpenAPI file and never edits a copy.
 Android/iOS delivery order and available physical devices are decided at the mobile
 gate, not assumed here. Native lock-screen/background limitations need per-platform
 evidence; a WebView preview is not phone acceptance. No forced TS/Dart code sharing.
@@ -206,11 +279,20 @@ remain in the Vision inventory and need their own complete slices.
 
 ## 7. Acceptance
 
-The first integrated Windows journey: open AYLUL, sign in, select a permitted topic,
-read a sourced explanation from current Shadows work, restart, then reopen it with
-correct history/freshness. Separate tests cover stale data, revoked link, interrupted
-stream and account switch. A native Windows trial must include display/focus behavior.
-Assessment/approval claims wait for backend B4 and real Shadows enforcement.
+The first release is accepted by a real run on Windows and a real phone:
+
+1. Claude Code asks to edit a file; the phone gets a push; the person allows it
+   there; Claude Code continues.
+2. A grant covers `npm test`; AYLUL allows it alone, and the record says AYLUL
+   decided on the person's behalf under that grant.
+3. The laptop is turned off; the phone shows it offline and chat continues with
+   the cloud brain.
+4. The grant is revoked from the phone; the next such request goes to the person.
+
+Few, exact tests: grant matching with its refusals; a failed or absent AYLUL
+approves nothing; both sides conform to the contract; a request already decided
+refuses with 409. A native Windows trial must include display/focus behavior.
+Shadows approval claims wait for backend B4 and real Shadows enforcement.
 
 Research: [Coucou and library record](../../evidence/2026-10-10-coucou-and-library-research.md).
 Backend: [delivery spec](../../../../shadows-backend/docs/superpowers/specs/2026-10-10-backend-delivery-design.md).
