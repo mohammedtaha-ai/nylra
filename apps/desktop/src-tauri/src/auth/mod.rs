@@ -16,7 +16,7 @@ use std::{
 pub struct AuthController {
     path: PathBuf,
     busy: AtomicBool,
-    pub cancelled: AtomicBool,
+    cancelled: AtomicBool,
 }
 impl AuthController {
     pub fn new(path: PathBuf) -> Arc<Self> {
@@ -25,6 +25,10 @@ impl AuthController {
             busy: AtomicBool::new(false),
             cancelled: AtomicBool::new(false),
         })
+    }
+    /// Ask an in-flight login to stop; never waits for the worker.
+    pub fn cancel(&self) {
+        self.cancelled.store(true, Ordering::SeqCst);
     }
     pub fn perform(&self, action: &str) -> Result<View, &'static str> {
         if self

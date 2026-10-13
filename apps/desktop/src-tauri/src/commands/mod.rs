@@ -28,7 +28,6 @@ pub fn cancel_login(
     if window.label() != "main" {
         return Err("main_required".into());
     }
-    auth.cancelled
-        .store(true, std::sync::atomic::Ordering::SeqCst);
+    auth.cancel();
     Ok(())
 }
