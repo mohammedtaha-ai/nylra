@@ -1,7 +1,7 @@
 # Inspected source map
 
-Date: 2026-10-11. Actual main-only Windows slice with a native backend login
-consumer. Mobile and conversations remain future paths in the source-structure design.
+Date: 2026-10-13. Actual Windows client, hook and sidecar source. Mobile and
+cloud conversations remain future paths in the source-structure design.
 
 | Source | Owned job | Contract |
 | --- | --- | --- |
@@ -9,7 +9,7 @@ consumer. Mobile and conversations remain future paths in the source-structure d
 | `apps/desktop/src/platform/` | Typed native hide invocation | Colocated `contract.yaml` |
 | `apps/desktop/src/features/` | Sessions and requests presentation with person actions | Colocated `contract.yaml` |
 | `apps/desktop/src/data/aylul-state.ts` | Refresh sidecar state while panel is visible | Features contract; presentation polling |
-| `apps/desktop/src-tauri/src/lib.rs` | Compose the native runtime | Composition only; behavior owned below |
+| `apps/desktop/src-tauri/src/lib.rs` | Compose the native runtime and sidecar lifetime | Composition only; behavior owned below |
 | `apps/desktop/src-tauri/src/windows/` | Main/tray lifecycle and physical placement | Colocated `contract.yaml` |
 | `apps/desktop/src-tauri/src/commands/` | Main-only native action IPC boundary | Colocated `contract.yaml` |
 | `apps/desktop/src-tauri/src/native_login/` | Local return/verifier/browser/DPAPI primitives | Colocated `contract.yaml` |
