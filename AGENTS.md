@@ -45,3 +45,14 @@ Two people build this repository in parallel (decided 2026-10-13).
   `shadows-backend/api/nylra-v1.openapi.json`. Generate Dart or TypeScript from
   it and never edit a copy; a field an app needs is added by a PR to the
   backend's TypeBox source first.
+
+## Leads
+
+Each side has a lead that plans with the user and runs a Sonnet builder and an
+Opus fixer (`.claude/agents/`): AYLUL's character in
+[docs/character](docs/character/AGENTS.md), the desktop UI in
+[docs/desktop-ui](docs/desktop-ui/AGENTS.md), and Tauri, sidecar and hook in
+[docs/native](docs/native/AGENTS.md). Sides agree before code in
+[docs/shared](docs/shared/README.md); cloud API needs go to
+`../shadows-backend/docs/shared/requests/`. New specs and plans go to their
+side; `docs/superpowers/` keeps earlier decisions.
