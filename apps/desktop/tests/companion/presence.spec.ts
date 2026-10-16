@@ -158,3 +158,26 @@ test("hidden document cancels frames until restored", async ({ page }) => {
     before,
   );
 });
+test("live DPR change resizes backing pixels while paused", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Pause motion" }).click();
+  const session = await page.context().newCDPSession(page);
+  await session.send("Emulation.setDeviceMetricsOverride", {
+    width: 400,
+    height: 700,
+    deviceScaleFactor: 2,
+    mobile: false,
+  });
+  await expect
+    .poll(() =>
+      page
+        .locator("canvas")
+        .evaluate(
+          (c: HTMLCanvasElement) => c.width / c.getBoundingClientRect().width,
+        ),
+    )
+    .toBe(2);
+  await session.send("Emulation.clearDeviceMetricsOverride");
+  await session.detach();
+});

@@ -19,11 +19,30 @@ const input: MotionInput = {
   direction: null,
   perch: null,
 };
-test('locked direction is visible on a still redraw without advancing motion', () => {
+test("locked direction is visible on a still redraw without advancing motion", () => {
   const model = createMotion(input.viewport, seededRandom());
-  const frame = readFrame(model, {...input, direction: 'right'});
+  const frame = readFrame(model, { ...input, direction: "right" });
   assert.equal(frame.character.lookX, 0.82);
   assert.equal(frame.character.lookY, 0);
+});
+test("perch hands meet the mock top without clipping the hood", () => {
+  const perched: MotionInput = {
+    ...input,
+    scene: "window",
+    pointer: null,
+    perch: { x: 30, y: 100, width: 240, height: 115 },
+  };
+  const model = createMotion(perched.viewport, seededRandom());
+  for (let i = 0; i < 600; i++) advanceMotion(model, 1 / 120, perched);
+  const { character: frame } = readFrame(model, perched);
+  assert.ok(
+    Math.abs(frame.cy + 43 * frame.scale - 100) < 2,
+    `hands baseline ${frame.cy + 43 * frame.scale} must meet mock top 100`,
+  );
+  assert.ok(
+    frame.cy - 135 * frame.scale >= 0,
+    "hood and glow must fit above perch",
+  );
 });
 test("motion cadence is stable at 30 60 and 120 Hz and inputs unchanged", () => {
   const original = JSON.stringify(input);

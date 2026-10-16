@@ -1,6 +1,110 @@
 import { test, expect } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 test.beforeEach(async ({ page }) => {
   await page.goto("/tests/companion/fixture.html?studio");
+});
+for (const preset of [
+  {
+    name: "offscreen export uses the latest expression outfit and direction",
+    initial: false,
+    button: "right",
+    lookX: 0.82,
+    tilt: 0.05,
+  },
+  {
+    name: "offscreen export clears a previously visible locked direction",
+    initial: true,
+    button: "Follow pointer",
+    lookX: 0,
+    tilt: 0,
+  },
+])
+  test(preset.name, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    const studio = page.getByRole("region", {
+      name: "AYLUL development studio",
+    });
+    await expect(studio.locator("canvas").first()).toBeVisible();
+    if (preset.initial) {
+      const before = await studio
+        .locator("canvas")
+        .first()
+        .evaluate((c: HTMLCanvasElement) => c.toDataURL());
+      await studio.getByRole("button", { name: "right", exact: true }).click();
+      await expect
+        .poll(() =>
+          studio
+            .locator("canvas")
+            .first()
+            .evaluate((c: HTMLCanvasElement) => c.toDataURL()),
+        )
+        .not.toBe(before);
+    }
+    // The stage has drawn the original selection, then becomes non-visible.
+    await studio.locator(".aylul-studio-stage").evaluate((el) => {
+      (el as HTMLElement).style.display = "none";
+    });
+    await studio.getByRole("button", { name: "Blocked", exact: true }).click();
+    await studio.getByRole("button", { name: "Winter", exact: true }).click();
+    await studio
+      .getByRole("button", { name: preset.button, exact: true })
+      .click();
+    const pending = page.waitForEvent("download");
+    await studio.getByRole("button", { name: "Export PNG" }).click();
+    const download = await pending;
+    const actual = await readFile((await download.path())!);
+    const expected = await page.evaluate(
+      async ({ lookX, tilt }) => {
+        const { exportCharacterPNG } =
+          await import("/src/features/companion/studio/export.ts");
+        const { DEFAULT_SETTINGS } =
+          await import("/src/features/companion/catalog.ts");
+        const blob = await exportCharacterPNG(
+          {
+            cx: 0,
+            cy: 0,
+            scale: 1,
+            lookX,
+            lookY: 0,
+            tilt,
+            time: 0,
+            earringAngle: 0,
+            blinkProgress: 0,
+            expression: "blocked",
+            outfit: "winter",
+            mini: false,
+            perchingHands: false,
+            sleepingMarks: [],
+            notificationPulse: 0,
+          },
+          DEFAULT_SETTINGS,
+        );
+        return [...new Uint8Array(await blob.arrayBuffer())];
+      },
+      { lookX: preset.lookX, tilt: preset.tilt },
+    );
+    expect(actual.equals(Buffer.from(expected))).toBe(true);
+  });
+test("mock window reclamps on narrow stage and resize", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  const studio = page.getByRole("region", { name: "AYLUL development studio" });
+  await studio.getByLabel("Scene").selectOption("window");
+  const fits = () =>
+    studio.locator(".aylul-mock-window").evaluate((el) => {
+      const box = el.getBoundingClientRect(),
+        stage = el.parentElement!.getBoundingClientRect();
+      return (
+        box.left >= stage.left &&
+        box.right <= stage.right + 0.1 &&
+        box.top >= stage.top &&
+        box.bottom <= stage.bottom + 0.1
+      );
+    });
+  await expect.poll(fits).toBe(true);
+  await page.setViewportSize({ width: 800, height: 900 });
+  await page.setViewportSize({ width: 320, height: 900 });
+  await expect.poll(fits).toBe(true);
 });
 test("all catalogs and scene controls work", async ({ page }) => {
   const studio = page.getByRole("region", { name: "AYLUL development studio" });

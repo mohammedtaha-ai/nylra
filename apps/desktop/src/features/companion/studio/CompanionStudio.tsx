@@ -37,7 +37,10 @@ export function CompanionStudio(): React.JSX.Element {
     [perch, setPerch] = React.useState<Rect | null>(null);
   const simulation = React.useRef<Simulation | null>(null),
     tones = React.useRef<ToneController | null>(null),
-    snapshot = React.useRef<SceneFrame | null>(null);
+    snapshot = React.useRef<{
+      frame: SceneFrame;
+      direction: DirectionId | null;
+    } | null>(null);
   React.useEffect(() => {
     const audio = createTones();
     tones.current = audio;
@@ -99,7 +102,7 @@ export function CompanionStudio(): React.JSX.Element {
               input={input}
               paused={paused}
               onFrame={(frame) => {
-                snapshot.current = frame;
+                snapshot.current = { frame, direction };
               }}
               onFailure={setError}
               onPoke={() => tones.current?.play("poke")}
@@ -155,7 +158,18 @@ export function CompanionStudio(): React.JSX.Element {
               onClick={() => {
                 setError("");
                 void exportCharacterPNG(
-                  snapshot.current?.character ?? staticFrame,
+                  {
+                    ...(snapshot.current?.frame.character ?? staticFrame),
+                    expression,
+                    outfit,
+                    ...(direction || snapshot.current?.direction !== direction
+                      ? {
+                          lookX: staticFrame.lookX,
+                          lookY: staticFrame.lookY,
+                          tilt: staticFrame.tilt,
+                        }
+                      : {}),
+                  },
                   settings,
                 )
                   .then((blob) =>

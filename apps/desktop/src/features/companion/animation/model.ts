@@ -55,6 +55,20 @@ export function createMotion(
 }
 const clamp = (n: number, min: number, max: number) =>
   Math.max(min, Math.min(max, n));
+function sceneLayout(input: MotionInput) {
+  const fit = fitCharacter(input.viewport);
+  if (input.scene !== "window" || !input.perch) return fit;
+  // Leave enough space for the complete hood/glow above the mock top. Hands
+  // are drawn 43 local units below the center in the perching pose.
+  const scale = Math.max(0, Math.min(fit.scale * 0.65, input.perch.y / 190));
+  return {
+    scale,
+    center: {
+      x: input.perch.x + input.perch.width / 2,
+      y: input.perch.y - 43 * scale,
+    },
+  };
+}
 export function advanceMotion(
   m: MotionModel,
   seconds: number,
@@ -63,7 +77,7 @@ export function advanceMotion(
   const elapsed = Number.isFinite(seconds) ? clamp(seconds, 0, 0.05) : 0;
   m.accumulator += elapsed;
   const dt = 1 / 120;
-  const { center, scale } = fitCharacter(input.viewport);
+  const { center, scale } = sceneLayout(input);
   if (!scale) return;
   const pointer = input.pointer;
   let target = { ...center };
@@ -79,7 +93,7 @@ export function advanceMotion(
   if (input.scene === "window" && input.perch)
     target = {
       x: input.perch.x + input.perch.width / 2,
-      y: input.perch.y - 38 * scale,
+      y: center.y,
     };
   const direction = DIRECTIONS.find((d) => d.id === input.direction);
   const tx =
@@ -111,7 +125,11 @@ export function advanceMotion(
     m.x += m.vx * dt;
     m.y += m.vy * dt;
     m.x = clamp(m.x, 150 * scale, input.viewport.width - 150 * scale);
-    m.y = clamp(m.y, 150 * scale, input.viewport.height - 150 * scale);
+    m.y = clamp(
+      m.y,
+      (input.scene === "window" ? 135 : 150) * scale,
+      input.viewport.height - 150 * scale,
+    );
     m.lookX += (tx - m.lookX) * dt * 10;
     m.lookY += (ty - m.lookY) * dt * 10;
     m.tilt +=
@@ -147,16 +165,22 @@ export function pokeMotion(m: MotionModel): void {
   m.angularVelocity += (m.random() > 0.5 ? 1 : -1) * 9;
 }
 export function readFrame(m: MotionModel, input: MotionInput): SceneFrame {
-  const { center, scale } = fitCharacter(input.viewport);
-  const direction = DIRECTIONS.find(value => value.id === input.direction);
+  const { center, scale } = sceneLayout(input);
+  const direction = DIRECTIONS.find((value) => value.id === input.direction);
   return {
     character: {
-      cx: scale
-        ? clamp(m.x, 150 * scale, input.viewport.width - 150 * scale)
-        : center.x,
-      cy: scale
-        ? clamp(m.y, 150 * scale, input.viewport.height - 150 * scale)
-        : center.y,
+      cx:
+        input.scene === "window" && input.perch
+          ? center.x
+          : scale
+            ? clamp(m.x, 150 * scale, input.viewport.width - 150 * scale)
+            : center.x,
+      cy:
+        input.scene === "window" && input.perch
+          ? center.y
+          : scale
+            ? clamp(m.y, 150 * scale, input.viewport.height - 150 * scale)
+            : center.y,
       scale: scale * (1 + Math.sin(m.poke * Math.PI) * 0.14),
       lookX: direction?.lx ?? m.lookX,
       lookY: direction?.ly ?? m.lookY,

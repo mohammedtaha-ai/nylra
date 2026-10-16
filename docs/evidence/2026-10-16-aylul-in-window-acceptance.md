@@ -35,8 +35,8 @@ Commands from `apps/desktop/` and observed results:
 
 | Command | Observed result |
 | --- | --- |
-| `npm run test:companion:unit` | 9 passed, 0 failed |
-| `npm run test:companion:browser` | 30 passed, 0 failed |
+| `npm run test:companion:unit` | 10 passed, 0 failed after review corrections |
+| `npm run test:companion:browser` | Final 34 passed, 0 failed, including review regressions and live DPR transition |
 | `npm run test:companion:production` | 1 passed, 0 failed; emitted module IDs include Companion and exclude studio/test fixtures |
 | `npm run build` | strict typecheck and Vite production bundle passed, 37 modules |
 
@@ -87,7 +87,9 @@ headroom; the drawing geometry itself is unchanged.
 
 `cargo build --release --locked --manifest-path apps/desktop/src-tauri/Cargo.toml`
 passed. The final rebuilt executable's SHA-256 was
-`d94668ccffed8b878aa34f57041e6d86e877b0b4121681cb04478124609b0052`.
+`ab6673d628e1fe10bde380cf18ba4bae1afaff6b49a5f561b028bf12ac617c87`
+after the shared perch correction. The native shell checks were rerun on that
+rebuilt executable with RunName `aylul-in-window-reviewed-20261016`.
 
 The plan's legacy `powershell -NoProfile -File ...` command was refused because
 that host disabled scripts. No execution policy was modified. The existing
@@ -97,6 +99,7 @@ local test normally:
 ```powershell
 pwsh -NoProfile -File apps/desktop/tests/windows-shell.ps1 -RunName aylul-in-window-before-keyboard-fix-pwsh-20261016
 pwsh -NoProfile -File apps/desktop/tests/windows-shell.ps1 -RunName aylul-in-window-named-keyboard-20261016
+pwsh -NoProfile -File apps/desktop/tests/windows-shell.ps1 -RunName aylul-in-window-reviewed-20261016
 ```
 
 The first run recorded the old first-Tab keyboard hide assumption as
@@ -114,9 +117,9 @@ the hide callback. The final run exited 0 and recorded:
 | Named UI button focused, Space hides native window | passed |
 
 Run records and bounded screenshots remain under ignored
-`apps/desktop/tests/.runs/aylul-in-window-named-keyboard-20261016/`.
+`apps/desktop/tests/.runs/aylul-in-window-reviewed-20261016/`.
 The script sampled only the main process for about five seconds (0% of one core
-in that run, 27.18 MiB working set). These figures exclude WebView2 descendants
+in that reviewed run, 29.45 MiB working set). These figures exclude WebView2 descendants
 and are not a claim of rendering efficiency or zero hidden rendering work.
 
 ## Remaining owner gates
@@ -137,3 +140,43 @@ and are not a claim of rendering efficiency or zero hidden rendering work.
 Task C-6 therefore records partial acceptance with these closing triggers rather
 than claiming every physical/runtime gate is complete. No push, merge, deployment,
 worktree or history rewrite was performed.
+
+## Independent whole-branch review and correction pass
+
+A fresh `gpt-6.1-sol` reviewer inspected `cf670bb..4f087aa` read-only, reran the
+nine then-existing Node tests and reproduced scene geometry numerically. It found
+two P2 defects; both were corrected with observed failing regression tests:
+
+1. Export preferred a stale visible-canvas snapshot after offscreen selection
+   changes. The new browser test failed byte comparison against the requested
+   blocked/winter/right-preset export. Export now retains the frozen motion pose
+   but overlays current controlled expression, outfit and direction. That
+   regression passed after correction. A second failing case covered clearing a
+   previously visible locked direction while offscreen; snapshots now also track
+   which controlled direction produced their pose so a cleared preset cannot leak
+   into the new export.
+2. Mock position bounds conflicted with the character's normal-stage bounds.
+   The Node regression reported hands baseline 193 against mock top 100; a browser
+   regression observed the initial mock exceeding a narrow stage. Perch scale and
+   center now leave hood headroom and align the hands with the mock top. Mock
+   bounds are shared by initial placement, dragging and parent resize, including
+   borders. Both regression tests passed after correction.
+
+The reviewer explicitly did not establish physical WebView/DPI/audio/download
+acceptance, user visual approval, remote CI or real backend authentication. Those
+remain the owner gates above. Its noted lack of live DPR transition coverage was
+addressed with a Chromium metrics-change test while paused; it still does not
+stand in for moving a physical Windows window between monitors. No deferred minor
+findings were reported. The author verifies the correction pass with tests; no
+second review seat or review pass was dispatched.
+
+Verification encountered one 15-second page-load timeout in the export-error
+test while the concurrent native build was running; 32 other tests passed. The
+unchanged test passed alone in 11.5 seconds. The browser test budget now uses the
+standard 30 seconds, with no automatic retries or weaker assertions. Subsequent
+full-suite results below supersede that interrupted run without hiding it.
+
+Final complete browser rerun: 34/34 passed in 54.3 seconds. Focused Node checks
+passed 10/10 and the production-module check passed 1/1. No known P1/P2 findings
+remain from the independent review after this correction pass. The remaining
+physical/runtime gates above are still open, not reclassified as completed.

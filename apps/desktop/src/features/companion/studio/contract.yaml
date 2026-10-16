@@ -11,6 +11,12 @@ exports:
   - name: exportCharacterPNG
     file: apps/desktop/src/features/companion/studio/export.ts
 obligations:
+  - rule: Export combines the frozen motion pose with current expression outfit and direction even if the stage cannot draw.
+    tested_by: apps/desktop/tests/companion/studio.spec.ts
+    test: offscreen export uses the latest expression outfit and direction
+  - rule: Mock window stays inside the stage after initial narrow layout and resizing.
+    tested_by: apps/desktop/tests/companion/studio.spec.ts
+    test: mock window reclamps on narrow stage and resize
   - rule: Manual identical-expression selection invalidates notification callbacks.
     tested_by: apps/desktop/tests/companion/studio.spec.ts
     test: manual same-expression selection cancels notification

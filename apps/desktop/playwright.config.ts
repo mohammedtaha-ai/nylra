@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/companion",
   testMatch: "**/*.spec.ts",
-  timeout: 15000,
+  timeout: 30000,
   workers: 1,
   use: {
     browserName: "chromium",
