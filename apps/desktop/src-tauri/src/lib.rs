@@ -11,6 +11,7 @@ pub fn run() {
             commands::cancel_login,
             commands::companion::companion_state,
             commands::companion::companion_ready,
+            commands::companion::companion_failed,
             commands::companion::set_companion_visible,
             commands::companion::set_companion_paused,
             commands::companion::drag_companion,

@@ -25,7 +25,7 @@ npm run build
 The browser checks use the installed Chrome channel through Playwright. They use
 synthetic IPC for shell presentation tests, not a real backend session. Real
 Windows and remaining physical acceptance are recorded in the
-[companion evidence](../../docs/evidence/2026-10-16-aylul-in-window-acceptance.md).
+[independent companion evidence](../../docs/evidence/2026-10-16-independent-companion-acceptance.md).
 
 From the repository root:
 

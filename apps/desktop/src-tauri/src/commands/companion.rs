@@ -3,7 +3,9 @@ use tauri::Manager;
 pub fn allowed_caller(label: &str, command: &str) -> bool {
     match command {
         "companion_state" => matches!(label, "main" | "companion"),
-        "companion_ready" | "drag_companion" | "open_main_from_companion" => label == "companion",
+        "companion_ready" | "companion_failed" | "drag_companion" | "open_main_from_companion" => {
+            label == "companion"
+        }
         "set_companion_visible"
         | "set_companion_paused"
         | "auth_action"
@@ -39,6 +41,11 @@ pub async fn companion_state(window: tauri::WebviewWindow) -> Result<CompanionSt
 pub async fn companion_ready(window: tauri::WebviewWindow) -> Result<CompanionState, String> {
     guard(&window, "companion_ready")?;
     companion::on_ui(window.app_handle().clone(), companion::ready).await
+}
+#[tauri::command]
+pub async fn companion_failed(window: tauri::WebviewWindow) -> Result<CompanionState, String> {
+    guard(&window, "companion_failed")?;
+    companion::on_ui(window.app_handle().clone(), companion::failed).await
 }
 #[tauri::command]
 pub async fn set_companion_visible(
@@ -83,6 +90,7 @@ mod tests {
         for label in ["main", "companion", "unknown"] {
             for name in [
                 "companion_ready",
+                "companion_failed",
                 "companion_state",
                 "set_companion_visible",
                 "set_companion_paused",
@@ -94,9 +102,10 @@ mod tests {
             ] {
                 let expected = match name {
                     "companion_state" => label == "main" || label == "companion",
-                    "companion_ready" | "drag_companion" | "open_main_from_companion" => {
-                        label == "companion"
-                    }
+                    "companion_ready"
+                    | "companion_failed"
+                    | "drag_companion"
+                    | "open_main_from_companion" => label == "companion",
                     _ => label == "main",
                 };
                 assert_eq!(allowed_caller(label, name), expected, "{label} {name}");

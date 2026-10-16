@@ -13,6 +13,9 @@ exports:
   - name: renderScene
     file: apps/desktop/src/features/companion/renderer/scene.ts
 obligations:
+  - rule: Recoverable gesture errors preserve the Canvas and renderer failures report to the native retry owner.
+    tested_by: apps/desktop/tests/companion/desktop-window.spec.ts
+    test: drawing failure after readiness reports to native recovery owner
   - rule: The compact entry draws a transparent character without account or studio loading.
     tested_by: apps/desktop/tests/companion/desktop-window.spec.ts
     test: desktop entry draws transparent character without account or studio

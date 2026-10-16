@@ -11,6 +11,7 @@ pub struct Store {
     model: Mutex<Model>,
     origin: Mutex<Option<(i32, i32)>>,
     toggle: Mutex<Option<tauri::menu::MenuItem<tauri::Wry>>>,
+    rebuilding: Mutex<bool>,
 }
 fn model<T>(app: &tauri::AppHandle, f: impl FnOnce(&mut Model) -> T) -> T {
     f(&mut app
@@ -96,7 +97,14 @@ fn fit(app: &tauri::AppHandle, initial: bool) -> Result<(), String> {
 pub fn setup_companion(app: &tauri::AppHandle) -> Result<(), String> {
     let result = (|| {
         if let Some(old) = app.get_webview_window("companion") {
+            model(app, |m| {
+                m.initialized = false;
+                m.finish(false, None);
+            });
+            publish(app);
+            *app.state::<Store>().rebuilding.lock().unwrap() = true;
             old.destroy().map_err(|_| "companion_unavailable")?;
+            return Ok(());
         }
         model(app, |m| {
             m.initialized = false;
@@ -126,6 +134,21 @@ pub fn setup_companion(app: &tauri::AppHandle) -> Result<(), String> {
                 .map_err(|_| "companion_unavailable")?;
         let owner = app.clone();
         w.on_window_event(move |event| match event {
+            tauri::WindowEvent::Destroyed => {
+                let rebuild =
+                    std::mem::take(&mut *owner.state::<Store>().rebuilding.lock().unwrap());
+                if rebuild {
+                    // Destroy removes the label after event dispatch. Queue from another
+                    // thread so reconstruction runs after that removal, never inline here.
+                    let app = owner.clone();
+                    tauri::async_runtime::spawn(async move {
+                        let next = app.clone();
+                        let _ = app.run_on_main_thread(move || {
+                            let _ = setup_companion(&next);
+                        });
+                    });
+                }
+            }
             tauri::WindowEvent::CloseRequested { api, .. } => {
                 api.prevent_close();
                 let _ = set_visible(&owner, false);
@@ -173,6 +196,7 @@ pub fn set_visible(app: &tauri::AppHandle, visible: bool) -> Result<CompanionSta
             || model(app, |m| !m.initialized && m.view.error.is_some()));
     if retry {
         setup_companion(app)?;
+        return Ok(snapshot(app));
     }
     apply_visibility(app)
 }
@@ -181,6 +205,14 @@ pub fn ready(app: &tauri::AppHandle) -> Result<CompanionState, String> {
         m.initialize(m.generation);
     });
     apply_visibility(app)
+}
+pub fn failed(app: &tauri::AppHandle) -> Result<CompanionState, String> {
+    let visible = app
+        .get_webview_window("companion")
+        .and_then(|w| w.is_visible().ok())
+        .unwrap_or(false);
+    model(app, |m| m.fail(visible));
+    Ok(publish(app))
 }
 pub fn set_paused(app: &tauri::AppHandle, paused: bool) -> Result<CompanionState, String> {
     model(app, |m| m.pause(paused));

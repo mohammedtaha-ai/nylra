@@ -12,6 +12,7 @@ test.beforeEach(async({page})=>{
         if(command==='plugin:event|listen')return args.handler;
         if(command==='plugin:event|unlisten')return;
         if(command==='companion_ready'||command==='companion_state')return state;
+        if(command==='companion_failed')return {...state,revision:2,renderAllowed:false,error:'companion_render_failed'};
         if(command==='drag_companion'||command==='open_main_from_companion')return;
         throw Error('Unexpected native call '+command);
       }
@@ -32,4 +33,18 @@ test('desktop Canvas failure stays local and does not report readiness',async({p
   await page.addInitScript(()=>{HTMLCanvasElement.prototype.getContext=(()=>null) as any});
   await page.goto('/companion.html');await expect(page.getByRole('alert')).toContainText('unavailable');
   expect(await page.evaluate(()=>(window as any).nativeCalls)).not.toContain('companion_ready');
+});
+test('transient drag failure leaves the independent canvas mounted',async({page})=>{
+  await page.goto('/companion.html');await expect(page.locator('canvas')).toBeVisible();
+  await page.evaluate(()=>{const internal=(window as any).__TAURI_INTERNALS__;const original=internal.invoke;internal.invoke=(command:string,args:any)=>command==='drag_companion'?Promise.reject(Error('refused')):original(command,args)});
+  await page.mouse.move(120,120);await page.mouse.down();await page.mouse.move(145,120);await page.mouse.up();
+  await expect(page.getByRole('alert')).toContainText('Unable to move');
+  await expect(page.locator('canvas')).toBeVisible();
+});
+test('drawing failure after readiness reports to native recovery owner',async({page})=>{
+  await page.goto('/companion.html');await expect(page.locator('canvas')).toBeVisible();
+  await expect.poll(()=>page.evaluate(()=>(window as any).nativeCalls.includes('companion_ready'))).toBe(true);
+  await page.evaluate(()=>{CanvasRenderingContext2D.prototype.clearRect=()=>{throw Error('controlled render failure')}});
+  await expect(page.getByRole('alert')).toContainText('unavailable');
+  await expect.poll(()=>page.evaluate(()=>(window as any).nativeCalls.includes('companion_failed'))).toBe(true);
 });

@@ -19,6 +19,7 @@ Proposed names below are design names, not assertions that commands exist.
 | Call / message | Sends | Gets back |
 | --- | --- | --- |
 | `companion_ready` (companion only) | No caller-supplied label or visibility | Native state snapshot; initial presentation readiness enables the pending initial show |
+| `companion_failed` (companion only) | No error text, identity, label or native coordinates | Native render denial and stable retryable rendering error; main/tray retain recovery |
 | `companion_state` (main or companion) | No arguments | `{ revision: number, visible: boolean, renderAllowed: boolean, paused: boolean, error: string or null }`, with no account material |
 | `set_companion_visible` (main only) | `{ visible: boolean }` | Reconciled native snapshot or stable error; tray calls the same native owner |
 | `set_companion_paused` (main only) | `{ paused: boolean }` | Native snapshot or stable error |
@@ -57,3 +58,8 @@ must not implement native visibility or authority rules in the renderer.
 The teacher records the user's subsequent written specification approval with
 the instruction to begin. This accepts the cross-side interface. The implementation
 plan remains a separate review boundary before product changes.
+
+Implementation ruling, 2026-10-17: accept the narrow companion-only failure
+report above. Final review reproduced that errors after readiness otherwise left
+native believing the surface was healthy and prevented Retry. This extends the
+same recovery owner, grants no new account action and accepts no model text.

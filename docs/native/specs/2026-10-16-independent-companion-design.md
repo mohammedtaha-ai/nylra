@@ -1,7 +1,7 @@
 # Independent AYLUL desktop window
 
 Date: 2026-10-16.
-Status: approved by the user on 2026-10-16; implementation plan prepared for review.
+Status: approved; implemented in development/debug on 2026-10-17. Device and optimized performance limits are recorded in the dated acceptance report.
 Owner: Native, with Character and Desktop UI integration.
 
 ## 1. Intent and existing decisions

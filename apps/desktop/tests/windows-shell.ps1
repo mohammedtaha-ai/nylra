@@ -18,9 +18,11 @@ public class NylraShell {
 }
 '@
 function Find-OwnedButton([string]$Name) {
+ if($Name -eq 'NYLRA'){return Find-NylraTrayIcon}
  $nameCondition=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),$Name
  $typeCondition=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::ControlTypeProperty),([Windows.Automation.ControlType]::Button)
  $condition=New-Object Windows.Automation.AndCondition $nameCondition,$typeCondition
+ if($Name -eq 'NYLRA'){$id=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::AutomationIdProperty,'NotifyItemIcon');$condition=[Windows.Automation.AndCondition]::new($condition,$id)}
  [Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$condition)
 }
 function Shortcut {
@@ -33,6 +35,8 @@ $p=Start-Process $exe -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try {
  Start-Sleep -Seconds 4;$w=Get-N0Rect 'NYLRA';$h=[IntPtr]$w.Handle
+ # Verify main controls with the optional companion independently hidden.
+ $character=[N0Win]::FindWindow([IntPtr]::Zero,'AYLUL');if($character -ne [IntPtr]::Zero){[NylraShell]::PostMessageW($character,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 300}
  $monitor=New-Object NylraShell+MonitorInfo;$monitor.Size=[Runtime.InteropServices.Marshal]::SizeOf($monitor)
  if(![NylraShell]::GetMonitorInfoW([NylraShell]::MonitorFromWindow($h,2),[ref]$monitor)){throw 'Native work area unavailable'}
  $fits=$w.Left -ge $monitor.Work.L -and $w.Top -ge $monitor.Work.T -and ($w.Left+$w.Width) -le $monitor.Work.R -and ($w.Top+$w.Height) -le $monitor.Work.B
@@ -64,8 +68,15 @@ try {
  $hideButton=$ownedRoot.FindFirst([Windows.Automation.TreeScope]::Descendants,$hideCondition)
  if(!$hideButton){throw 'Owned Hide to tray button not exposed by UI Automation'}
  $hideButton.SetFocus();Start-Sleep -Milliseconds 200
+ # UIA focus alone can leave WebView2's keyboard navigation anchor stale. Move
+ # through the native Tab route and return to the named action before Space.
+ [N0Win]::keybd_event(16,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(9,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(9,0,2,[UIntPtr]::Zero);[N0Win]::keybd_event(16,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 100
+ foreach($tabAttempt in 1..12){[N0Win]::keybd_event(9,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(9,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 100;if([Windows.Automation.AutomationElement]::FocusedElement.Current.Name -eq 'Hide to tray'){break}}
+ if([Windows.Automation.AutomationElement]::FocusedElement.Current.Name -ne 'Hide to tray'){throw 'Native Tab navigation did not reach Hide to tray'}
+ $keyboardFocus=[Windows.Automation.AutomationElement]::FocusedElement.Current.Name
+ $keyboardForeground=[N0Win]::GetForegroundWindow().ToInt64()
  [N0Win]::keybd_event(32,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(32,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 700
- $results.Add([pscustomobject]@{Scenario='keyboard-hide-button';Passed=![NylraShell]::IsWindowVisible($h)})
+ $results.Add([pscustomobject]@{Scenario='keyboard-hide-button';Passed=![NylraShell]::IsWindowVisible($h);FocusedElement=$keyboardFocus;Foreground=$keyboardForeground;Main=$w.Handle})
  if([NylraShell]::IsWindowVisible($h)){throw 'Named Hide to tray button did not hide the native window after Space'}
  Shortcut
  # Main-process-only sample; excludes companion rendering in WebView2 processes.

@@ -12,4 +12,5 @@ export function connectCompanion(onState:(state:CompanionState)=>void,onError:(r
 export async function setCompanionVisible(visible:boolean):Promise<CompanionState>{return acceptState(null,await invoke('set_companion_visible',{visible}));}
 export async function setCompanionPaused(paused:boolean):Promise<CompanionState>{return acceptState(null,await invoke('set_companion_paused',{paused}));}
 export function dragCompanion():Promise<void>{return invoke('drag_companion');}
+export function reportCompanionFailure():Promise<CompanionState>{return invoke('companion_failed');}
 export function openMainFromCompanion():Promise<void>{return invoke('open_main_from_companion');}

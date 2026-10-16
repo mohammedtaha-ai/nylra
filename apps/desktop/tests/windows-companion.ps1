@@ -1,4 +1,4 @@
-param([string]$RunName='independent-companion',[switch]$Profile,[switch]$WebViewOnly)
+param([string]$RunName='independent-companion',[switch]$Profile,[switch]$WebViewOnly,[int]$FocusCycles=10)
 $ErrorActionPreference='Stop'
 . (Join-Path $PSScriptRoot 'windows-support.ps1')
 Add-Type -AssemblyName UIAutomationClient
@@ -19,21 +19,35 @@ $out=New-NylraRunDir $RunName
 if(Test-Path (Join-Path $out 'native.json')){throw 'Use a fresh RunName'}
 $observations=[Collections.Generic.List[object]]::new()
 function FindOwnedElement([string]$name,[Windows.Automation.ControlType]$type){
+ if($name -eq 'NYLRA' -and $type -eq [Windows.Automation.ControlType]::Button){return Find-NylraTrayIcon}
  $a=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::NameProperty,$name)
  $b=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::ControlTypeProperty,$type)
- [Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,[Windows.Automation.AndCondition]::new($a,$b))
+ $condition=[Windows.Automation.AndCondition]::new($a,$b)
+ if($name -eq 'NYLRA' -and $type -eq [Windows.Automation.ControlType]::Button){$condition=[Windows.Automation.AndCondition]::new($condition,[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::AutomationIdProperty,'NotifyItemIcon'))}
+ [Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$condition)
 }
 function TrayItem([string]$name){
+ foreach($menuAttempt in 1..5){
+ [N0Win]::keybd_event(27,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(27,0,2,[UIntPtr]::Zero)
  $icon=FindOwnedElement 'NYLRA' ([Windows.Automation.ControlType]::Button)
  if(!$icon){$overflow=FindOwnedElement 'Show Hidden Icons' ([Windows.Automation.ControlType]::Button);if(!$overflow){throw 'Owned tray overflow unavailable'};$r=$overflow.Current.BoundingRectangle;Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2));$icon=FindOwnedElement 'NYLRA' ([Windows.Automation.ControlType]::Button)}
  if(!$icon){throw 'Owned NYLRA icon unavailable'}
  $r=$icon.Current.BoundingRectangle;[N0Win]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))|Out-Null
+ Start-Sleep -Milliseconds 500
+ $icon=FindOwnedElement 'NYLRA' ([Windows.Automation.ControlType]::Button)
+ if(!$icon){continue}
+ $r=$icon.Current.BoundingRectangle;[N0Win]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))|Out-Null
  [N0Win]::mouse_event(8,0,0,0,[UIntPtr]::Zero);[N0Win]::mouse_event(16,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 300
- $item=FindOwnedElement $name ([Windows.Automation.ControlType]::MenuItem);if(!$item){throw "Missing tray item $name"};$r=$item.Current.BoundingRectangle;Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2))
+ $item=$null;foreach($menuWait in 1..10){$item=FindOwnedElement $name ([Windows.Automation.ControlType]::MenuItem);if($item){break};Start-Sleep -Milliseconds 100}
+ if($item){$r=$item.Current.BoundingRectangle;Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2));return}
+ }
+ $menuCondition=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::ControlTypeProperty,[Windows.Automation.ControlType]::MenuItem)
+ $menuNames=@([Windows.Automation.AutomationElement]::RootElement.FindAll([Windows.Automation.TreeScope]::Descendants,$menuCondition)|Where-Object {$_.Current.ProcessId -eq $process.Id}|ForEach-Object {$_.Current.Name})
+ $observations.Add(@{Scenario='tray-item-diagnostic';Expected=$name;OwnedMenuItems=$menuNames})
+ throw "Missing tray item $name after refreshing owned tray icons"
 }
 $oldArgs=$env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS
-$port=9335
-$listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,$port);$listener.Start();$listener.Stop()
+$listener=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$listener.Start();$port=$listener.LocalEndpoint.Port;$listener.Stop()
 $env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--remote-debugging-port=$port"
 $exe=Join-Path (Get-NylraTarget) 'debug/nylra-desktop.exe'
 $process=Start-Process $exe -PassThru -WindowStyle Hidden
@@ -56,7 +70,7 @@ try {
  if(!$WebViewOnly){
  $x=$character.Left+[int]($character.Width/2);$y=$character.Top+[int]($character.Height/2)
  [N0Win]::SetCursorPos($x,$y)|Out-Null;[N0Win]::mouse_event(2,0,0,0,[UIntPtr]::Zero)
- foreach($offset in 1..12){[N0Win]::SetCursorPos(($x-10*$offset),($y-4*$offset))|Out-Null;Start-Sleep -Milliseconds 50}
+ foreach($offset in 1..12){[N0Win]::SetCursorPos(($x-40*$offset),($y-4*$offset))|Out-Null;Start-Sleep -Milliseconds 50}
  [N0Win]::mouse_event(4,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 400
  $moved=Get-N0Rect 'AYLUL'
  if($moved.Left -eq $character.Left -and $moved.Top -eq $character.Top){throw 'Real native drag did not move companion'}
@@ -70,10 +84,15 @@ try {
  $observations.Add(@{Scenario='actual-tray-companion-toggle';Passed=$true})
  }
  $form=[Windows.Forms.Form]::new();$form.Text='NYLRA owned focus witness';$form.Width=340;$form.Height=100;$form.Show();[Windows.Forms.Application]::DoEvents();[CompanionWin]::SetForegroundWindow($form.Handle)|Out-Null
- $nodeArgs=@((Join-Path $PSScriptRoot 'companion-native.mjs'),'--port',"$port",'--output',(Join-Path $out 'native.json'),'--foreground',"$($form.Handle.ToInt64())",'--pid',"$($process.Id)",'--profile',"$($Profile.IsPresent.ToString().ToLower())")
- & node @nodeArgs
- if($LASTEXITCODE -ne 0){throw 'Native WebView checks failed; inspect native.json'}
- $observations.Add(@{Scenario='native-webview-state-focus-recovery';Passed=$true})
+ $nodeArgs=@((Join-Path $PSScriptRoot 'companion-native.mjs'),'--port',"$port",'--output',(Join-Path $out 'native.json'),'--foreground',"$($form.Handle.ToInt64())",'--pid',"$($process.Id)",'--profile',"$($Profile.IsPresent.ToString().ToLower())",'--cycles',"$FocusCycles")
+ $nodeStart=[Diagnostics.ProcessStartInfo]::new('node');$nodeStart.UseShellExecute=$false;$nodeStart.CreateNoWindow=$true
+ foreach($nodeArg in $nodeArgs){$nodeStart.ArgumentList.Add($nodeArg)}
+ $nodeChild=[Diagnostics.Process]::Start($nodeStart)
+ # Keep the owned focus witness responsive; a blocked UI thread creates Windows
+ # ghost windows and invalidates foreground-HWND comparisons.
+ while(!$nodeChild.HasExited){[Windows.Forms.Application]::DoEvents();Start-Sleep -Milliseconds 50}
+ if($nodeChild.ExitCode -ne 0){throw 'Native WebView checks failed; inspect native.json'}
+ $observations.Add(@{Scenario='native-webview-state-recovery';Passed=$true;FocusCyclesRequested=$FocusCycles})
  TrayItem 'Quit NYLRA';if(!$process.WaitForExit(5000)){throw 'Quit did not exit owned application'}
  $observations.Add(@{Scenario='actual-tray-quit';Passed=$true})
 }finally{

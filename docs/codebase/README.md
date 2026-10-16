@@ -1,7 +1,7 @@
 # Inspected source map
 
-Date: 2026-10-11. Actual main-only Windows slice with a native backend login
-consumer. Mobile and conversations remain future paths in the source-structure design.
+Updated: 2026-10-17. Main and independent companion Windows surfaces with a native
+backend login consumer. Mobile and conversations remain future paths in the source-structure design.
 
 | Source | Owned job | Contract |
 | --- | --- | --- |

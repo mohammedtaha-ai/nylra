@@ -12,6 +12,7 @@ public_api:
   setCompanionVisible: Request main-only native visibility and validate the returned projection.
   setCompanionPaused: Request main-only native motion pause.
   dragCompanion: Request companion-only dragging.
+  reportCompanionFailure: Notify the native recovery owner of a fixed local rendering failure without transmitting error text.
   openMainFromCompanion: Request deliberate main navigation from companion.
 obligations:
   - rule: Older readiness replies cannot reverse newer native state.

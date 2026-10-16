@@ -35,19 +35,21 @@ try {
   for(const command of ['auth_action','cancel_login','hide_main','set_companion_visible','set_companion_paused']){
     let denied=false;try{await invoke(companion,command,{action:'status',visible:false,paused:true})}catch{denied=true}assert.ok(denied,`${command} must reject companion`);
   }
-  for(const command of ['companion_ready','drag_companion','open_main_from_companion']){
+  for(const command of ['companion_ready','companion_failed','drag_companion','open_main_from_companion']){
     let denied=false;try{await invoke(main,command)}catch{denied=true}assert.ok(denied,`${command} must reject main`);
   }
   report.observations.push({scenario:'actual-native-ipc-scope',passed:true});
-  for(let i=0;i<10;i++){
+  const cycles=args.cycles===undefined?10:Number(args.cycles);
+  for(let i=0;i<cycles;i++){
     await invoke(main,'set_companion_visible',{visible:false});
     const before=foreground();assert.equal(before,Number(args.foreground),'owned foreground test window required');
     await invoke(main,'set_companion_visible',{visible:true});await sleep(100);
     const after=foreground();report.focusCycles.push({before,after});assert.equal(after,before);
   }
+  report.focusCyclesRequested=cycles;
   // A page-local Canvas failure must be recoverable without restarting the app.
-  await companion.addInitScript(()=>{HTMLCanvasElement.prototype.getContext=()=>null});
-  await companion.reload();await waitState(s=>s.error==='companion_unavailable',150);
+  await companion.evaluate(()=>{CanvasRenderingContext2D.prototype.clearRect=()=>{throw Error('controlled render failure')}});
+  await waitState(s=>s.error==='companion_render_failed');
   await invoke(main,'set_companion_visible',{visible:true});
   for(let i=0;i<60;i++){companion=context.pages().find(p=>!p.isClosed()&&p.url().includes('companion.html'));if(companion){const state=await invoke(main,'companion_state');if(state.visible&&state.renderAllowed)break;}await sleep(150)}
   await waitState(s=>s.visible&&s.renderAllowed&&!s.error);
@@ -64,5 +66,5 @@ try {
     }
   }
   report.passed=true;
-}catch(error){report.passed=false;report.error=String(error);process.exitCode=1;}
+}catch(error){report.passed=false;report.error=String(error);report.stack=error.stack;process.exitCode=1;}
 finally{writeFileSync(args.output,JSON.stringify(report,null,2));await browser?.close();}

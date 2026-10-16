@@ -53,9 +53,13 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: focused shell/native-owner checks and frontend build pass with account behavior preserved.
 
 ### N-5 · Verify native behavior and record remaining gates
-- Status: doing
+- Status: done
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-5-product-native-acceptance-profiling-and-final-review
 - Read: Tasks 1–4 inspected contracts; approved native spec section 6; existing dated Windows evidence.
 - Touch: exactly Task 5 Files, including reproducible fixes inside Tasks 1–4 scopes.
 - Needs: N-4 integrated product.
 - Done when: final checks, actual Windows observations and fresh review are recorded; unperformed or failed device/performance gates remain explicitly open.
+
+Implemented and locally verified 2026-10-17 in debug, per user instruction.
+See [current acceptance](../evidence/2026-10-16-independent-companion-acceptance.md)
+for exact results and remaining optimized performance, hardware and hit-test gates.

@@ -70,6 +70,10 @@ impl Model {
     pub fn pause(&mut self, paused: bool) {
         self.change(|v| v.paused = paused);
     }
+    pub fn fail(&mut self, visible: bool) {
+        self.initialized = false;
+        self.finish(visible, Some("companion_render_failed".into()));
+    }
     pub fn expire(&mut self, generation: u64) {
         if generation == self.generation && !self.initialized {
             self.change(|v| {
@@ -82,6 +86,17 @@ impl Model {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn companion_drawing_failure_revokes_permission_and_is_retryable() {
+        let mut model = Model::default();
+        let generation = model.begin_document();
+        model.initialize(generation);
+        model.finish(true, None);
+        model.fail(true);
+        assert!(model.view.visible);
+        assert!(!model.initialized && !model.view.render_allowed);
+        assert_eq!(model.view.error.as_deref(), Some("companion_render_failed"));
+    }
     #[test]
     fn companion_initially_denies_drawing_and_hide_before_ready_wins() {
         let mut model = Model::default();

@@ -6,6 +6,7 @@ fn main() {
             "cancel_login",
             "companion_state",
             "companion_ready",
+            "companion_failed",
             "set_companion_visible",
             "set_companion_paused",
             "drag_companion",

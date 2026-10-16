@@ -8,6 +8,7 @@ public_api:
   setup_companion: Build or reconstruct a hidden transparent 240px logical window; report construction failure without terminating main.
   snapshot: Return the current credential-free companion projection.
   ready: Initialize current surface and apply requested visibility; used after local Canvas resources are ready.
+  failed: Revoke drawing and mark the native projection retryable after Canvas failure.
   set_visible: Apply requested visibility, deny rendering before hide and reconcile actual native visibility.
   set_paused: Publish the application-owned motion pause state.
   drag: Start native dragging for the owned companion.
@@ -22,6 +23,8 @@ obligations:
     tested_by: windows::companion::state::tests::companion_failed_hide_reconciles_actual_visibility
   - rule: Initialization deadlines and retries are generation-scoped.
     tested_by: windows::companion::state::tests::companion_initialization_deadline_is_retryable_and_generation_scoped
+  - rule: Drawing failure after readiness revokes permission and exposes Retry.
+    tested_by: windows::companion::state::tests::companion_drawing_failure_revokes_permission_and_is_retryable
   - rule: Placement fits complete rectangles and preserves negative monitor positions.
     tested_by: windows::companion::placement::tests::companion_negative_origin_and_small_or_missing_areas
   - rule: Direct no-activate show is paired with direct hide rather than Tao's cached visibility flags.
