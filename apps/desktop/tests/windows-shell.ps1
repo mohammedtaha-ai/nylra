@@ -55,12 +55,20 @@ try {
  if($overflowOpened){[N0Win]::keybd_event(27,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(27,0,2,[UIntPtr]::Zero)}
  foreach($i in 1..10){[NylraShell]::PostMessageW($h,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 250;if([NylraShell]::IsWindowVisible($h)){throw 'Hide cycle failed'};Shortcut;if(![NylraShell]::IsWindowVisible($h)){throw 'Shortcut restore failed'}}
  $results.Add([pscustomobject]@{Scenario='close-hide-shortcut-restore';Cycles=10;Passed=$true})
- # Only enabled action is Hide to tray; real Tab+Space exercises the UI wrapper/IPC.
- [N0Win]::keybd_event(9,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(9,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 200
+ # Companion/account controls add Tab stops. Focus the actual named UI button;
+ # Space must still reach its frontend handler and native hide_main invocation.
+ $ownedRoot=[Windows.Automation.AutomationElement]::FromHandle($h)
+ $hideName=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),'Hide to tray'
+ $hideType=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::ControlTypeProperty),([Windows.Automation.ControlType]::Button)
+ $hideCondition=New-Object Windows.Automation.AndCondition $hideName,$hideType
+ $hideButton=$ownedRoot.FindFirst([Windows.Automation.TreeScope]::Descendants,$hideCondition)
+ if(!$hideButton){throw 'Owned Hide to tray button not exposed by UI Automation'}
+ $hideButton.SetFocus();Start-Sleep -Milliseconds 200
  [N0Win]::keybd_event(32,0,0,[UIntPtr]::Zero);[N0Win]::keybd_event(32,0,2,[UIntPtr]::Zero);Start-Sleep -Milliseconds 700
  $results.Add([pscustomobject]@{Scenario='keyboard-hide-button';Passed=![NylraShell]::IsWindowVisible($h)})
+ if([NylraShell]::IsWindowVisible($h)){throw 'Named Hide to tray button did not hide the native window after Space'}
  Shortcut
- # Bound owned-process idle measurement; shell has no companion animation.
+ # Main-process-only sample; excludes companion rendering in WebView2 processes.
  $cpuBefore=$p.CPU;$clock=[DateTime]::UtcNow;Start-Sleep -Seconds 5;$p.Refresh()
  $results.Add([pscustomobject]@{Scenario='main-process-only-idle';Seconds=([DateTime]::UtcNow-$clock).TotalSeconds;CPUOneCorePercent=100*($p.CPU-$cpuBefore)/([DateTime]::UtcNow-$clock).TotalSeconds;WorkingSetMiB=$p.WorkingSet64/1MB;Note='Excludes WebView2 descendants; not aggregate renderer acceptance'})
 } finally {

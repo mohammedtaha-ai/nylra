@@ -1,7 +1,75 @@
-import React from 'react';import type {Rect} from '../types.ts';
-export function MockWindow({onPerch}:{onPerch:(rect:Rect)=>void}):React.JSX.Element{
- const host=React.useRef<HTMLDivElement>(null);const drag=React.useRef<{x:number;y:number}|null>(null);const [position,setPosition]=React.useState({x:30,y:140});
- const measure=React.useCallback(()=>{const el=host.current;if(el)onPerch({x:el.offsetLeft,y:el.offsetTop,width:el.offsetWidth,height:el.offsetHeight});},[onPerch]);
- React.useEffect(()=>{measure();const observer=new ResizeObserver(measure);if(host.current)observer.observe(host.current);return ()=>observer.disconnect();},[measure,position]);
- return <div className="aylul-mock-window" ref={host} style={{left:position.x,top:position.y}}><button type="button" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);drag.current={x:e.clientX-position.x,y:e.clientY-position.y};}} onPointerMove={e=>{if(!drag.current||!host.current)return;const parent=host.current.parentElement!;setPosition({x:Math.max(0,Math.min(parent.clientWidth-host.current.clientWidth,e.clientX-drag.current.x)),y:Math.max(100,Math.min(parent.clientHeight-host.current.clientHeight,e.clientY-drag.current.y))});}} onPointerUp={e=>{drag.current=null;e.currentTarget.releasePointerCapture(e.pointerId);}} onPointerCancel={()=>{drag.current=null;}}>Mock code window</button><pre>Preview only{`\n`}No project execution.</pre></div>;
+import React from "react";
+import type { Rect } from "../types.ts";
+export function MockWindow({
+  onPerch,
+}: {
+  onPerch: (rect: Rect) => void;
+}): React.JSX.Element {
+  const host = React.useRef<HTMLDivElement>(null);
+  const drag = React.useRef<{ x: number; y: number } | null>(null);
+  const [position, setPosition] = React.useState({ x: 30, y: 140 });
+  const measure = React.useCallback(() => {
+    const el = host.current;
+    if (el)
+      onPerch({
+        x: el.offsetLeft,
+        y: el.offsetTop,
+        width: el.offsetWidth,
+        height: el.offsetHeight,
+      });
+  }, [onPerch]);
+  React.useEffect(() => {
+    measure();
+    const observer = new ResizeObserver(measure);
+    if (host.current) observer.observe(host.current);
+    return () => observer.disconnect();
+  }, [measure, position]);
+  return (
+    <div
+      className="aylul-mock-window"
+      ref={host}
+      style={{ left: position.x, top: position.y }}
+    >
+      <button
+        type="button"
+        onPointerDown={(e) => {
+          e.currentTarget.setPointerCapture(e.pointerId);
+          drag.current = {
+            x: e.clientX - position.x,
+            y: e.clientY - position.y,
+          };
+        }}
+        onPointerMove={(e) => {
+          if (!drag.current || !host.current) return;
+          const parent = host.current.parentElement!;
+          setPosition({
+            x: Math.max(
+              0,
+              Math.min(
+                parent.clientWidth - host.current.clientWidth,
+                e.clientX - drag.current.x,
+              ),
+            ),
+            y: Math.max(
+              100,
+              Math.min(
+                parent.clientHeight - host.current.clientHeight,
+                e.clientY - drag.current.y,
+              ),
+            ),
+          });
+        }}
+        onPointerUp={(e) => {
+          drag.current = null;
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        }}
+        onPointerCancel={() => {
+          drag.current = null;
+        }}
+      >
+        Mock code window
+      </button>
+      <pre>Preview only{`\n`}No project execution.</pre>
+    </div>
+  );
 }

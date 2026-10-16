@@ -2,8 +2,30 @@
 
 React/TypeScript + Tauri 2 main-only shell. Close hides to tray. Left tray click,
 Open NYLRA and Ctrl+Alt+Shift+F12 restore the main panel. Quit NYLRA exits.
-Sign-in consumes backend auth-v1 1.1.0 through native Rust. Animated AYLUL remains
-unavailable pending its independent asset/render acceptance.
+Sign-in consumes backend auth-v1 1.1.0 through native Rust. AYLUL is now a
+procedural Canvas companion inside the existing window, with pause and opt-in
+interaction tones. It starts idle; no simulated operation is reported as real
+work, capture or speech playback.
+
+`npm run dev --prefix apps/desktop` includes an explicitly opened development
+studio for expressions, outfits, mock scenes and PNG export. Production excludes
+that studio. The renderer uses local source and system fonts, without CDN assets.
+Legacy PNG experiments are archived locally outside Git; see
+[`assets/aylul/README.md`](../../assets/aylul/README.md).
+
+Focused checks from `apps/desktop/`:
+
+```powershell
+npm run test:companion:unit
+npm run test:companion:browser
+npm run test:companion:production
+npm run build
+```
+
+The browser checks use the installed Chrome channel through Playwright. They use
+synthetic IPC for shell presentation tests, not a real backend session. Real
+Windows and remaining physical acceptance are recorded in the
+[companion evidence](../../docs/evidence/2026-10-16-aylul-in-window-acceptance.md).
 
 From the repository root:
 
