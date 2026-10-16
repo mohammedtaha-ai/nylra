@@ -4,6 +4,8 @@ status: current
 source: apps/desktop/src/features/companion
 responsibility: Present procedural AYLUL with isolated motion, message lifetime, accessible controls and optional tones; no runtime or authority effects. Development studio is separately owned.
 exports:
+  - name: DesktopCompanion
+    file: apps/desktop/src/features/companion/DesktopCompanion.tsx
   - name: Companion
     file: apps/desktop/src/features/companion/Companion.tsx
   - name: renderCharacter
@@ -11,6 +13,12 @@ exports:
   - name: renderScene
     file: apps/desktop/src/features/companion/renderer/scene.ts
 obligations:
+  - rule: The compact entry draws a transparent character without account or studio loading.
+    tested_by: apps/desktop/tests/companion/desktop-window.spec.ts
+    test: desktop entry draws transparent character without account or studio
+  - rule: An eight pixel drag consumes the panel click and lost mouse-up does not strand the next gesture.
+    tested_by: apps/desktop/tests/companion/desktop-gesture.test.ts
+    test: eight pixel drag consumes panel click and next gesture survives lost up
   - rule: Explicit native denial cancels all draws even if document visibility remains visible.
     tested_by: apps/desktop/tests/companion/native-visibility.spec.ts
     test: native denial stops all draws while document remains visible

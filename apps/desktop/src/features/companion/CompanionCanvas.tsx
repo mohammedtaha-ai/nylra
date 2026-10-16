@@ -14,6 +14,7 @@ export type CompanionCanvasProps = {
   paused: boolean;
   renderAllowed?: boolean;
   onReady?: () => void;
+  actionLabel?: string;
   onFrame?: (frame: SceneFrame) => void;
   onFailure: (reason: string) => void;
   onPoke?: () => void;
@@ -184,7 +185,7 @@ export function CompanionCanvas(
       <button
         className="aylul-poke"
         type="button"
-        aria-label="Poke AYLUL"
+        aria-label={props.actionLabel ?? "Poke AYLUL"}
         onClick={() => poke.current()}
       >
         <canvas ref={canvas} aria-hidden="true" />

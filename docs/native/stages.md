@@ -37,7 +37,7 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: Task 2 native-state Node tests, native-visibility browser tests and frontend build pass.
 
 ### N-3 · Present the independent character and gestures
-- Status: doing
+- Status: done
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-3-compact-independent-entry-and-reliable-gestures
 - Read: Task 2 interfaces; companion contract and renderer; approved spec section 3.
 - Touch: exactly Task 3 Files.
@@ -45,7 +45,7 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: gesture, desktop-window and production-graph checks pass; 240px visual inspected.
 
 ### N-4 · Connect main and tray controls
-- Status: todo
+- Status: doing
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-4-main-controls-and-tray-integration-without-duplicate-animation
 - Read: Task 1 native owner; Task 2 wrappers; app/windows contracts; accepted shared request.
 - Touch: exactly Task 4 Files.
