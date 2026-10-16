@@ -2,13 +2,22 @@ name: companion-presentation
 version: 1
 status: current
 source: apps/desktop/src/features/companion
-responsibility: Render the selected procedural AYLUL character from explicit frame data without runtime or authority effects.
+responsibility: Own procedural AYLUL rendering, local motion, frame scheduling and message lifetime without runtime or authority effects.
 exports:
   - name: renderCharacter
     file: apps/desktop/src/features/companion/renderer/character.ts
   - name: renderScene
     file: apps/desktop/src/features/companion/renderer/scene.ts
 obligations:
+  - rule: Frame cadence preserves elapsed simulation and each model owns its random state.
+    tested_by: apps/desktop/tests/companion/model.test.ts
+    test: motion cadence is stable at 30 60 and 120 Hz and inputs unchanged
+  - rule: One frame owner cancels callbacks on pause and disposal.
+    tested_by: apps/desktop/tests/companion/scheduler.test.ts
+    test: one loop is owned across double starts stop and dispose
+  - rule: Repeated message IDs cannot extend their lifetime.
+    tested_by: apps/desktop/tests/companion/messages.test.ts
+    test: same ID does not extend expiry and same text new ID does
   - rule: All nine expressions and ten outfits draw with a real Canvas context and no global engine.
     tested_by: apps/desktop/tests/companion/renderer.spec.ts
     test: all expressions and outfits draw without global engine

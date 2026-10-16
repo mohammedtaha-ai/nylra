@@ -11,7 +11,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-2 · Add deterministic motion, geometry, scheduling and message expiry
-- Status: todo
+- Status: done
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-2
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/src/features/companion/animation/model.ts, apps/desktop/src/features/companion/animation/geometry.ts, apps/desktop/src/features/companion/animation/scheduler.ts, apps/desktop/src/features/companion/animation/messages.ts, apps/desktop/tests/companion/model.test.ts, apps/desktop/tests/companion/geometry.test.ts, apps/desktop/tests/companion/scheduler.test.ts, apps/desktop/tests/companion/messages.test.ts, apps/desktop/src/features/companion/contract.yaml, apps/desktop/tests/companion/fakes.ts, docs/character/stages.md
@@ -19,7 +19,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-3 · Build an accessible, lifecycle-safe React presence
-- Status: todo
+- Status: doing
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-3
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/src/features/companion/Companion.tsx, apps/desktop/src/features/companion/CompanionCanvas.tsx, apps/desktop/src/features/companion/SpeechBubble.tsx, apps/desktop/src/features/companion/audio.ts, apps/desktop/src/features/companion/companion.css, apps/desktop/tests/companion/presence.spec.ts, apps/desktop/tests/companion/fixture.tsx, apps/desktop/src/features/companion/contract.yaml, docs/character/stages.md
