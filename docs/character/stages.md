@@ -35,7 +35,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-5 · Agree the boundary and embed the feature in the existing shell
-- Status: doing
+- Status: done
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-5
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: docs/shared/requests/2026-10-16-companion-shell-embedding.md, apps/desktop/tests/companion/shell.spec.ts, apps/desktop/tests/companion/production.test.ts, apps/desktop/src/app/main.tsx, apps/desktop/src/app/contract.yaml, apps/desktop/tests/companion/fixture.tsx, apps/desktop/package.json, docs/character/stages.md
@@ -43,7 +43,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-6 · Close visual and Windows acceptance with truthful evidence
-- Status: todo
+- Status: doing
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-6
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/tests/companion/visual.spec.ts, docs/evidence/2026-10-16-aylul-in-window-acceptance.md, apps/desktop/tests/windows-shell.ps1, apps/desktop/README.md, assets/aylul/README.md, docs/codebase/README.md, apps/desktop/src/features/companion/contract.yaml, apps/desktop/src/features/companion/studio/contract.yaml, apps/desktop/src/app/contract.yaml, docs/character/stages.md, docs/character/stages.md

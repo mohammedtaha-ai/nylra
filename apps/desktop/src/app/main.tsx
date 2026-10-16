@@ -3,8 +3,19 @@ import { createRoot } from 'react-dom/client';
 import './shell.css';
 import { hideToTray } from '../platform/windows';
 import { authAction, cancelLogin, type AuthView, type AuthAction } from '../platform/auth';
+import { Companion } from '../features/companion/Companion';
+
+const Studio = import.meta.env.DEV
+  ? React.lazy(() => import('../features/companion/studio/CompanionStudio').then(module => ({default:module.CompanionStudio})))
+  : null;
+class PresenceBoundary extends React.Component<{children:React.ReactNode},{failed:boolean}> {
+  state={failed:false};
+  static getDerivedStateFromError(){return {failed:true};}
+  render(){return this.state.failed?<p role="alert">AYLUL view is unavailable. Account and tray actions remain available.</p>:this.props.children;}
+}
 
 function Shell() {
+  const [studioOpen,setStudioOpen]=React.useState(false);
   const [error,setError]=React.useState('');
   const [auth,setAuth]=React.useState<AuthView|null>(null);
   const [busy,setBusy]=React.useState(false);
@@ -38,7 +49,11 @@ function Shell() {
       {auth?.providerLogout==='pending' && <p>Backend session revoked. Provider sign-out was handed to your browser; completion is not confirmed here.</p>}
     </section>
     <section aria-labelledby="presence"><h2 id="presence">AYLUL</h2>
-      <p>The animated companion is not available yet. You can still use this panel.</p>
+      <PresenceBoundary><Companion /></PresenceBoundary>
+      {Studio && <>
+        <button type="button" onClick={()=>setStudioOpen(value=>!value)}>{studioOpen?'Close development studio':'Open development studio'}</button>
+        {studioOpen && <PresenceBoundary><React.Suspense fallback={<p>Loading development studio…</p>}><Studio /></React.Suspense></PresenceBoundary>}
+      </>}
     </section>
     <button onClick={()=>void hideToTray().catch(()=>setError('Unable to hide the panel. Please try again.'))}>Hide to tray</button>
     {error && <p role="alert">{error}</p>}

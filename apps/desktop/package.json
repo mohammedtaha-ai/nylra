@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "tsc --noEmit && vite build",
-    "test:companion:browser": "playwright test"
+    "test:companion:browser": "playwright test",
+    "test:companion:unit": "node --test tests/companion/model.test.ts tests/companion/geometry.test.ts tests/companion/scheduler.test.ts tests/companion/messages.test.ts tests/companion/contracts.test.ts",
+    "test:companion:production": "node --test tests/companion/production.test.ts"
   },
   "dependencies": {
     "@tauri-apps/api": "2.11.0",

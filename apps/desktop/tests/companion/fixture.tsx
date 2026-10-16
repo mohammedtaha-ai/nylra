@@ -20,6 +20,17 @@ async function render(expression = 'idle', outfit = 'default') {
   } catch (error) { return {error:String(error)}; }
 }
 Object.assign(window, {fixture:{render}});
+if(new URLSearchParams(location.search).has('shell')){
+ const callLog=document.createElement('pre');callLog.dataset.testid='fixture-ipc-calls';document.body.append(callLog);
+ import('@tauri-apps/api/mocks').then(async({mockIPC})=>{
+  mockIPC((command,args)=>{callLog.textContent+=`${command} ${JSON.stringify(args)}\n`;
+   if(command==='auth_action'&&args?.action==='status')return {state:'signed_out',hasEnrollment:false,principal:null,providerLogout:null};
+   if(command==='hide_main')return;
+   throw new Error('Unexpected fixture command');
+  });
+  await import('../../src/app/main');
+ });
+}
 if(new URLSearchParams(location.search).has('presence')){
   Promise.all([import('react'),import('react-dom/client'),import(/* @vite-ignore */ source+'Companion.tsx')]).then(([React,{createRoot},{Companion}])=>{
     function Fixture(){
