@@ -1,6 +1,18 @@
 // Test-only entry: never imported by the application.
 import React from "react";
+import '../../src/features/companion/companion.css';
 const source = "/src/features/companion/";
+if(new URLSearchParams(location.search).has('nativeVisibility')) {
+  Promise.all([import('react-dom/client'),import('../../src/features/companion/CompanionCanvas'),import('../../src/features/companion/catalog')]).then(([{createRoot},{CompanionCanvas},{DEFAULT_SETTINGS}])=>{
+    function Fixture(){
+      const [allowed,setAllowed]=React.useState(!new URLSearchParams(location.search).has('denied'));
+      const [paused,setPaused]=React.useState(false),[ready,setReady]=React.useState(false),[mounted,setMounted]=React.useState(true),[expression,setExpression]=React.useState('idle');
+      const input:any={viewport:{width:0,height:0,dpr:1},presentation:{expression,statusText:expression,message:null},settings:DEFAULT_SETTINGS,outfit:'default',scene:'studio',pointer:null,direction:null,perch:null};
+      return <><button onClick={()=>setAllowed(false)}>Deny drawing</button><button onClick={()=>setAllowed(true)}>Allow drawing</button><button onClick={()=>setPaused(true)}>Pause fixture</button><button onClick={()=>setExpression('blocked')}>Change input</button><button onClick={()=>setMounted(false)}>Unmount canvas</button><p>{ready?'Canvas ready':'Initializing'}</p>{mounted&&<div style={{width:240,height:240}}><CompanionCanvas input={input} paused={paused} renderAllowed={allowed} onReady={()=>setReady(true)} onFailure={()=>setReady(false)}/></div>}</>;
+    }
+    createRoot(document.getElementById('root')!).render(<Fixture/>);
+  });
+}
 async function render(expression = "idle", outfit = "default") {
   try {
     const { renderCharacter } = await import(

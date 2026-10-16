@@ -29,7 +29,7 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: Task 1 focused native tests and formatting pass; inspected contracts/map updated.
 
 ### N-2 · Synchronize native render permission
-- Status: doing
+- Status: done
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-2-race-safe-platform-state-and-explicit-animation-permission
 - Read: Task 1 state/commands; platform and companion contracts; approved spec section 4.
 - Touch: exactly Task 2 Files.
@@ -37,7 +37,7 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: Task 2 native-state Node tests, native-visibility browser tests and frontend build pass.
 
 ### N-3 · Present the independent character and gestures
-- Status: todo
+- Status: doing
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-3-compact-independent-entry-and-reliable-gestures
 - Read: Task 2 interfaces; companion contract and renderer; approved spec section 3.
 - Touch: exactly Task 3 Files.

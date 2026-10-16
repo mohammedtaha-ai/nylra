@@ -12,6 +12,8 @@ import { renderScene } from "./renderer/scene.ts";
 export type CompanionCanvasProps = {
   input: MotionInput;
   paused: boolean;
+  renderAllowed?: boolean;
+  onReady?: () => void;
   onFrame?: (frame: SceneFrame) => void;
   onFailure: (reason: string) => void;
   onPoke?: () => void;
@@ -37,6 +39,7 @@ export function CompanionCanvas(
     let viewport = { width: 0, height: 0, dpr: 1 };
     const motion = createMotion(viewport);
     let modelReady = false;
+    let readinessReported = false;
     const reduced = matchMedia("(prefers-reduced-motion: reduce)");
     let dprQuery: MediaQueryList | null = null;
     const fail = () => {
@@ -63,6 +66,7 @@ export function CompanionCanvas(
       (seconds) => {
         if (
           disposed ||
+          latest.current.renderAllowed === false ||
           !visible ||
           !intersects ||
           !viewport.width ||
@@ -90,7 +94,7 @@ export function CompanionCanvas(
     const reconcile = () => {
       visible = document.visibilityState !== "hidden";
       const canDraw =
-        visible && intersects && viewport.width > 0 && viewport.height > 0;
+        latest.current.renderAllowed !== false && visible && intersects && viewport.width > 0 && viewport.height > 0;
       if (!canDraw) {
         frameLoop.stop();
         return;
@@ -117,6 +121,10 @@ export function CompanionCanvas(
         modelReady = true;
       }
       pointer.current = null;
+      if (!readinessReported && viewport.width > 0 && viewport.height > 0) {
+        readinessReported = true;
+        latest.current.onReady?.();
+      }
       reconcile();
     };
     const dprChanged = () => {
@@ -157,7 +165,7 @@ export function CompanionCanvas(
   }, []);
   React.useEffect(() => {
     sync.current();
-  }, [props.input, props.paused]);
+  }, [props.input, props.paused, props.renderAllowed]);
   return (
     <div
       className="aylul-canvas-region"

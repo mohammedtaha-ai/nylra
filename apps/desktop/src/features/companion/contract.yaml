@@ -11,6 +11,12 @@ exports:
   - name: renderScene
     file: apps/desktop/src/features/companion/renderer/scene.ts
 obligations:
+  - rule: Explicit native denial cancels all draws even if document visibility remains visible.
+    tested_by: apps/desktop/tests/companion/native-visibility.spec.ts
+    test: native denial stops all draws while document remains visible
+  - rule: Canvas readiness does not depend on permission to draw.
+    tested_by: apps/desktop/tests/companion/native-visibility.spec.ts
+    test: initialization reports ready without a draw under denied permission
   - rule: Perching uses scene-aware scale and position so the hands meet the mock top with hood headroom.
     tested_by: apps/desktop/tests/companion/model.test.ts
     test: perch hands meet the mock top without clipping the hood
