@@ -1,7 +1,7 @@
 # Independent AYLUL desktop window
 
 Date: 2026-10-16.
-Status: proposed written specification; awaiting user review before planning.
+Status: approved by the user on 2026-10-16; implementation plan prepared for review.
 Owner: Native, with Character and Desktop UI integration.
 
 ## 1. Intent and existing decisions
@@ -194,9 +194,9 @@ evidence report. Do not relabel the old probe results as product acceptance.
 ## 7. Review boundary and deferred work
 
 The user approved the conversational approach and instructed work to begin.
-This written artifact is the next architectural review boundary. After written
-specification review, prepare the implementation plan and its stage tasks before
-product edits. Preserve the previously requested inline execution method and
+The user subsequently approved this written specification with an instruction
+to begin. Prepare the implementation plan and its stage tasks before product
+edits. Preserve the previously requested inline execution method and
 no-worktree constraint; do not ask the user to choose these again.
 
 | Deferred decision | Owner and closing trigger |

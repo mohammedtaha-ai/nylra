@@ -1,6 +1,6 @@
 # Independent companion window integration
 
-- Status: asked
+- Status: accepted
 - Asked by: Character and Desktop UI, 2026-10-16
 - Owner: Native
 - Serves: docs/native/specs/2026-10-16-independent-companion-design.md
@@ -42,15 +42,18 @@ author visibility events or supply trusted caller identities.
 
 ## Answer
 
-Awaiting written specification review. No dependent source edit is authorized by
-this proposed interface alone.
+Native accepts this interface following the user's written specification approval
+on 2026-10-16. It retains separate render permission, real native visibility and
+main-only account authority. Its implementation belongs to Task 1 of the native
+plan; dependent presentation tasks consume the implemented owner.
 
 ## Reply
 
-Pending acceptance of the concrete interface before implementation.
+Character and Desktop UI accept the versioned state and narrow commands. They
+must not implement native visibility or authority rules in the renderer.
 
 ## Ruling
 
-The user's instruction to choose the best approach delegates design selection;
-it does not stand in for review of this newly written interface. The teacher will
-record acceptance with the written specification decision before dependent code.
+The teacher records the user's subsequent written specification approval with
+the instruction to begin. This accepts the cross-side interface. The implementation
+plan remains a separate review boundary before product changes.
