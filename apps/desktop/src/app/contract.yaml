@@ -2,11 +2,12 @@ name: desktop-main-presentation
 version: 1
 status: current
 source: apps/desktop/src/app
-responsibility: Render the local shell with native account verification, isolated Canvas companion and development-only studio entry.
+responsibility: Compose separate main and compact companion entries; main retains native account verification, companion controls and a development-only studio.
 public_api:
   Shell: Show account identity only from a freshly validated native View; provide login, cancellation, session checks and explicit surrender actions.
+  CompanionControls: Observe revisioned native companion state and request visibility/pause without optimistic success.
 obligations:
-  - rule: A companion rendering failure leaves account and tray actions usable.
+  - rule: A companion initialization failure leaves account and tray actions usable.
     tested_by: 'integration: apps/desktop/tests/companion/shell.spec.ts'
     note: companion failure preserves account and hide actions uses real frontend wrappers with synthetic Tauri IPC, not a Rust/backend acceptance claim.
   - rule: Production includes the companion but excludes studio modules and test fixtures.

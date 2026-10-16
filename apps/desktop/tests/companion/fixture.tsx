@@ -69,6 +69,8 @@ if (new URLSearchParams(location.search).has("shell")) {
   callLog.dataset.testid = "fixture-ipc-calls";
   document.body.append(callLog);
   import("@tauri-apps/api/mocks").then(async ({ mockIPC }) => {
+    const failed=new URLSearchParams(location.search).has('companionFailed');
+    let companion={revision:1,visible:!failed,renderAllowed:!failed,paused:false,error:failed?'companion_unavailable':null as string|null};
     mockIPC((command, args) => {
       callLog.textContent += `${command} ${JSON.stringify(args)}\n`;
       if (command === "auth_action" && args?.action === "status")
@@ -79,8 +81,14 @@ if (new URLSearchParams(location.search).has("shell")) {
           providerLogout: null,
         };
       if (command === "hide_main") return;
+      if (command==='companion_state')return companion;
+      if(command==='set_companion_visible'){
+        if(new URLSearchParams(location.search).has('hideRefused'))throw Error('refused');
+        companion={...companion,revision:companion.revision+1,visible:args?.visible as boolean,renderAllowed:args?.visible as boolean,error:null};return companion;
+      }
+      if(command==='set_companion_paused'){companion={...companion,revision:companion.revision+1,paused:args?.paused as boolean};return companion;}
       throw new Error("Unexpected fixture command");
-    });
+    },{shouldMockEvents:true});
     await import("../../src/app/main");
   });
 }

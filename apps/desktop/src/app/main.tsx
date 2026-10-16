@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './shell.css';
 import { hideToTray } from '../platform/windows';
 import { authAction, cancelLogin, type AuthView, type AuthAction } from '../platform/auth';
-import { Companion } from '../features/companion/Companion';
+import { CompanionControls } from './CompanionControls';
 
 const Studio = import.meta.env.DEV
   ? React.lazy(() => import('../features/companion/studio/CompanionStudio').then(module => ({default:module.CompanionStudio})))
@@ -49,7 +49,7 @@ function Shell() {
       {auth?.providerLogout==='pending' && <p>Backend session revoked. Provider sign-out was handed to your browser; completion is not confirmed here.</p>}
     </section>
     <section aria-labelledby="presence"><h2 id="presence">AYLUL</h2>
-      <PresenceBoundary><Companion /></PresenceBoundary>
+      <PresenceBoundary><CompanionControls /></PresenceBoundary>
       {Studio && <>
         <button type="button" onClick={()=>setStudioOpen(value=>!value)}>{studioOpen?'Close development studio':'Open development studio'}</button>
         {studioOpen && <PresenceBoundary><React.Suspense fallback={<p>Loading development studio…</p>}><Studio /></React.Suspense></PresenceBoundary>}

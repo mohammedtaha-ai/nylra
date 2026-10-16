@@ -57,7 +57,10 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     });
     let show = tauri::menu::MenuItem::with_id(app, "show", "Open NYLRA", true, None::<&str>)?;
     let quit = tauri::menu::MenuItem::with_id(app, "quit", "Quit NYLRA", true, None::<&str>)?;
-    let menu = tauri::menu::Menu::with_items(app, &[&show, &quit])?;
+    let toggle =
+        tauri::menu::MenuItem::with_id(app, "companion-toggle", "Show AYLUL", true, None::<&str>)?;
+    companion::attach_toggle(app.handle(), toggle.clone());
+    let menu = tauri::menu::Menu::with_items(app, &[&show, &toggle, &quit])?;
     // Neutral application icon, not substitute character artwork.
     let mut pixels = vec![0u8; 16 * 16 * 4];
     for p in pixels.as_chunks_mut::<4>().0 {
@@ -83,6 +86,9 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
                 let _ = open_main(app);
             }
             "quit" => app.exit(0),
+            "companion-toggle" => {
+                let _ = companion::set_visible(app, !companion::snapshot(app).visible);
+            }
             _ => (),
         })
         .build(app)?;
