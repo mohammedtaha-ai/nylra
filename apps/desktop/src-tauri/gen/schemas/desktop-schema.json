@@ -177,6 +177,138 @@
       "description": "Permission identifier",
       "oneOf": [
         {
+          "description": "Enables the auth_action command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-auth-action",
+          "markdownDescription": "Enables the auth_action command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the cancel_login command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-cancel-login",
+          "markdownDescription": "Enables the cancel_login command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the companion_failed command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-companion-failed",
+          "markdownDescription": "Enables the companion_failed command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the companion_ready command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-companion-ready",
+          "markdownDescription": "Enables the companion_ready command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the companion_state command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-companion-state",
+          "markdownDescription": "Enables the companion_state command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the drag_companion command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-drag-companion",
+          "markdownDescription": "Enables the drag_companion command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the hide_main command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-hide-main",
+          "markdownDescription": "Enables the hide_main command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the open_main_from_companion command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-open-main-from-companion",
+          "markdownDescription": "Enables the open_main_from_companion command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the set_companion_paused command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-set-companion-paused",
+          "markdownDescription": "Enables the set_companion_paused command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the set_companion_visible command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-set-companion-visible",
+          "markdownDescription": "Enables the set_companion_visible command without any pre-configured scope."
+        },
+        {
+          "description": "Local companion presentation and explicit main navigation only.",
+          "type": "string",
+          "const": "companion-actions",
+          "markdownDescription": "Local companion presentation and explicit main navigation only."
+        },
+        {
+          "description": "Denies the auth_action command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-auth-action",
+          "markdownDescription": "Denies the auth_action command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the cancel_login command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-cancel-login",
+          "markdownDescription": "Denies the cancel_login command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the companion_failed command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-companion-failed",
+          "markdownDescription": "Denies the companion_failed command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the companion_ready command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-companion-ready",
+          "markdownDescription": "Denies the companion_ready command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the companion_state command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-companion-state",
+          "markdownDescription": "Denies the companion_state command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the drag_companion command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-drag-companion",
+          "markdownDescription": "Denies the drag_companion command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the hide_main command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-hide-main",
+          "markdownDescription": "Denies the hide_main command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the open_main_from_companion command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-open-main-from-companion",
+          "markdownDescription": "Denies the open_main_from_companion command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the set_companion_paused command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-set-companion-paused",
+          "markdownDescription": "Denies the set_companion_paused command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the set_companion_visible command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-set-companion-visible",
+          "markdownDescription": "Denies the set_companion_visible command without any pre-configured scope."
+        },
+        {
+          "description": "Account and local companion controls for main only.",
+          "type": "string",
+          "const": "main-actions",
+          "markdownDescription": "Account and local companion controls for main only."
+        },
+        {
           "description": "Default core plugins set.\n#### This default permission set includes:\n\n- `core:path:default`\n- `core:event:default`\n- `core:window:default`\n- `core:webview:default`\n- `core:app:default`\n- `core:image:default`\n- `core:resources:default`\n- `core:menu:default`\n- `core:tray:default`",
           "type": "string",
           "const": "core:default",
