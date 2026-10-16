@@ -267,6 +267,12 @@ historical evidence; this renderer's acceptance is recorded separately with inpu
 provenance. Update asset-facing documentation if its current-appearance description
 would otherwise misleadingly imply this renderer uses those PNGs.
 
+User amendment during implementation, 2026-10-16: move those unchanged legacy
+packs and the reference board to ignored local `archive/aylul-legacy-2026-10-16/`,
+removing their tracked copies from the current tree. This supersedes keeping them
+at their original paths; preserve complete pack contents and verify their hashes.
+Historical evidence retains its original, dated path references.
+
 ## 9. Deferred decisions and closing triggers
 
 | Decision | Owner and closing trigger |
