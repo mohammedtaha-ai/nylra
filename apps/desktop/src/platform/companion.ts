@@ -1,9 +1,9 @@
 import {invoke} from '@tauri-apps/api/core';
-import {listen} from '@tauri-apps/api/event';
+import {getCurrentWebviewWindow} from '@tauri-apps/api/webviewWindow';
 import {acceptState,connectState,type CompanionState,type CompanionTransport} from './companion-state.ts';
 export type {CompanionState} from './companion-state.ts';
 const nativeTransport:CompanionTransport={
-  listen:handler=>listen<unknown>('companion-state',event=>handler(event.payload)),
+  listen:handler=>getCurrentWebviewWindow().listen<unknown>('companion-state',event=>handler(event.payload)),
   snapshot:()=>invoke('companion_state'),ready:()=>invoke('companion_ready'),
 };
 export function connectCompanion(onState:(state:CompanionState)=>void,onError:(reason:string)=>void,ready=false,transport=nativeTransport):()=>void {

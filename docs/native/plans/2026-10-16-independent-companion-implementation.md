@@ -175,6 +175,12 @@ await expect(page.locator("canvas")).toHaveCount(0);
 
 ## Task 5: Product-native acceptance, profiling and final review
 
+**User amendment, 2026-10-17:** Continue in development/debug. All executable
+builds and native drivers below use `cargo build --locked` and `target/debug`,
+superseding release instructions in this plan. Optimized performance acceptance
+is deferred to an explicitly requested later profiling step; debug measurements
+are diagnostic only and cannot close the provisional release CPU budget.
+
 **Files:** Create `tests/companion-native.mjs`, `tests/windows-companion.ps1`,
 `docs/evidence/2026-10-16-independent-companion-acceptance.md`. Modify relevant
 actual contracts, `apps/desktop/README.md`, root `README.md`, `docs/codebase/README.md`,

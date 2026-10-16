@@ -159,7 +159,7 @@ fn apply_visibility(app: &tauri::AppHandle) -> Result<CompanionState, String> {
     } else {
         model(app, |m| m.deny_render());
         publish(app);
-        w.hide().map_err(|_| "companion_hide_failed".into())
+        no_activate::hide(&w)
     };
     let actual = w.is_visible().unwrap_or(false);
     model(app, |m| m.finish(actual, result.as_ref().err().cloned()));

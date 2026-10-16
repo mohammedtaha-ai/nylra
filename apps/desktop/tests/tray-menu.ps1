@@ -37,7 +37,7 @@ function SelectOwnedMenuItem([string]$Name){
  $r=$item.Current.BoundingRectangle;if($r.IsEmpty -or $r.Width -le 0){throw 'Owned menu rectangle unavailable'}
  Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2))
 }
-$p=Start-Process (Join-Path (Get-NylraTarget) 'release/nylra-desktop.exe') -PassThru -WindowStyle Hidden
+$p=Start-Process (Join-Path (Get-NylraTarget) 'debug/nylra-desktop.exe') -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try{
  Start-Sleep -Seconds 3;$w=Get-N0Rect 'NYLRA';$h=[IntPtr]$w.Handle

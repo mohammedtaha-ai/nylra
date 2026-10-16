@@ -5,6 +5,7 @@ test.beforeEach(async({page})=>{
     const callbacks=new Map<number,Function>();let next=1;
     const state={revision:1,visible:true,renderAllowed:true,paused:false,error:null};
     Object.assign(window,{nativeCalls:[],__TAURI_EVENT_PLUGIN_INTERNALS__:{unregisterListener(){}},__TAURI_INTERNALS__:{
+      metadata:{currentWindow:{label:'companion'},currentWebview:{label:'companion'}},
       transformCallback(fn:Function){const id=next++;callbacks.set(id,fn);return id},unregisterCallback(id:number){callbacks.delete(id)},
       invoke:async(command:string,args:any)=>{
         (window as any).nativeCalls.push(command);

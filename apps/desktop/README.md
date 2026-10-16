@@ -1,10 +1,10 @@
 # NYLRA Windows shell
 
-React/TypeScript + Tauri 2 main-only shell. Close hides to tray. Left tray click,
+React/TypeScript + Tauri 2 with separate main and desktop companion windows. Close hides the corresponding window. Left tray click,
 Open NYLRA and Ctrl+Alt+Shift+F12 restore the main panel. Quit NYLRA exits.
 Sign-in consumes backend auth-v1 1.1.0 through native Rust. AYLUL is now a
-procedural Canvas companion inside the existing window, with pause and opt-in
-interaction tones. It starts idle; no simulated operation is reported as real
+procedural Canvas companion on the desktop, with motion controls in main and
+Show/Hide AYLUL in the tray. It starts idle; no simulated operation is reported as real
 work, capture or speech playback.
 
 `npm run dev --prefix apps/desktop` includes an explicitly opened development
@@ -33,15 +33,20 @@ From the repository root:
 npm ci --prefix apps/desktop
 npm run build --prefix apps/desktop
 cargo test --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
-cargo build --release --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
+cargo build --locked --manifest-path apps/desktop/src-tauri/Cargo.toml
 $env:NYLRA_BACKEND_URL='https://127.0.0.1:8443'
 $env:NYLRA_DEV_CA=(Resolve-Path '..\shadows-backend\.local-runtime\tls\ca.pem').Path
-& apps/desktop/src-tauri/target/release/nylra-desktop.exe
+& apps/desktop/src-tauri/target/debug/nylra-desktop.exe
 ```
 
 The Windows build requires MSVC/WebView2. The native icon is a synthetic build
 resource reproduced by the N0 `prepare-icon.ps1`, deleted with the probes and kept at
 `41b8e84` (`docs/evidence/probes/2026-10-10-n0/prepare-icon.ps1`); it is not AYLUL art.
+
+The commands above run a development build. Browser `npm run dev` previews the
+interface; the independent OS window requires the native executable. This debug
+workflow embeds the latest `dist`, so rebuild the frontend before rebuilding Rust.
+Transparent padding is still part of the rectangular native pointer area.
 The public local CA configures only the native client. A system browser must trust
 that CA separately; do not bypass certificate verification. Windows CurrentUser
 trust does not by itself prove Firefox trust. Start the sibling Docker stack using

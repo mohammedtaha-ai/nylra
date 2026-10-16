@@ -28,7 +28,7 @@ function Shortcut {
  foreach($key in @(0x7B,0x10,0x12,0x11)){[N0Win]::keybd_event($key,0,2,[UIntPtr]::Zero)}
  Start-Sleep -Milliseconds 700
 }
-$exe=Join-Path (Get-NylraTarget) 'release/nylra-desktop.exe'
+$exe=Join-Path (Get-NylraTarget) 'debug/nylra-desktop.exe'
 $p=Start-Process $exe -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try {

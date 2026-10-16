@@ -68,7 +68,8 @@ if (new URLSearchParams(location.search).has("shell")) {
   const callLog = document.createElement("pre");
   callLog.dataset.testid = "fixture-ipc-calls";
   document.body.append(callLog);
-  import("@tauri-apps/api/mocks").then(async ({ mockIPC }) => {
+  import("@tauri-apps/api/mocks").then(async ({ mockIPC,mockWindows }) => {
+    mockWindows('main');
     const failed=new URLSearchParams(location.search).has('companionFailed');
     let companion={revision:1,visible:!failed,renderAllowed:!failed,paused:false,error:failed?'companion_unavailable':null as string|null};
     mockIPC((command, args) => {

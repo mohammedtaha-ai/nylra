@@ -145,6 +145,10 @@ No error silently quits the application or claims a successful operation.
 
 ## 6. Verification and acceptance
 
+User amendment, 2026-10-17: use development/debug native builds while developing.
+Release profiling below is deferred to an explicitly requested later step.
+Debug rendering/lifecycle evidence does not establish optimized performance.
+
 The implementation plan must assign exact file scopes, test names and commands
 before code. Update inspected source contracts and the actual code map with the
 corresponding implementation; create no placeholder source contracts now.

@@ -2,7 +2,7 @@ name: companion-presentation
 version: 1
 status: current
 source: apps/desktop/src/features/companion
-responsibility: Present procedural AYLUL with isolated motion, message lifetime, accessible controls and optional tones; no runtime or authority effects. Development studio is separately owned.
+responsibility: Present procedural AYLUL with isolated motion and explicit native rendering permission; desktop gestures invoke narrow platform wrappers. Reusable in-window presence owns message lifetime and optional tones. Development studio is separately owned.
 exports:
   - name: DesktopCompanion
     file: apps/desktop/src/features/companion/DesktopCompanion.tsx
