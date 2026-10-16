@@ -2,13 +2,20 @@ name: desktop-main-presentation
 version: 1
 status: current
 source: apps/desktop/src/app
-responsibility: Render the local shell with native account verification and truthful unavailable-companion state.
+responsibility: Compose separate main and compact companion entries; main retains native account verification, companion controls and a development-only studio.
 public_api:
   Shell: Show account identity only from a freshly validated native View; provide login, cancellation, session checks and explicit surrender actions.
+  CompanionControls: Observe revisioned native companion state and request visibility/pause without optimistic success.
 obligations:
+  - rule: A companion initialization failure leaves account and tray actions usable.
+    tested_by: 'integration: apps/desktop/tests/companion/shell.spec.ts'
+    note: companion failure preserves account and hide actions uses real frontend wrappers with synthetic Tauri IPC, not a Rust/backend acceptance claim.
+  - rule: Production includes the companion but excludes studio modules and test fixtures.
+    tested_by: 'integration: apps/desktop/tests/companion/production.test.ts'
+    note: production includes companion and excludes studio modules and remote assets inspects emitted module IDs.
   - rule: Main remains usable without character artwork or backend access.
     tested_by: 'integration: apps/desktop/tests/windows-shell.ps1'
     note: Current native screenshot and Tab/Space hide action; full screen-reader/RTL testing is missing.
 gaps:
   - at: Shell
-    gap: Browser UI acceptance remains limited by Firefox trust and automation availability; renderer and full AYLUL acceptance remain separate.
+    gap: Real sign-in browser journey and native companion DPI/tray/performance acceptance remain separate from mocked Chromium shell checks.

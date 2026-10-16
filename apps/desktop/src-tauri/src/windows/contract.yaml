@@ -5,8 +5,9 @@ source: apps/desktop/src-tauri/src/windows
 responsibility: >
   Construct the local main shell, retain it on close, own native tray/shortcut
   actions and recover an inaccessible title bar when an explicit open occurs.
+  The companion subdirectory has its own contract and is excluded from this owner.
 public_api:
-  setup: Build one main window, close-to-tray handler, left-click open, Open/Quit menu and Ctrl+Alt+Shift+F12.
+  setup: Build main, close-to-tray handler, left-click open, Open/Show-or-Hide-AYLUL/Quit menu and Ctrl+Alt+Shift+F12; start the separately owned companion without propagating its failure.
   open_main: Unminimize/show; fit inner size to physical work area accounting for frame; recover inaccessible origin; focus after deliberate user action.
   recover_origin: Leave a usable title bar unchanged; otherwise clamp origin within the first available work area.
   fit_inner: Bound physical inner size using native work area and decoration size, with margins.
@@ -32,8 +33,6 @@ gaps:
     gap: Recovery runs on explicit open, not an automatic display-change callback. Hardware monitor removal is untested.
   - at: setup
     gap: Error results from event callbacks are currently ignored; no UI error path for tray or shortcut restore failures.
-  - at: setup
-    gap: Only a main shell is built; animated companion and ordinary-notification show are intentionally gated by N0 asset/render acceptance.
 tests:
   - name: lost_window_and_one_pixel_sliver_recover_a_usable_title_bar
     checks: Synthetic physical rectangles recover to hand-derived coordinates; not device-removal evidence.

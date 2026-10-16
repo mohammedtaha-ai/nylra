@@ -3,18 +3,18 @@
 Cloud-backed human liaison with a desktop companion and a mobile application.
 AYLUL is its companion character.
 
-**Status:** Product vision and agreements recorded. A main-only Windows shell and
+**Status:** Product vision and agreements recorded. A Windows main shell and independent AYLUL companion with
 local native-login primitives are implemented in [apps/desktop](apps/desktop/README.md).
 Backend auth-v1 login is wired into Rust with protected enrollment/session storage;
 see [joint authentication evidence](docs/evidence/2026-10-11-joint-native-auth.md).
-Animated AYLUL and full browser UI acceptance remain gated. The earlier
+The procedural companion uses local Canvas source with native visibility and motion controls.
+Full device/performance acceptance remains separately recorded. The earlier
 [continuation report](docs/evidence/2026-10-11-windows-shell-continuation.md) is historical.
 No conversations, mobile or Production features are implemented.
 
-[AYLUL artwork](assets/aylul/README.md) pins the three approved expressions and
-the six prepared review candidates. Start there for the appearance handoff;
-the [dated report](docs/evidence/2026-10-12-approved-aylul-and-six-expressions.md)
-records exact assets, prompts, checks and remaining runtime gates.
+[AYLUL artwork](assets/aylul/README.md) points to the current procedural renderer
+and the ignored local archive of earlier image experiments. Historical dated
+reports retain their original asset references.
 
 ## Start here
 

@@ -13,9 +13,11 @@ public class NylraMenuWin {
 }
 '@
 function Button([string]$Name){
+ if($Name -eq 'NYLRA'){return Find-NylraTrayIcon}
  $a=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::NameProperty),$Name
  $b=New-Object Windows.Automation.PropertyCondition ([Windows.Automation.AutomationElement]::ControlTypeProperty),([Windows.Automation.ControlType]::Button)
  $c=New-Object Windows.Automation.AndCondition $a,$b
+ if($Name -eq 'NYLRA'){$id=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::AutomationIdProperty,'NotifyItemIcon');$c=[Windows.Automation.AndCondition]::new($c,$id)}
  [Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$c)
 }
 function OpenOwnedMenu {
@@ -37,10 +39,11 @@ function SelectOwnedMenuItem([string]$Name){
  $r=$item.Current.BoundingRectangle;if($r.IsEmpty -or $r.Width -le 0){throw 'Owned menu rectangle unavailable'}
  Click-N0 ([int]($r.Left+$r.Width/2)) ([int]($r.Top+$r.Height/2))
 }
-$p=Start-Process (Join-Path (Get-NylraTarget) 'release/nylra-desktop.exe') -PassThru -WindowStyle Hidden
+$p=Start-Process (Join-Path (Get-NylraTarget) 'debug/nylra-desktop.exe') -PassThru -WindowStyle Hidden
 $results=[Collections.Generic.List[object]]::new()
 try{
  Start-Sleep -Seconds 3;$w=Get-N0Rect 'NYLRA';$h=[IntPtr]$w.Handle
+ $character=[N0Win]::FindWindow([IntPtr]::Zero,'AYLUL');if($character -ne [IntPtr]::Zero){[NylraMenuWin]::PostMessageW($character,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 300}
  [NylraMenuWin]::PostMessageW($h,0x10,[IntPtr]::Zero,[IntPtr]::Zero)|Out-Null;Start-Sleep -Milliseconds 500
  OpenOwnedMenu;SelectOwnedMenuItem 'Open NYLRA';Start-Sleep -Milliseconds 500
  $opened=[NylraMenuWin]::IsWindowVisible($h) -and [N0Win]::GetForegroundWindow().ToInt64() -eq $w.Handle

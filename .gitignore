@@ -4,3 +4,7 @@ apps/desktop/dist/
 .superpowers/
 **/native/icons/
 apps/desktop/tests/.runs/
+
+apps/desktop/test-results/
+apps/desktop/playwright-report/
+/archive/

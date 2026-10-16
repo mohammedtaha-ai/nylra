@@ -1,14 +1,17 @@
 # Inspected source map
 
-Date: 2026-10-11. Actual main-only Windows slice with a native backend login
-consumer. Mobile and conversations remain future paths in the source-structure design.
+Updated: 2026-10-17. Main and independent companion Windows surfaces with a native
+backend login consumer. Mobile and conversations remain future paths in the source-structure design.
 
 | Source | Owned job | Contract |
 | --- | --- | --- |
 | `apps/desktop/src/app/` | Main React presentation and local hide error | Colocated `contract.yaml` |
 | `apps/desktop/src/platform/` | Typed native hide invocation | Colocated `contract.yaml` |
+| `apps/desktop/src/features/companion/` | Compact desktop character/gestures plus reusable presence, procedural Canvas renderer and explicit drawing permission | Colocated `contract.yaml`; excludes separately owned studio |
+| `apps/desktop/src/features/companion/studio/` | Development-only scenes, controlled simulations and PNG export | Colocated `contract.yaml`; excluded from parent scope |
 | `apps/desktop/src-tauri/src/lib.rs` | Compose the native runtime | Composition only; behavior owned below |
 | `apps/desktop/src-tauri/src/windows/` | Main/tray lifecycle and physical placement | Colocated `contract.yaml` |
+| `apps/desktop/src-tauri/src/windows/companion/` | Independent native companion lifecycle, explicit render permission, no-activation show and complete-rectangle fitting | Colocated `contract.yaml`; excluded from parent scope |
 | `apps/desktop/src-tauri/src/commands/` | Main-only native action IPC boundary | Colocated `contract.yaml` |
 | `apps/desktop/src-tauri/src/native_login/` | Local return/verifier/browser/DPAPI primitives | Colocated `contract.yaml` |
 | `apps/desktop/src-tauri/src/auth/` | Backend auth-v1 native consumer | Colocated `contract.yaml` |

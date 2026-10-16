@@ -41,3 +41,19 @@ function Click-N0([int]$X,[int]$Y) {
  [N0Win]::SetCursorPos($X,$Y)|Out-Null;Start-Sleep -Milliseconds 500
  [N0Win]::mouse_event(2,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 60;[N0Win]::mouse_event(4,0,0,0,[UIntPtr]::Zero);Start-Sleep -Milliseconds 200
 }
+# Explorer removes orphaned icons from forcibly stopped test runs when hovered.
+# Reacquire by observed notification-icon ID after that cleanup, never taskbar text.
+function Find-NylraTrayIcon {
+ $name=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::NameProperty,'NYLRA')
+ $id=[Windows.Automation.PropertyCondition]::new([Windows.Automation.AutomationElement]::AutomationIdProperty,'NotifyItemIcon')
+ $condition=[Windows.Automation.AndCondition]::new($name,$id)
+ foreach($attempt in 1..20){
+  $icon=[Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$condition)
+  if(!$icon){return $null}
+  try{$identity=$icon.GetRuntimeId() -join ',';$r=$icon.Current.BoundingRectangle;[N0Win]::SetCursorPos([int]($r.Left+$r.Width/2),[int]($r.Top+$r.Height/2))|Out-Null;Start-Sleep -Milliseconds 250
+   $current=[Windows.Automation.AutomationElement]::RootElement.FindFirst([Windows.Automation.TreeScope]::Descendants,$condition)
+   if($current -and ($current.GetRuntimeId() -join ',') -eq $identity){return $current}
+  }catch [Windows.Automation.ElementNotAvailableException]{}
+ }
+ return $null
+}
