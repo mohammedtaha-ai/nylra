@@ -1,5 +1,6 @@
 use tauri::{Manager, WebviewUrl, WebviewWindowBuilder};
 use tauri_plugin_global_shortcut::GlobalShortcutExt;
+pub mod companion;
 mod placement;
 
 // Foreground activation is reserved for explicit tray, shortcut and launch actions.
@@ -87,5 +88,6 @@ pub fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .build(app)?;
     app.global_shortcut().register("Ctrl+Alt+Shift+F12")?;
     open_main(app.handle())?;
+    let _ = companion::setup_companion(app.handle());
     Ok(())
 }

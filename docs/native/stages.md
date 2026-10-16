@@ -7,7 +7,7 @@ their task here and set its status. Task shape: [`AGENTS.md`](./AGENTS.md#a-task
 
 Independent companion specification approved by the user on 2026-10-16:
 [`2026-10-16-independent-companion-design.md`](specs/2026-10-16-independent-companion-design.md).
-The implementation plan is prepared for review before source changes.
+The implementation plan is approved; inline execution began on 2026-10-16.
 Execution remains inline in
 the original checkout; no worktrees.
 
@@ -16,12 +16,12 @@ the original checkout; no worktrees.
 The accepted cross-side interface is in
 [`2026-10-16-independent-companion-window.md`](../shared/requests/2026-10-16-independent-companion-window.md).
 
-All following tasks await review of
+Tasks follow the approved
 [`2026-10-16-independent-companion-implementation.md`](plans/2026-10-16-independent-companion-implementation.md).
 The exact file lists and test assertions live in each task's Files and Steps.
 
 ### N-1 · Own native companion lifecycle and IPC
-- Status: todo
+- Status: done
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-1-native-companion-owner-and-restricted-ipc
 - Read: approved native spec; windows and commands contracts; code map; accepted independent-companion shared request.
 - Touch: exactly Task 1 Files, including its four named native companion source files and ACL/composition changes.
@@ -29,7 +29,7 @@ The exact file lists and test assertions live in each task's Files and Steps.
 - Done when: Task 1 focused native tests and formatting pass; inspected contracts/map updated.
 
 ### N-2 · Synchronize native render permission
-- Status: todo
+- Status: doing
 - Plan: docs/native/plans/2026-10-16-independent-companion-implementation.md#task-2-race-safe-platform-state-and-explicit-animation-permission
 - Read: Task 1 state/commands; platform and companion contracts; approved spec section 4.
 - Touch: exactly Task 2 Files.
