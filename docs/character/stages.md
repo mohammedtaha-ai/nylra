@@ -19,7 +19,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-3 · Build an accessible, lifecycle-safe React presence
-- Status: doing
+- Status: done
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-3
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/src/features/companion/Companion.tsx, apps/desktop/src/features/companion/CompanionCanvas.tsx, apps/desktop/src/features/companion/SpeechBubble.tsx, apps/desktop/src/features/companion/audio.ts, apps/desktop/src/features/companion/companion.css, apps/desktop/tests/companion/presence.spec.ts, apps/desktop/tests/companion/fixture.tsx, apps/desktop/src/features/companion/contract.yaml, docs/character/stages.md
@@ -27,7 +27,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-4 · Rebuild the development studio on the shared renderer
-- Status: todo
+- Status: doing
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-4
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/src/features/companion/studio/CompanionStudio.tsx, apps/desktop/src/features/companion/studio/SceneControls.tsx, apps/desktop/src/features/companion/studio/PreviewGrid.tsx, apps/desktop/src/features/companion/studio/MockWindow.tsx, apps/desktop/src/features/companion/studio/simulation.ts, apps/desktop/src/features/companion/studio/export.ts, apps/desktop/src/features/companion/studio/studio.css, apps/desktop/src/features/companion/studio/contract.yaml, apps/desktop/tests/companion/studio.spec.ts, apps/desktop/tests/companion/fixture.tsx, apps/desktop/src/features/companion/contract.yaml, docs/codebase/README.md, docs/character/stages.md

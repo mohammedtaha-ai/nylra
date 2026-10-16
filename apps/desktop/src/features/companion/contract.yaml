@@ -2,13 +2,24 @@ name: companion-presentation
 version: 1
 status: current
 source: apps/desktop/src/features/companion
-responsibility: Own procedural AYLUL rendering, local motion, frame scheduling and message lifetime without runtime or authority effects.
+responsibility: Present procedural AYLUL with isolated motion, message lifetime, accessible controls and optional tones; no runtime or authority effects. Development studio is separately owned.
 exports:
+  - name: Companion
+    file: apps/desktop/src/features/companion/Companion.tsx
   - name: renderCharacter
     file: apps/desktop/src/features/companion/renderer/character.ts
   - name: renderScene
     file: apps/desktop/src/features/companion/renderer/scene.ts
 obligations:
+  - rule: Poking cannot replace owner messages or report work outcomes.
+    tested_by: apps/desktop/tests/companion/presence.spec.ts
+    test: poke preserves controlled message
+  - rule: Paused input updates redraw a still without continuous animation.
+    tested_by: apps/desktop/tests/companion/presence.spec.ts
+    test: paused changes repaint without animation
+  - rule: Hidden document cancels scheduled rendering until visibility returns.
+    tested_by: apps/desktop/tests/companion/presence.spec.ts
+    test: hidden document cancels frames until restored
   - rule: Frame cadence preserves elapsed simulation and each model owns its random state.
     tested_by: apps/desktop/tests/companion/model.test.ts
     test: motion cadence is stable at 30 60 and 120 Hz and inputs unchanged
@@ -28,5 +39,5 @@ obligations:
     tested_by: apps/desktop/tests/companion/renderer.spec.ts
     test: character render preserves transparent corners
 gaps:
-  - at: renderCharacter
-    gap: Fixed-pose image review remains separate from pixel determinism tests; no animation or native performance acceptance yet.
+  - at: CompanionCanvas
+    gap: Simulated document visibility and Chromium tests do not establish Windows tray-hide suspension, DPI or native rendering cost.

@@ -1,4 +1,5 @@
 // Test-only entry: never imported by the application.
+import React from 'react';
 const source = '/src/features/companion/';
 async function render(expression = 'idle', outfit = 'default') {
   try {
@@ -19,3 +20,17 @@ async function render(expression = 'idle', outfit = 'default') {
   } catch (error) { return {error:String(error)}; }
 }
 Object.assign(window, {fixture:{render}});
+if(new URLSearchParams(location.search).has('presence')){
+  Promise.all([import('react'),import('react-dom/client'),import(/* @vite-ignore */ source+'Companion.tsx')]).then(([React,{createRoot},{Companion}])=>{
+    function Fixture(){
+      const [mounted,setMounted]=React.useState(true);const [expression,setExpression]=React.useState('idle');
+      const [message,setMessage]=React.useState<any>(null);const [width,setWidth]=React.useState(400);
+      return <><button onClick={()=>setMounted(v=>!v)}>Mount toggle</button><button onClick={()=>setExpression(v=>v==='idle'?'blocked':'idle')}>Change expression</button>
+        <button onClick={()=>setMessage({id:String(performance.now()),text:'Owner message'})}>New message</button>
+        <button onClick={()=>setMessage({id:'unsafe',text:'<img onerror=alert(1)> Hey! جاهز لمساعدتك '+ 'A'.repeat(150)})}>Mixed text</button>
+        <button onClick={()=>setWidth(v=>v===0?300:0)}>Zero size</button>
+        <div style={{width,maxWidth:'100%'}}>{mounted&&<Companion presentation={{expression,statusText:expression,message}}/>}</div></>;
+    }
+    createRoot(document.getElementById('root')!).render(<React.StrictMode><Fixture/></React.StrictMode>);
+  }).catch(error=>{document.getElementById('root')!.textContent=String(error);});
+}
