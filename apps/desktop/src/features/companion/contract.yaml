@@ -1,0 +1,23 @@
+name: companion-presentation
+version: 1
+status: current
+source: apps/desktop/src/features/companion
+responsibility: Render the selected procedural AYLUL character from explicit frame data without runtime or authority effects.
+exports:
+  - name: renderCharacter
+    file: apps/desktop/src/features/companion/renderer/character.ts
+  - name: renderScene
+    file: apps/desktop/src/features/companion/renderer/scene.ts
+obligations:
+  - rule: All nine expressions and ten outfits draw with a real Canvas context and no global engine.
+    tested_by: apps/desktop/tests/companion/renderer.spec.ts
+    test: all expressions and outfits draw without global engine
+  - rule: Identical frame inputs produce identical pixels.
+    tested_by: apps/desktop/tests/companion/renderer.spec.ts
+    test: same inputs produce same pixels
+  - rule: The character canvas retains transparent corners.
+    tested_by: apps/desktop/tests/companion/renderer.spec.ts
+    test: character render preserves transparent corners
+gaps:
+  - at: renderCharacter
+    gap: Fixed-pose image review remains separate from pixel determinism tests; no animation or native performance acceptance yet.
