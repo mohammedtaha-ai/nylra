@@ -1,7 +1,7 @@
 # AYLUL in-window Canvas companion
 
 Date: 2026-10-16.
-Status: conversational design approved; written specification awaiting user review.
+Status: written specification approved for planning on 2026-10-16; implementation awaits plan review.
 Owner: Character. Desktop UI owns the shell embedding described in section 7.
 
 ## 1. Intent and agreed scope
@@ -135,6 +135,11 @@ replaces the preceding message; expiry applies only to that message and never
 changes work state. Maintain an accessible textual status independent of pixels;
 announce message changes politely, not on animation frames. Do not manufacture
 the prototype's hard-coded greeting whenever the expression is `speaking`.
+The production poke response is visual and optionally tonal; it must not copy
+`pokeAylul`'s `sayMessage('Hey! ...')` into the controlled message slot. Only the
+supplied message or its own expiry may replace or clear that slot. Re-rendering
+the same message must not restart its expiry; the input boundary must distinguish
+a new message from a repeated render, including consecutive identical text.
 
 ## 6. Rendering, motion and failure behavior
 
@@ -155,6 +160,10 @@ the prototype's hard-coded greeting whenever the expression is `speaking`.
 - Respect `prefers-reduced-motion`, including changes while mounted. In reduced
   motion, draw a still pose on input/size changes; stop continuous blinking,
   bobbing, particles, shaking and movement. State and text remain available.
+- Manual pause stops motion, not presentation updates. While paused or in reduced
+  motion, redraw once for a changed expression, outfit or size using a stable
+  pose, and update message/status immediately without restarting continuous frames.
+  Returning to visibility must draw the latest inputs before resuming motion.
 - On resume, reconcile message expiry with its deadline. Timers belonging to a
   superseded message or simulation may not mutate the new one. No deferred work
   result is inferred from elapsed time in production.
@@ -180,6 +189,13 @@ No command from those scenes executes project work, records approval, captures
 audio or delivers an operating-system notification. Remove the prototype's
 "convert to Tauri" modal and global API installation snippets: this app is already
 Tauri and uses typed composition.
+
+Manual expression selection, scene changes and studio closure invalidate pending
+simulation transitions and notification-demo timers. A new simulation replaces
+the previous one. Include `triggerNotificationDemo`'s standalone timeout in that
+ownership; checking only the current expression is insufficient because a later
+selection can have the same value. A cancelled run cannot update text, expression,
+outfit or tones after its scene or selection has been replaced.
 
 Size previews must actually render at the stated pixel sizes. Share one main
 preview scheduling owner; render direction and icon thumbnails on relevant
@@ -219,12 +235,16 @@ Automated acceptance must cover:
 2. Single-owner scheduling, cleanup, pause/visibility/reduced-motion transitions,
    and remount behavior. Use a controlled clock/scheduler to observe cancelled
    callbacks and stale simulation/message updates, not arbitrary sleeps.
+   Cover manual selection of the same expression during a pending demo, scene
+   changes, and controlled input updates while paused or in reduced motion.
 3. Independence of main and studio state; simulation never drives the main
    production presence; the production build excludes studio simulation code.
 4. Canvas-failure fallback and non-fatal audio/export failures. Verify that account
    controls remain usable rather than only testing an error helper in isolation.
 5. Real text rendering for mixed Arabic/English, long messages, keyboard controls
    and accessible status. A snapshot of TypeScript objects cannot prove layout.
+   Verify that poke leaves supplied messages intact, ordinary re-renders do not
+   extend expiry, and a new message with identical text has its own lifecycle.
 
 Run `npm run build --prefix apps/desktop` and the focused tests selected in the
 plan. Source inspection and a passing build do not constitute visual acceptance.
@@ -260,8 +280,10 @@ would otherwise misleadingly imply this renderer uses those PNGs.
 
 ## 10. Current review boundary
 
-This change creates the written specification and its index entry only. Product
-source, contracts, stage tasks and implementation plan remain unchanged. Review
-this file next; only written-spec approval permits preparation of the detailed
-implementation plan. Implementation starts after plan review and selection of
-execution method. No worktree, push or deployment is part of this workflow.
+The user approved preparation of the implementation plan after the requested
+`gpt-6-astra`/`medium` static review. Its corrections protect controlled messages,
+invalidate superseded demo timers, and keep paused presentation current. The
+[implementation plan](../plans/2026-10-16-aylul-in-window-implementation.md) carries
+the next review boundary. Product source and source contracts remain unchanged.
+Implementation starts after plan review and selection of execution method. No
+worktree, push or deployment is part of this workflow.
