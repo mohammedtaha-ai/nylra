@@ -27,7 +27,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-4 · Rebuild the development studio on the shared renderer
-- Status: doing
+- Status: done
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-4
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: apps/desktop/src/features/companion/studio/CompanionStudio.tsx, apps/desktop/src/features/companion/studio/SceneControls.tsx, apps/desktop/src/features/companion/studio/PreviewGrid.tsx, apps/desktop/src/features/companion/studio/MockWindow.tsx, apps/desktop/src/features/companion/studio/simulation.ts, apps/desktop/src/features/companion/studio/export.ts, apps/desktop/src/features/companion/studio/studio.css, apps/desktop/src/features/companion/studio/contract.yaml, apps/desktop/tests/companion/studio.spec.ts, apps/desktop/tests/companion/fixture.tsx, apps/desktop/src/features/companion/contract.yaml, docs/codebase/README.md, docs/character/stages.md
@@ -35,7 +35,7 @@ Execution: native, user-approved 2026-10-16. No worktrees.
 - Done when: task-specific commands and acceptance in the linked plan have observed results; record missing native evidence explicitly.
 
 ### C-5 · Agree the boundary and embed the feature in the existing shell
-- Status: todo
+- Status: doing
 - Plan: docs/character/plans/2026-10-16-aylul-in-window-implementation.md#task-5
 - Read: approved companion spec, code map, and this task in the plan; existing contracts before source edits.
 - Touch: docs/shared/requests/2026-10-16-companion-shell-embedding.md, apps/desktop/tests/companion/shell.spec.ts, apps/desktop/tests/companion/production.test.ts, apps/desktop/src/app/main.tsx, apps/desktop/src/app/contract.yaml, apps/desktop/tests/companion/fixture.tsx, apps/desktop/package.json, docs/character/stages.md

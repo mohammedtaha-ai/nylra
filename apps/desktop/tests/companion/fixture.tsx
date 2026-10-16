@@ -34,3 +34,9 @@ if(new URLSearchParams(location.search).has('presence')){
     createRoot(document.getElementById('root')!).render(<React.StrictMode><Fixture/></React.StrictMode>);
   }).catch(error=>{document.getElementById('root')!.textContent=String(error);});
 }
+if(new URLSearchParams(location.search).has('studio')){
+ Promise.all([import('react-dom/client'),import(/* @vite-ignore */ source+'studio/CompanionStudio.tsx'),import(/* @vite-ignore */ source+'Companion.tsx')]).then(([{createRoot},{CompanionStudio},{Companion}])=>{
+  function Fixture(){const [open,setOpen]=React.useState(true);return <><Companion/><button onClick={()=>setOpen(v=>!v)}>Studio toggle</button>{open&&<CompanionStudio/>}</>;}
+  createRoot(document.getElementById('root')!).render(<React.StrictMode><Fixture/></React.StrictMode>);
+ }).catch(error=>{document.getElementById('root')!.textContent=String(error);});
+}
