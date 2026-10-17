@@ -1,8 +1,15 @@
 # AYLUL appearance sources
 
-The current Canvas companion is extracted from root `ayl.html` into
+The current Canvas companion was extracted from the supplied `ayl.html` into
 `apps/desktop/src/features/companion/`. Its design and implementation plan live in
 `docs/character/`. The renderer does not load the historical PNGs.
+
+After the renderer was accepted, the original standalone HTML was moved on
+2026-10-17 to ignored local `archive/aylul-source-2026-10-17/ayl.html` so it no
+longer remains loose at the repository root. Its SHA-256 remains
+`103a5ba2765c4a0f81f9b93051d2883fef1dc79a7e49dc8cb4ee0d0ff76a8bae`.
+This archive is a local reference, not an application build dependency or a file
+distributed by Git. The extracted TypeScript renderer is the current source.
 
 At the user's request on 2026-10-16, the legacy PNG expressions, animation packs,
 candidate images and reference board were moved to the local directory

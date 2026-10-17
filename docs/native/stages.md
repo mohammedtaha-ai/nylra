@@ -63,3 +63,15 @@ The exact file lists and test assertions live in each task's Files and Steps.
 Implemented and locally verified 2026-10-17 in debug, per user instruction.
 See [current acceptance](../evidence/2026-10-16-independent-companion-acceptance.md)
 for exact results and remaining optimized performance, hardware and hit-test gates.
+
+## Next discussion: desktop laptop relay
+
+The human requested collaborative planning on the same existing branch and
+one commit per completed, verified task. The inspected starting points and
+scope decisions are in the
+[planning brief](specs/2026-10-17-laptop-relay-planning-brief.md).
+The human subsequently requested merging their joint human/Claude hook work
+into this branch. That local integration is recorded in
+[merge evidence](../evidence/2026-10-17-hook-companion-merge.md) and its
+[accepted shared request](../shared/requests/2026-10-17-hook-companion-merge.md).
+Cloud relay-consumer implementation tasks remain in planning, not started.

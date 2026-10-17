@@ -72,3 +72,30 @@ asked Claude Code to create `probe.txt` with the Write tool, in a new session.
 Not measured: Codex hooks, `SessionEnd` (sessions were closed by ending the
 terminal), a hook `deny`, several hooks on one event, and `onFailure`, which
 needs Claude Code 2.1.295.
+
+## Later the same day: refusals and permission rules
+
+Probe source: `docs/evidence/probes/2026-10-13-aylul-rule/` at `97775d0`, deleted
+in the next commit. Claude Code had updated itself to 2.1.296 by this run.
+
+- **Refusals have their own hook.** The hook reference documents
+  `PermissionDenied`: it runs when auto mode denies a tool call, with
+  `tool_name`, `tool_input`, `tool_use_id` and `reason` (for a classifier
+  verdict the matched rule in brackets, such as `[Data Exfiltration]`). Its only
+  output is `retry: true`, which tells the model it may try again and does not
+  reverse the denial. Read from the documentation, not run.
+- **A deliberate refusal was not built.** Preparing a task file meant to make a
+  second session's request be denied, with a hook standing in for the person's
+  approval, was itself refused by the controlling session's classifier as
+  `[Auto-Mode Bypass]`. The probe stopped there. Whether an approved allow rule
+  lets auto mode run a call its classifier denies stays untested; Claude Code's
+  denial text says a permission rule allows the action in future.
+- **A rule written during a session applies at once.** In default mode, the
+  `PermissionRequest` hook allowed the first Write (`a.txt`) and in the same
+  moment added `Write` to `permissions.allow` in the project's
+  `.claude/settings.local.json`. The second Write (`b.txt`), three seconds
+  later, raised no `PermissionRequest` and ran without a prompt. The terminal
+  showed "Allowed by PermissionRequest hook" under the first Write only.
+- **The last message is in `Stop`.** `last_assistant_message` held Claude's
+  final text for the turn ("Created `probe.txt` containing `hi`."), and every
+  hook carries `transcript_path` to the full session transcript.

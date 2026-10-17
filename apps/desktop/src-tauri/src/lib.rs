@@ -1,6 +1,7 @@
 pub mod auth;
 mod commands;
 pub mod native_login;
+mod sidecar;
 mod windows;
 
 pub fn run() {
@@ -9,6 +10,7 @@ pub fn run() {
             commands::hide_main,
             commands::auth_action,
             commands::cancel_login,
+            commands::aylul_call,
             commands::companion::companion_state,
             commands::companion::companion_ready,
             commands::companion::companion_failed,
@@ -34,8 +36,17 @@ pub fn run() {
             let path = app.path().app_data_dir()?.join("auth-v1.dpapi");
             app.manage(auth::AuthController::new(path));
             app.manage(windows::companion::Store::default());
+            app.manage(std::sync::Arc::new(sidecar::start_default()));
             windows::setup(app)
         })
-        .run(tauri::generate_context!())
-        .expect("NYLRA native runtime failed");
+        .build(tauri::generate_context!())
+        .expect("NYLRA native runtime failed")
+        .run(|app, event| {
+            if let tauri::RunEvent::Exit = event {
+                use tauri::Manager;
+                if let Some(sidecar) = app.try_state::<std::sync::Arc<sidecar::SidecarState>>() {
+                    sidecar.stop();
+                }
+            }
+        });
 }

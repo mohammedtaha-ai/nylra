@@ -4,6 +4,9 @@ import './shell.css';
 import { hideToTray } from '../platform/windows';
 import { authAction, cancelLogin, type AuthView, type AuthAction } from '../platform/auth';
 import { CompanionControls } from './CompanionControls';
+import { useAylulState } from '../data/aylul-state';
+import { SessionsPanel } from '../features/sessions/SessionsPanel';
+import { ApprovalsPanel } from '../features/approvals/ApprovalsPanel';
 
 const Studio = import.meta.env.DEV
   ? React.lazy(() => import('../features/companion/studio/CompanionStudio').then(module => ({default:module.CompanionStudio})))
@@ -15,6 +18,7 @@ class PresenceBoundary extends React.Component<{children:React.ReactNode},{faile
 }
 
 function Shell() {
+  const aylul=useAylulState();
   const [studioOpen,setStudioOpen]=React.useState(false);
   const [error,setError]=React.useState('');
   const [auth,setAuth]=React.useState<AuthView|null>(null);
@@ -48,6 +52,8 @@ function Shell() {
       </div>
       {auth?.providerLogout==='pending' && <p>Backend session revoked. Provider sign-out was handed to your browser; completion is not confirmed here.</p>}
     </section>
+    <SessionsPanel state={aylul.state} refresh={aylul.refresh} />
+    <ApprovalsPanel state={aylul.state} refresh={aylul.refresh} />
     <section aria-labelledby="presence"><h2 id="presence">AYLUL</h2>
       <PresenceBoundary><CompanionControls /></PresenceBoundary>
       {Studio && <>
