@@ -44,6 +44,7 @@ test("production includes companion and excludes studio modules and remote asset
   function walk(name:string){if(visited.has(name))return;visited.add(name);const chunk=chunks.get(name);if(!chunk)return;graph.push(...chunk.ids);chunk.imports.forEach(walk)}
   walk(companionChunk);
   assert.ok(!graph.some(id=>id.endsWith('/platform/auth.ts')||id.endsWith('/app/main.tsx')||id.includes('/companion/studio/')),'companion must not load account or studio code');
+  assert.ok(!graph.some(id=>id.endsWith('/platform/aylul.ts')||id.endsWith('/data/aylul-state.ts')||id.includes('/features/approvals/')||id.includes('/features/sessions/')),'companion must not load local agent state or approval controls');
   assert.ok(
     !ids.some((id) => id.includes("/companion/studio/")),
     "development studio must not be bundled",

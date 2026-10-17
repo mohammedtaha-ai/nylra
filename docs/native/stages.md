@@ -70,5 +70,8 @@ The human requested collaborative planning on the same existing branch and
 one commit per completed, verified task. The inspected starting points and
 scope decisions are in the
 [planning brief](specs/2026-10-17-laptop-relay-planning-brief.md).
-This is planning only: the old hook/sidecar branch is still unmerged, and no
-relay-consumer implementation tasks are approved or started yet.
+The human subsequently requested merging their joint human/Claude hook work
+into this branch. That local integration is recorded in
+[merge evidence](../evidence/2026-10-17-hook-companion-merge.md) and its
+[accepted shared request](../shared/requests/2026-10-17-hook-companion-merge.md).
+Cloud relay-consumer implementation tasks remain in planning, not started.

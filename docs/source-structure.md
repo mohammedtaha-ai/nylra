@@ -60,11 +60,12 @@ apps/
         main.ts                  entry: started by Tauri, stopped when AYLUL quits
         brain/                   runs aylul-brain with the laptop's tool adapters
         link/                    outbound WebSocket to shadows-backend
-        agents/                  installs aylul-hook into each agent's hook config
+        agents/                  writes agent settings: hook entries and permission rules
         hooks/                   named-pipe server receiving aylul-hook events
         sessions/                agent sessions and steps built from hook events
-        approvals/               holds an agent's request until decided or timed out
-        grants/                  grant store and deterministic rule matching
+        approvals/               holds a request or refusal until answered or timed out
+        grants/                  rules AYLUL wrote, their expiry and revocation
+        store/                   sessions, requests, answers and rules in node:sqlite
         shadows/                 client for the local Shadows API's projection
       tests/                     sidecar unit and pipe tests
     hook/                        aylul-hook, the command an agent's hook runs
@@ -122,10 +123,11 @@ AYLUL desktop is three processes on the laptop, each with one job:
 - **Failure is not consent.** If the sidecar is off, the pipe is missing or a
   request times out, `aylul-hook` returns control to the agent's own prompt.
   It never answers "allow" by itself.
-- **Grants match by code.** `grants/` compares a request with the person's rules
-  deterministically. Model output, file content and session text never decide.
-  Only the laptop creates or widens a grant; a revocation from the phone arrives
-  through `link/`.
+- **The agent enforces grants.** A grant is a permission rule the person
+  approved, written by `agents/` into the project's agent settings; Claude Code
+  matches it, not AYLUL ([step 2(a)](superpowers/specs/2026-10-13-aylul-hook-laptop-design.md#5-rules)).
+  Model output, file content and session text never create one. Only the laptop
+  creates or widens a grant; a revocation from the phone arrives through `link/`.
 - **The brain package is not copied here.** `brain/` runs `aylul-brain` from
   shadows-backend as a versioned package; how it is delivered is OPEN in the
   backend's [source structure](../../shadows-backend/docs/source-structure.md).

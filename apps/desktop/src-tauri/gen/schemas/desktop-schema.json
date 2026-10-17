@@ -183,6 +183,12 @@
           "markdownDescription": "Enables the auth_action command without any pre-configured scope."
         },
         {
+          "description": "Enables the aylul_call command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-aylul-call",
+          "markdownDescription": "Enables the aylul_call command without any pre-configured scope."
+        },
+        {
           "description": "Enables the cancel_login command without any pre-configured scope.",
           "type": "string",
           "const": "allow-cancel-login",
@@ -249,6 +255,12 @@
           "markdownDescription": "Denies the auth_action command without any pre-configured scope."
         },
         {
+          "description": "Denies the aylul_call command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-aylul-call",
+          "markdownDescription": "Denies the aylul_call command without any pre-configured scope."
+        },
+        {
           "description": "Denies the cancel_login command without any pre-configured scope.",
           "type": "string",
           "const": "deny-cancel-login",
@@ -303,10 +315,10 @@
           "markdownDescription": "Denies the set_companion_visible command without any pre-configured scope."
         },
         {
-          "description": "Account and local companion controls for main only.",
+          "description": "Account, local sidecar and companion controls for main only.",
           "type": "string",
           "const": "main-actions",
-          "markdownDescription": "Account and local companion controls for main only."
+          "markdownDescription": "Account, local sidecar and companion controls for main only."
         },
         {
           "description": "Default core plugins set.\n#### This default permission set includes:\n\n- `core:path:default`\n- `core:event:default`\n- `core:window:default`\n- `core:webview:default`\n- `core:app:default`\n- `core:image:default`\n- `core:resources:default`\n- `core:menu:default`\n- `core:tray:default`",

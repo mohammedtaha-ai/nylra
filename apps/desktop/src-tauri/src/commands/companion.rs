@@ -9,6 +9,7 @@ pub fn allowed_caller(label: &str, command: &str) -> bool {
         "set_companion_visible"
         | "set_companion_paused"
         | "auth_action"
+        | "aylul_call"
         | "cancel_login"
         | "hide_main" => label == "main",
         _ => false,
@@ -97,6 +98,7 @@ mod tests {
                 "drag_companion",
                 "open_main_from_companion",
                 "auth_action",
+                "aylul_call",
                 "cancel_login",
                 "hide_main",
             ] {

@@ -71,6 +71,8 @@ if (new URLSearchParams(location.search).has("shell")) {
   import("@tauri-apps/api/mocks").then(async ({ mockIPC,mockWindows }) => {
     mockWindows('main');
     const failed=new URLSearchParams(location.search).has('companionFailed');
+    const hookSession=new URLSearchParams(location.search).has('hookSession');
+    let pending=hookSession?[{id:'request-one',kind:'request',sessionId:'session-one',project:'C:/synthetic/project',tool:'Read',target:'C:/synthetic/project/a.ts',reason:null,proposedRule:null,at:'2026-10-17T10:00:00Z',held:true}]:[];
     let companion={revision:1,visible:!failed,renderAllowed:!failed,paused:false,error:failed?'companion_unavailable':null as string|null};
     mockIPC((command, args) => {
       callLog.textContent += `${command} ${JSON.stringify(args)}\n`;
@@ -82,6 +84,11 @@ if (new URLSearchParams(location.search).has("shell")) {
           providerLogout: null,
         };
       if (command === "hide_main") return;
+      if(command==='aylul_call'){
+        if(new URLSearchParams(location.search).has('sidecarUnavailable'))throw Error('sidecar_unavailable');
+        if(args?.method==='state')return {sessions:hookSession?[{id:'session-one',agent:'claude_code',project:'C:/synthetic/project',state:'waiting',startedAt:'2026-10-17T10:00:00Z',updatedAt:'2026-10-17T10:00:00Z',lastStep:null,lastMessage:null}]:[],pending,hooksInstalled:true};
+        if(args?.method==='request.answer'){pending=[];return null;}
+      }
       if (command==='companion_state')return companion;
       if(command==='set_companion_visible'){
         if(new URLSearchParams(location.search).has('hideRefused'))throw Error('refused');
