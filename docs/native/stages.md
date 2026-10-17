@@ -63,3 +63,12 @@ The exact file lists and test assertions live in each task's Files and Steps.
 Implemented and locally verified 2026-10-17 in debug, per user instruction.
 See [current acceptance](../evidence/2026-10-16-independent-companion-acceptance.md)
 for exact results and remaining optimized performance, hardware and hit-test gates.
+
+## Next discussion: desktop laptop relay
+
+The human requested collaborative planning on the same existing branch and
+one commit per completed, verified task. The inspected starting points and
+scope decisions are in the
+[planning brief](specs/2026-10-17-laptop-relay-planning-brief.md).
+This is planning only: the old hook/sidecar branch is still unmerged, and no
+relay-consumer implementation tasks are approved or started yet.
